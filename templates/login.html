@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'mystyle.css'%}">
+  </head>
+  <body>
+    <center>
+    <div class="form">
+        <form action>
+          <h2>Login Form</h2><br>
+                <div class="input">
+                    <input required class="input-field" type="email" name="email">
+                    <label for="email">Enter your email</label>
+                </div>
+                <div class="input">
+                    <input required class="input-field" type="password" name="password">
+                    <label for="password">Password</label>
+                </div>
+                <br>
+                <div class="submit">
+                    <input  type="submit" value="Submit">
+                </div>
+                <br>
+                <span>Don't have an account? <a href="register.html">Signup now</a></span>
+        </form>
+        
+    </div>
+  </center>
+  <br><br><br>
+  <br><br><br>
+  </body>
+</html>
