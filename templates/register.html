@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="mystyle.css">
+    <link rel="stylesheet" href="{% static 'mystyle.css'%}">
   </head>
   <body>
     <center>
     <div class="form">
-        <form action>
+        <form action="{% url 'register'%}" method="POST">
+          {% csrf_token %}
           <h2>Register Form</h2><br>
                 <div class="input">
                     <input required class="input-field" type="text" name="firstname">
@@ -35,7 +37,7 @@
                     <input  type="submit" value="Submit">
                 </div>
                 <br>
-                <span>Have an account? <a href="login.html">login now</a></span>
+                <span>Have an account? <a href="{% url 'login'%}">login now</a></span>
         </form>
         
     </div>
