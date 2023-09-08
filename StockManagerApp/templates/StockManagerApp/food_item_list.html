@@ -1,0 +1,12 @@
+<!-- templates/inventory/food_item_list.html -->
+
+<h1>Food Items</h1>
+<ul>
+  {% for food_item in food_items %}
+    <li>
+      <a href="{% url 'view_food_item' food_item.pk %}">{{ food_item.name }}</a>
+      - <a href="{% url 'edit_food_item' food_item.pk %}">Edit</a>
+    </li>
+  {% endfor %}
+</ul>
+<a href="{% url 'add_food_item' %}">Add Food Item</a>
