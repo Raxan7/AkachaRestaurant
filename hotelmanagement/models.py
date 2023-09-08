@@ -18,6 +18,7 @@ class Restaurant(models.Model):
 
 
 class Table(models.Model):
+    objects = models.Manager()
     id = models.AutoField(primary_key=True)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     table_number = models.CharField(max_length=10)
@@ -31,6 +32,7 @@ class MenuCategory(models.Model):
 
 
 class MenuItem(models.Model):
+    objects = models.Manager()
     id = models.AutoField(primary_key=True)
     category = models.ForeignKey(MenuCategory, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
@@ -39,6 +41,7 @@ class MenuItem(models.Model):
 
 
 class Reservation(models.Model):
+    objects = models.Manager()
     id = models.AutoField(primary_key=True)
     guest_name = models.CharField(max_length=255)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
@@ -48,6 +51,7 @@ class Reservation(models.Model):
 
 
 class Order(models.Model):
+    objects = models.Manager()
     id = models.AutoField(primary_key=True)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     table = models.ForeignKey(Table, on_delete=models.CASCADE)
@@ -56,6 +60,7 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
+    objects = models.Manager()
     id = models.AutoField(primary_key=True)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
@@ -63,6 +68,7 @@ class OrderItem(models.Model):
 
 
 class Review(models.Model):
+    objects = models.Manager()
     id = models.AutoField(primary_key=True)
     guest_name = models.CharField(max_length=255)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
@@ -72,6 +78,7 @@ class Review(models.Model):
 
 
 class Employee(models.Model):
+    objects = models.Manager()
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
     email = models.EmailField()
@@ -82,6 +89,7 @@ class Employee(models.Model):
 
 
 class Payment(models.Model):
+    objects = models.Manager()
     id = models.AutoField(primary_key=True)
     reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
