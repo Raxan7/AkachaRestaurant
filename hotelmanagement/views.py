@@ -1,9 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+
 from .models import CustomUser
 from .EmailBackEnd import EmailBackEnd
 from django.contrib.auth import login, logout
-from .models import Reservation, Restaurant, Review, MenuCategory, MenuItem, Order, OrderItem, Employee, Payment, Table
+from .models import (
+    Reservation, Restaurant, Review, MenuCategory, MenuItem, Order, OrderItem, Employee, Payment, Table
+)
 
 
 # Create your views here.
