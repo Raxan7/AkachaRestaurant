@@ -8,6 +8,7 @@ class CustomUser(AbstractUser):
 
 
 class Restaurant(models.Model):
+    objects = models.Manager()
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
     location = models.CharField(max_length=255)
@@ -24,6 +25,7 @@ class Table(models.Model):
 
 
 class MenuCategory(models.Model):
+    objects = models.Manager()
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
 
