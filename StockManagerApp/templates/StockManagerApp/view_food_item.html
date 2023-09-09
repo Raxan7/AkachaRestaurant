@@ -1,0 +1,9 @@
+<!-- templates/inventory/view_food_item.html -->
+
+<h1>Food Item Details</h1>
+<p><strong>Name:</strong> {{ food_item.name }}</p>
+<p><strong>Description:</strong> {{ food_item.description }}</p>
+<p><strong>Quantity:</strong> {{ food_item.quantity }}</p>
+<p><strong>Expiration Date:</strong> {{ food_item.expiration_date }}</p>
+<p><strong>Reorder Quantity:</strong> {{ food_item.reorder_quantity }}</p>
+<a href="{% url 'food_item_list' %}">Back to Food Items</a>
