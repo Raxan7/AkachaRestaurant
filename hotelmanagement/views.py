@@ -16,35 +16,51 @@ def logins(request):
             return redirect("home")
     return render(request, 'login.html')
 
+def userprofile(request, id):
+    user = CustomUser.objects.get(id=id)
+    return render(request, "user_details.html", {'userr':user})
+
+def logout_user(request):
+    logout(request)
+    return redirect("login")
+
 def register(request):
     if request.method == "POST":
         first_name = request.POST.get("firstname")
         last_name = request.POST.get("lastname")
         email = request.POST.get("email")
         password = request.POST.get("password")
-        password2 = request.POST.get("password1")
-        if password != password2:
-            messages.error(request, 'Password do not match')
-            return render(request, 'register.html')
+        if password:
+            password2 = request.POST.get("password1")
+            if password != password2:
+                messages.error(request, 'Password do not match')
+                return render(request, 'register.html')
+        else:
+            password="12345678"
         if CustomUser.objects.filter(email=email).exists():
             messages.error(request, 'Email Alredy Exists')
             return render(request, 'register.html')
         try:
-            user = CustomUser.objects.create_user(
-                username=email, 
-                email=email, 
-                password=password,
-                first_name=first_name,
-                last_name=last_name,
-            )
+            user = CustomUser.objects.create_user(username=last_name, email=email, password=password,first_name=first_name,last_name=last_name,)
             user.save()
         except:
             messages.error(request, 'Something Went Wrong ')
             return render(request, 'register.html')
+        if password=="12345678":
+            messages.success(request, 'One Employee added successfully!')
+            return redirect("add_user")
         return redirect("login")
     else:
         return render(request, 'register.html')
-    
+
+def add_user(request):
+    return render(request, "add_user.html")
+def  manage_user(request, user):
+    if user==1:
+        users = CustomUser.objects.filter(user_type="customer")
+    else:
+        users=CustomUser.objects.exclude(user_type="customer")
+    return render(request, "manage_user.html", {'users':users})
 def home(request):
     return render(request, "home.html")
 

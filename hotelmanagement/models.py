@@ -5,6 +5,8 @@ from django.contrib.auth.models import AbstractUser
 # Create your models here.
 class CustomUser(AbstractUser):
     id = models.AutoField(primary_key=True)
+    profile = models.ImageField(upload_to="profiles/", null=True)
+    user_type = models.CharField(default="customer", max_length=50)
     
 
 class Restaurant(models.Model):
