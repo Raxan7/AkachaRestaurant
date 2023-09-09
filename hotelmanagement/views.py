@@ -1,25 +1,28 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-
 from .models import CustomUser
 from .EmailBackEnd import EmailBackEnd
 from django.contrib.auth import login, logout
-from .models import (
-    Reservation, Restaurant, Review, MenuCategory, MenuItem, Order, OrderItem, Employee, Payment, Table
-)
-
+from .models import Reservation, Restaurant, Review, MenuCategory, MenuItem, Order, OrderItem, Employee, Payment, Table
 
 # Create your views here.
 def logins(request):
-    if request.method == "POST":
-        username = request.POST.get('email')
-        password = request.POST.get('password')
+    if request.method=="POST":
+        username=request.POST.get('email')
+        password=request.POST.get('password')
         user = EmailBackEnd.authenticate(request, username, password)
         if user != None:
             login(request, user)
             return redirect("home")
     return render(request, 'login.html')
 
+def userprofile(request, id):
+    user = CustomUser.objects.get(id=id)
+    return render(request, "user_details.html", {'userr':user})
+
+def logout_user(request):
+    logout(request)
+    return redirect("login")
 
 def register(request):
     if request.method == "POST":
@@ -27,57 +30,60 @@ def register(request):
         last_name = request.POST.get("lastname")
         email = request.POST.get("email")
         password = request.POST.get("password")
-        password2 = request.POST.get("password1")
-        if password != password2:
-            messages.error(request, 'Password do not match')
-            return render(request, 'register.html')
+        if password:
+            password2 = request.POST.get("password1")
+            if password != password2:
+                messages.error(request, 'Password do not match')
+                return render(request, 'register.html')
+        else:
+            password="12345678"
         if CustomUser.objects.filter(email=email).exists():
             messages.error(request, 'Email Alredy Exists')
             return render(request, 'register.html')
         try:
-            user = CustomUser.objects.create_user(
-                username=email,
-                email=email,
-                password=password,
-                first_name=first_name,
-                last_name=last_name,
-            )
+            user = CustomUser.objects.create_user(username=last_name, email=email, password=password,first_name=first_name,last_name=last_name,)
             user.save()
         except:
             messages.error(request, 'Something Went Wrong ')
             return render(request, 'register.html')
+        if password=="12345678":
+            messages.success(request, 'One Employee added successfully!')
+            return redirect("add_user")
         return redirect("login")
     else:
         return render(request, 'register.html')
 
-
+def add_user(request):
+    return render(request, "add_user.html")
+def  manage_user(request, user):
+    if user==1:
+        users = CustomUser.objects.filter(user_type="customer")
+    else:
+        users=CustomUser.objects.exclude(user_type="customer")
+    return render(request, "manage_user.html", {'users':users})
 def home(request):
     return render(request, "home.html")
-
 
 def add_menu_category(request):
     if request.method == "POST":
         name = request.POST['name']
-        MenuCategory.objects.create(name=name)
+        MenuCategory.objects.create(name = name)
     return render(request, "add_menu.html")
-
 
 def manage_menu_category(request):
     menus = MenuCategory.objects.all()
-    return render(request, "manage_menu.html", {"menus": menus})
-
+    return render(request, "manage_menu.html", {"menus":menus})
 
 def edit_menu_category(request, id):
     if request.method == "POST":
         name = request.POST['name']
         menu = MenuCategory.objects.get(id=id)
-        menu.name = name
+        menu.name=name
         name.save()
         return redirect("/")
     menu = MenuCategory.objects.get(id=id)
-    return render(request, "edit_menu_category.html", {"menu": menu})
-
-
+    return render(request, "edit_menu_category.html", {"menu":menu})
+    
 def add_menu_item(request):
     if request.method == "POST":
         category_id = request.POST["category_id"]
@@ -85,14 +91,12 @@ def add_menu_item(request):
         description = request.POST['description']
         price = request.POST['price']
         category = MenuCategory.objects.get(id=category_id)
-        MenuItem.objects.create(name=name, description=description, price=price, category=category)
+        MenuItem.objects.create(name=name, description=description, price=price,category=category)
     return render(request, "add_menu_item.html")
-
 
 def manage_menu_item(request):
     menuItems = MenuItem.objects.all()
-    return render(request, "manage_menu_item.html", {'menuItems': menuItems})
-
+    return render(request, "manage_menu_item.html", {'menuItems':menuItems})
 
 def edit_menu_item(request, id):
     if request.method == "POST":
@@ -103,14 +107,13 @@ def edit_menu_item(request, id):
         price = request.POST['price']
         category = MenuCategory.objects.get(id=category_id)
         menuItem.name = name
-        menuItem.description = description
-        menuItem.price = price
-        menuItem.category = category
+        menuItem.description=description
+        menuItem.price=price
+        menuItem.category=category
         menuItem.save()
         return redirect("/")
     menu_item = MenuItem.objects.get(id=id)
-    return render(request, "edit_menu_item.html", {"menu_item": menu_item})
-
+    return render(request, "edit_menu_item.html", {"menu_item":menu_item})
 
 def add_restaurant(request):
     if request.method == "POST":
@@ -121,11 +124,9 @@ def add_restaurant(request):
         Restaurant.objects.create(name=name, location=location, description=description, contact=contact)
     return render(request, "add_restaurant.html")
 
-
 def manage_restaurant(request):
     restaurants = Restaurant.objects.all()
-    return render(request, "manage_restaurant.html", {"restaurants": restaurants})
-
+    return render(request, "manage_restaurant.html", {"restaurants":restaurants})
 
 def edit_restaurant(request, id):
     if request.method == "POST":
@@ -134,21 +135,20 @@ def edit_restaurant(request, id):
         location = request.POST['location']
         description = request.POST['description']
         contact = request.POST['contact']
-        restaurant.name = name
+        restaurant.name=name
         restaurant.location = location
-        restaurant.description = description
-        restaurant.contact = contact
+        restaurant.description=description
+        restaurant.contact=contact
         restaurant.save()
         return redirect("/")
     restaurant = Restaurant.objects.get(id=id)
-    return render(request, "edit_restaurant.html", {"restaurant": restaurant})
-
+    return render(request, "edit_restaurant.html", {"restaurant":restaurant})
 
 def add_table(request):
     if request.method == "POST":
         table_number = request.POST["table_number"]
         restaurant_id = request.POST["restaurant_id"]
         capacity = request.POST["capacity"]
-        restaurant = Restaurant.objects.get(id=restaurant_id)
+        restaurant = Restaurant.objects.get(id = restaurant_id)
         Table.objects.create(table_number=table_number, restaurant=restaurant, capacity=capacity)
     return render(request, "add_table.html")
