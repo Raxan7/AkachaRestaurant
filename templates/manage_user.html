@@ -23,7 +23,9 @@
             {% for user in users%}
             <tr>
               <td class="py-1">
+                {%if user.profile %}
                 <img src="{{user.profile.url}}" alt="image" />
+                {%endif%}
               </td>
               <td> {{user.first_name}} </td>
               <td>

@@ -1,12 +1,16 @@
 {% extends 'base.html' %}
 {% block content%}
+
 <div class="row container" style="margin-top: 1rem;">
     <div class="col-md-7 grid-margin stretch-card">
       <div class="card">
         <div class="card-body">
           <h4 class="card-title">User's details</h4>
             <div>
-                <h5>Firstname: {{userr.first_name}}</h3>
+                <div class="row">
+                <h5 class="col">Firstname: {{userr.first_name}} </h5>
+                    <i class="col mdi mdi-square-edit-outline me-2 text-success"></i>
+                </div>
                 <h5>Lastname: {{userr.last_name}}</h3>
                 <h5>Username: {{userr.username}}</h3>
                 <h5>User E-mail: {{userr.email}}</h3>
@@ -19,7 +23,9 @@
       <div class="card">
         <div class="card-body">
           <h4 class="card-title">User Profile</h4>
+          {%if userr.profile%}
             <img class="img-fluid" src="{{userr.profile.url}}" alt="">
+            {%endif%}
         </div>
       </div>
     </div>
