@@ -64,7 +64,7 @@ def deactivate_user(request, id):
     user.save()
     return redirect("manage_user")
 
-def ctivate_user(request, id):
+def activate_user(request, id):
     user = CustomUser.objects.get(id=id)
     user.is_active=True
     user.save()
