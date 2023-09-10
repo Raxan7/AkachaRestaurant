@@ -129,12 +129,13 @@ USE_TZ = True
 
 if 'DJANGO_SETTINGS_MODULE' in os.environ:
     # Production settings
+    STATIC_ROOT = (os.path.join(BASE_DIR, 'static/'))
+else:
+    # Development settings
     STATICFILES_DIRS = [
         os.path.join(BASE_DIR, 'static'),
     ]
-else:
-    # Development settings
-    STATIC_ROOT = (os.path.join(BASE_DIR, 'static/'))
+
 
 STATIC_URL = '/static/'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
