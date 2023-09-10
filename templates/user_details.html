@@ -1,16 +1,58 @@
 {% extends 'base.html' %}
 {% block content%}
-<div class="row container" style="margin-top: 1rem;">
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Toggle Input</title>
+    <style>
+        #hiddenInput {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="row" style="margin-top: 1rem;">
     <div class="col-md-7 grid-margin stretch-card">
       <div class="card">
         <div class="card-body">
-          <h4 class="card-title">User's details</h4>
+          <div class="row justify-content-between">
+          <h4 class="col card-title">User's details</h4>
+          <h4 class="col">Edit</h4>
+          </div>
             <div>
-                <h5>Firstname: {{userr.first_name}}</h3>
-                <h5>Lastname: {{userr.last_name}}</h3>
-                <h5>Username: {{userr.username}}</h3>
-                <h5>User E-mail: {{userr.email}}</h3>
-                <h5>User Type: {{user.user_type}}</h3>
+              <input type="hidden" value="{{userr.id}}">
+                <div class="row justify-content-between">
+                    <h5 class="col">Firstname: <b class="text-success">{{userr.first_name}}</b> </h5>
+                    <button class="col btn btn-trasparent" id="toggleButton"><i class="col mdi mdi-square-edit-outline menu-icon text-success mdi-24px"></i></button>
+                    <input id="hiddenInput" type="text" class="form-control form-control-lg col" name='firstname' value="{{userr.first_name}}">
+                  
+                </div>
+                <div class="row justify-content-between">
+                  <h5 class="col">Lastname: <b class="text-success">{{userr.last_name}}</b> </h5>
+                  <button class="col btn btn-trasparent" id="toggleButton1"><i class="col mdi mdi-square-edit-outline menu-icon text-success mdi-24px"></i></button>
+                  <input style="display: none;" id="hiddenInput1" type="text" class="form-control form-control-lg col" name='lastname' value="{{userr.last_name}}">
+                </div>
+                <div class="row justify-content-between">
+                  <h5 class="col">Username: <b class="text-success">{{userr.username}}</b> </h5>
+                  <button class="col btn btn-trasparent" id="toggleButton2"><i class="col mdi mdi-square-edit-outline menu-icon text-success mdi-24px"></i></button>
+                  <input style="display: none;" id="hiddenInput2" type="text" class="form-control form-control-lg col" name='username' value="{{userr.username}}">
+                </div>
+                <div class="row justify-content-between">
+                  <h5 class="col">E-mail: <b class="text-success">{{userr.email}}</b> </h5>
+                  <button class="col btn btn-trasparent" id="toggleButton3"><i class="col mdi mdi-square-edit-outline menu-icon text-success mdi-24px"></i></button>
+                  <input style="display: none;" id="hiddenInput3" type="email" class="form-control form-control-lg col" name='email' value="{{userr.email}}">
+                </div>
+                <div class="row justify-content-between">
+                  <h5 class="col">User Type: <b class="text-success">{{userr.user_type}}</b> </h5>
+                  {%if user.user_type == "Super"%}
+                  <button class="col btn btn-trasparent" id="toggleButton4"><i class="col mdi mdi-square-edit-outline menu-icon text-success mdi-24px"></i></button>
+                  <input style="display: none;" id="hiddenInput4" type="email" class="form-control form-control-lg col" name='user_type' value="{{userr.user_type}}">
+                  {%else%}
+                  <input type="hidden" value="{{userr.user_type}}">
+                  {%endif%}
+                </div>
+                
+                <h5>User Type: {{user.user_type}}</h5>
             </div>
         </div>
       </div>
@@ -19,9 +61,93 @@
       <div class="card">
         <div class="card-body">
           <h4 class="card-title">User Profile</h4>
+          {%if userr.profile%}
             <img class="img-fluid" src="{{userr.profile.url}}" alt="">
+            {%endif%}
+            <div class="row justify-content-between">
+              <button class="col btn btn-trasparent" id="toggleButton5"><i class="col mdi mdi-square-edit-outline menu-icon text-success mdi-24px"></i></button>
+              <input width="40px" style="display: none;" id="hiddenInput5" type="file" class="form-control form-control-lg col" name='profile'>
+            </div>
         </div>
+        
+        
+        <center>
+        <div class="mt-3">
+          <button type="submit" class="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn">Save Changes</a>
+        </div>
+      </center>
       </div>
+      
     </div>
   </div>
+  <script>
+    // Get references to the button and input field
+    const toggleButton = document.getElementById('toggleButton');
+    const hiddenInput = document.getElementById('hiddenInput');
+    // Add a click event listener to the button
+    toggleButton.addEventListener('click', function () {
+        // Toggle the visibility of the input field
+        if (hiddenInput.style.display === 'none' || hiddenInput.style.display === '') {
+            hiddenInput.style.display = 'block'; // Show the input field
+        } else {
+            hiddenInput.style.display = 'none'; // Hide the input field
+        }
+    });
+    const toggleButton1 = document.getElementById('toggleButton1');
+    const hiddenInput1 = document.getElementById('hiddenInput1');
+    toggleButton1.addEventListener('click', function () {
+      // Toggle the visibility of the input field
+      if (hiddenInput1.style.display === 'none' || hiddenInput1.style.display === '') {
+          hiddenInput1.style.display = 'block'; // Show the input field
+      } else {
+          hiddenInput1.style.display = 'none'; // Hide the input field
+      }
+  });
+  const toggleButton2 = document.getElementById('toggleButton2');
+  const hiddenInput2 = document.getElementById('hiddenInput2');
+  toggleButton2.addEventListener('click', function () {
+    // Toggle the visibility of the input field
+    if (hiddenInput2.style.display === 'none' || hiddenInput2.style.display === '') {
+        hiddenInput2.style.display = 'block'; // Show the input field
+    } else {
+        hiddenInput2.style.display = 'none'; // Hide the input field
+    }
+});
+const toggleButton3 = document.getElementById('toggleButton3');
+const hiddenInput3 = document.getElementById('hiddenInput3');
+toggleButton3.addEventListener('click', function () {
+  // Toggle the visibility of the input field
+  if (hiddenInput3.style.display === 'none' || hiddenInput3.style.display === '') {
+      hiddenInput3.style.display = 'block'; // Show the input field
+  } else {
+      hiddenInput3.style.display = 'none'; // Hide the input field
+  }
+});
+
+const toggleButton4 = document.getElementById('toggleButton4');
+const hiddenInput4 = document.getElementById('hiddenInput4');
+toggleButton4.addEventListener('click', function () {
+  // Toggle the visibility of the input field
+  if (hiddenInput4.style.display === 'none' || hiddenInput4.style.display === '') {
+      hiddenInput4.style.display = 'block'; // Show the input field
+  } else {
+      hiddenInput4.style.display = 'none'; // Hide the input field
+  }
+});
+const toggleButton5 = document.getElementById('toggleButton5');
+const hiddenInput5 = document.getElementById('hiddenInput5');
+toggleButton5.addEventListener('click', function () {
+  // Toggle the visibility of the input field
+  if (hiddenInput5.style.display === 'none' || hiddenInput5.style.display === '') {
+      hiddenInput5.style.display = 'block'; // Show the input field
+  } else {
+      hiddenInput5.style.display = 'none'; // Hide the input field
+  }
+});
+</script>
+<script>
+
+</script>
+</body>
+</html>
 {% endblock %}

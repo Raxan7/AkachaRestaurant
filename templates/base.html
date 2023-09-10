@@ -24,13 +24,18 @@
     <div class="container-scroller">
         {% include 'navigation.html' with user=user id=id%}
         <div class="container-fluid page-body-wrapper">
+          {% if user.user_type == "customer"%}
+          {% include 'customer_sidebar.html' with user=user id=id %}
+          {%else%}
             {% include 'side_bar.html' with user=user id=id %}
+            {%endif%}
             <div class="main-panel">
                 {% block content%}
                 {%endblock%}
                 {% include 'footer.html' with user=user id=id %}
             </div>
         </div>
+        
     </div>
        <!-- container-scroller -->
     <!-- plugins:js -->
@@ -44,7 +49,7 @@
     <script src="{% static 'assets/js/off-canvas.js'%}"></script>
     <script src="{% static 'assets/js/hoverable-collapse.js'%}"></script>
     <script src="{% static 'assets/js/misc.js'%}"></script>
-    <script src=""{% static 'awesome/js/all.js'%}""></script>
+    <script src=""{% static 'awesome/js/all.css'%}""></script>
     <!-- endinject -->
     <!-- Custom js for this page -->
     <script src="{% static 'assets/js/dashboard.js'%}"></script>

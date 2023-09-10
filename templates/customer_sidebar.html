@@ -13,9 +13,7 @@
         <li class="nav-item nav-profile">
           <a href="{% url 'home'%}" class="nav-link">
             <div class="nav-profile-image">
-              {% if user.profile %}
-                <img src="{{user.profile.url}}" alt="profile" />
-              {% endif %}
+              <img src="{{user.profile.url}}" alt="profile" />
               <span class="login-status online"></span>
               <!-- change to offline or busy as needed -->
             </div>
@@ -32,7 +30,7 @@
             <i class="mdi mdi-home menu-icon"></i>
           </a>
         </li>
-        <li class="nav-item">
+        {% comment %} <li class="nav-item">
           <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
             <span class="menu-title">Manage Users</span>
             <i class="menu-arrow"></i>
@@ -48,12 +46,24 @@
               </li>
             </ul>
           </div>
-        </li>
+        </li> {% endcomment %}
         <li class="nav-item">
           <a class="nav-link" href="#">
-            <span class="menu-title">Manage sales</span>
+            <span class="menu-title">View menu</span>
             <i class="mdi mdi-contacts menu-icon"></i>
           </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span class="menu-title">Order food</span>
+              <i class="mdi mdi-contacts menu-icon"></i>
+            </a>
+          </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">
+            <span class="menu-title">Contact Sellers</span>
+            <i class="mdi mdi-contacts menu-icon"></i>
+            </a>
         </li>
       </ul>
     </nav>
