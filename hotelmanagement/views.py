@@ -67,6 +67,7 @@ def edit_user(request):
         last_name = request.POST.get("lastname")
         email = request.POST.get("email")
         username = request.POST.get("username")
+        user_type = request.POST.get("user_type")
         profile = request.FILES.get("image")
         id = request.POST.get("id")
         user = CustomUser.objects.get(id=id)
@@ -74,6 +75,7 @@ def edit_user(request):
         user.last_name = last_name
         user.email = email
         user.username = username
+        user.user_type = user_type
         if profile:
             user.profile = profile
         user.save()
