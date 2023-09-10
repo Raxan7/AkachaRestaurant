@@ -1,45 +1,50 @@
 {% extends 'base.html' %}
-{% block content%}
-<div class="col-lg-12 grid-margin stretch-card" style="margin: 5px;">
+{% block content %}
+  <div class="col-lg-12 grid-margin stretch-card" style="margin: 5px;">
     <div class="card">
       <div class="card-body">
         <div class="row">
-        <div class="col"><h4 class="card-title">Users Management</h4></div>
-        <div class="col"><h4><a href="{% url 'add_user'%}" class=""> <i class="mdi mdi-account-plus me-2 text-success"></i> Add user</a></h4></div>
+          <div class="col">
+            <h4 class="card-title">Users Management</h4>
+          </div>
+          <div class="col">
+            <h4><a href="{% url 'add_user' %}" class=""><i class="mdi mdi-account-plus me-2 text-success"></i> Add user</a></h4>
+          </div>
         </div>
-        </p>
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th> User </th>
-              <th> First name </th>
-              <th> Lastname </th>
-              <th> Username </th>
-              <th> User_type </th>
-              <th colspan="2">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for user in users%}
-            <tr>
-              <td class="py-1">
-                {%if user.profile %}
-                <img src="{{user.profile.url}}" alt="image" />
-                {%endif%}
-              </td>
-              <td> {{user.first_name}} </td>
-              <td>
-                {{user.last_name}}
-              </td>
-              <td> {{user.username}}</td>
-              <td> {{user.user_type}}</td>
-              <td><a href="{% url 'userprofile' user.id%}" class="btn-danger"><i class="fa-solid fa-eye"></i></a></td>
-              <td>Delete</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>First name</th>
+                <th>Lastname</th>
+                <th>Username</th>
+                <th>User_type</th>
+                <th colspan="2">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for user in users %}
+                <tr>
+                  <td class="py-1">
+                    {% if user.profile %}
+                      <img src="{{ user.profile.url }}" alt="image" />
+                    {% endif %}
+                  </td>
+                  <td>{{ user.first_name }}</td>
+                  <td>{{ user.last_name }}</td>
+                  <td>{{ user.username }}</td>
+                  <td>{{ user.user_type }}</td>
+                  <td>
+                    <a href="{% url 'userprofile'  user.id  %}" class="btn-danger"><i class="fa-solid fa-eye"></i></a>
+                  </td>
+                  <td>Delete</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
-{%endblock%}
+{% endblock %}
