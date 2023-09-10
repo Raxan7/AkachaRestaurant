@@ -42,7 +42,7 @@
                     <a href="{% url 'delete_user'  userr.id  %}" class="btn-danger">delete</a>
                   </td>
                   {%if userr.is_active %}
-                  {%if user.user_type != "Super"%}
+                  {%if userr.user_type != "Super"%}
                   <td>
                     <a href="{% url 'deactivate_user'  userr.id  %}" class="btn-danger">deactivate</a>
                   </td>
