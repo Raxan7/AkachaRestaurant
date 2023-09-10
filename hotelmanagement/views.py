@@ -61,6 +61,23 @@ def  manage_user(request, user):
     else:
         users=CustomUser.objects.exclude(user_type="customer")
     return render(request, "manage_user.html", {'users':users})
+def edit_user(request):
+    if request.method == "POST":
+        first_name = request.POST.get("firstname")
+        last_name = request.POST.get("lastname")
+        email = request.POST.get("email")
+        username = request.POST.get("username")
+        profile = request.FILES.get("image")
+        id = request.POST.get("id")
+        user = CustomUser.objects.get(id=id)
+        user.first_name=first_name
+        user.last_name = last_name
+        user.email = email
+        user.username = username
+        if profile:
+            user.profile = profile
+        user.save()
+        return redirect('userprofile', id=id)
 def home(request):
     return render(request, "home.html")
 
