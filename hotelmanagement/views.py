@@ -53,14 +53,33 @@ def register(request):
     else:
         return render(request, 'register.html')
 
+def delete_user(request, id):
+    user = CustomUser.objects.get(id=id)
+    user.delete()
+    return redirect("manage_user")
+
+def deactivate_user(request, id):
+    user = CustomUser.objects.get(id=id)
+    user.is_active=False
+    user.save()
+    return redirect("manage_user")
+
+def ctivate_user(request, id):
+    user = CustomUser.objects.get(id=id)
+    user.is_active=True
+    user.save()
+    return redirect("manage_user")
+
 def add_user(request):
     return render(request, "add_user.html")
+
 def  manage_user(request, user):
     if user==1:
         users = CustomUser.objects.filter(user_type="customer")
     else:
         users=CustomUser.objects.exclude(user_type="customer")
     return render(request, "manage_user.html", {'users':users})
+
 def edit_user(request):
     if request.method == "POST":
         first_name = request.POST.get("firstname")
