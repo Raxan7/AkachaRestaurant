@@ -13,7 +13,9 @@
         <li class="nav-item nav-profile">
           <a href="{% url 'home'%}" class="nav-link">
             <div class="nav-profile-image">
-              <img src="{{user.profile.url}}" alt="profile" />
+              {% if user.profile %}
+                <img src="{{user.profile.url}}" alt="profile" />
+              {% endif %}
               <span class="login-status online"></span>
               <!-- change to offline or busy as needed -->
             </div>
