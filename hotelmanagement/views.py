@@ -57,27 +57,27 @@ def delete_user(request, id):
     user = CustomUser.objects.get(id=id)
     user.delete()
     if user.user_type == "Super":
-        return redirect("manage_user", id = 2)
+        return redirect("manage_user", 2)
     else:
-        return redirect("manage_user", id = 1)
+        return redirect("manage_user", 1)
 
 def deactivate_user(request, id):
     user = CustomUser.objects.get(id=id)
     user.is_active=False
     user.save()
     if user.user_type == "Super":
-        return redirect("manage_user", id = 2)
+        return redirect("manage_user", 2)
     else:
-        return redirect("manage_user", id = 1)
+        return redirect("manage_user", 1)
 
 def activate_user(request, id):
     user = CustomUser.objects.get(id=id)
     user.is_active=True
     user.save()
     if user.user_type == "Super":
-        return redirect("manage_user", id = 2)
+        return redirect("manage_user", 2)
     else:
-        return redirect("manage_user", id = 1)
+        return redirect("manage_user", 1)
 
 def add_user(request):
     return render(request, "add_user.html")
