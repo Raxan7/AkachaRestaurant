@@ -1,12 +1,32 @@
 {% extends 'base.html' %}
 {% block content %}
+
   <div class="col-lg-12 grid-margin stretch-card" style="margin: 5px;">
     <div class="card">
       <div class="card-body">
+
         <div class="row">
           <div class="col">
-            <h4 class="card-title">Users Management</h4>
+            <div class="row">
+              <h4 class="col card-title">Users Management</h4>
+           
+              <div class="col justify-content-center">
+                <div class="pop-up col" style="display: none; position: absolute; margin: auto; max-width: 300px;" id="hiddenInput">
+                      <center>
+                        <h2 style="color:red">Warning</h2>
+                        <h4>You Are about to delete some users from your records confirm for the deletion 
+                          in the field bellow or abord the action
+                        </h4>
+                        <div class="row justify-content-around">
+                          <a href="{% url 'delete_user' 20%}">Confirm</a>
+                          <a id="toggle" href="">Abort</a>
+                        </div>
+                      </center>
+                </div>
+              </div>
+            </div>
           </div>
+          
           <div class="col">
             <h4><a href="{% url 'add_user' %}" class=""><i class="mdi mdi-account-plus me-2 text-success"></i> Add user</a></h4>
           </div>
@@ -36,18 +56,18 @@
                   <td>{{ userr.username }}</td>
                   <td>{{ userr.user_type }}</td>
                   <td>
-                    <a href="{% url 'userprofile'  userr.id  %}" class="btn-danger"><i class="fa-solid fa-eye"></i></a>
+                    <a href="{% url 'userprofile'  userr.id  %}" style="color: green;"><i class="fa-solid fa-eye"></i></a>
                   </td>
                   <td>
-                    <a href="{% url 'delete_user'  userr.id  %}" class="btn-danger">delete</a>
+                    <a href="#" style="color: red;" id="togglep">delete</a>
                   </td>
                   {%if userr.is_active %}
                   <td>
-                    <a href="{% url 'deactivate_user'  userr.id  %}" class="btn-danger">deactivate</a>
+                    <a href="{% url 'deactivate_user'  userr.id  %}" style="color: red;">deactivate</a>
                   </td>
                   {%else%}
                   <td>
-                    <a href="{% url 'activate_user'  userr.id  %}" class="btn-danger">activate</a>
+                    <a href="{% url 'activate_user'  userr.id  %}" style="color: green;">activate</a>
                   </td>
                   {%endif%}
                 </tr>
@@ -58,4 +78,31 @@
       </div>
     </div>
   </div>
+  <script>
+    const togglep = document.getElementById('togglep');
+    const hiddenInput = document.getElementById('hiddenInput');
+    // Add a click event listener to the p
+    togglep.addEventListener('click', function () {
+        // Toggle the visibility of the input field
+        if (hiddenInput.style.display === 'none' || hiddenInput.style.display === '') {
+            hiddenInput.style.display = 'flex';
+            hiddenInput.style.flexDirection = 'row';
+            hiddenInput.style.justifyContent='center'; // Show the input field
+        } else {
+            hiddenInput.style.display = 'none'; // Hide the input field
+        }
+    });
+    const toggle = document.getElementById('toggle');
+    // Add a click event listener to the p
+    toggle.addEventListener('click', function () {
+        // Toggle the visibility of the input field
+        if (hiddenInput.style.display === 'none' || hiddenInput.style.display === '') {
+            hiddenInput.style.display = 'flex';
+            hiddenInput.style.flexDirection = 'row';
+            hiddenInput.style.justifyContent='center'; // Show the input field
+        } else {
+            hiddenInput.style.display = 'none'; // Hide the input field
+        }
+    });
+  </script>
 {% endblock %}

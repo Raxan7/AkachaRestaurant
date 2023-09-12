@@ -3,7 +3,7 @@ from django.contrib import messages
 from .models import CustomUser
 from .EmailBackEnd import EmailBackEnd
 from django.contrib.auth import login, logout
-from .models import Reservation, Restaurant, Review, MenuCategory, MenuItem, Order, OrderItem, Employee, Payment, Table
+from .models import Reservation, MenuImage, Restaurant, Review, MenuCategory, MenuItem, Order, OrderItem, Employee, Payment, Table
 
 # Create your views here.
 def logins(request):
@@ -115,7 +115,7 @@ def add_menu_category(request):
     if request.method == "POST":
         name = request.POST['name']
         MenuCategory.objects.create(name = name)
-    return render(request, "add_menu.html")
+        return redirect("manage_menu_category")
 
 def manage_menu_category(request):
     menus = MenuCategory.objects.all()
@@ -161,6 +161,39 @@ def edit_menu_item(request, id):
         return redirect("/")
     menu_item = MenuItem.objects.get(id=id)
     return render(request, "edit_menu_item.html", {"menu_item":menu_item})
+
+def add_menu_image(request):
+    if request.method == "POST":
+        menu_id = request.POST['menu_id']
+        category_id = request.POST["category_id"]
+        image = request.FILES['image']
+        category = MenuCategory.objects.get(id=category_id)
+        menu = MenuItem.objects.get(id = menu_id)
+        MenuImage.objects.create(menu_item = menu, menu_category = category, image = image)
+        return redirect("add_menu_image")
+    menu_categories = MenuCategory.objects.all()
+    return render(request, "add_menu_image.html", {'categories': menu_categories})
+
+def manage_menu_image(request):
+    menu_images = MenuImage.objects.all()
+    return render(request, "manage_menu_image.html", {'images': menu_images})
+
+def edit_menu_image(request, id):
+    if request.method == "POST":
+        menu_id = request.POST['menu_id']
+        category_id = request.POST["category_id"]
+        image = request.FILES['image']
+        category = MenuCategory.objects.get(id=category_id)
+        menu = MenuItem.objects.get(id = menu_id)
+        menu_image = MenuImage.objects.get(id=id)
+        if image:
+            menu_image.image=image
+        menu_image.menu_item=menu
+        menu_image.menu_category = category
+        menu_image.save()
+        return redirect("edit_menu_image", id)
+    menu_image = MenuImage.objects.get(id=id)
+    return render(request, "edit_menu_image.html", {'menu_image':menu_image})
 
 def add_restaurant(request):
     if request.method == "POST":

@@ -24,6 +24,7 @@ class Table(models.Model):
     table_number = models.CharField(max_length=10)
     capacity = models.PositiveIntegerField()
 
+
 class MenuCategory(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
@@ -34,6 +35,12 @@ class MenuItem(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
     price = models.DecimalField(max_digits=6, decimal_places=2)
+
+class MenuImage(models.Model):
+    id = models.AutoField(primary_key=True)
+    image = models.ImageField(upload_to="menus/")
+    menu_category = models.ForeignKey(MenuCategory, on_delete=models.CASCADE)
+    menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
 
 class Reservation(models.Model):
     id = models.AutoField(primary_key=True)
