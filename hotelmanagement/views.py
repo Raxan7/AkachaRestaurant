@@ -3,7 +3,7 @@ from django.contrib import messages
 from .models import CustomUser
 from .EmailBackEnd import EmailBackEnd
 from django.contrib.auth import login, logout
-from .models import Reservation, Restaurant, Review, MenuCategory, MenuItem, Order, OrderItem, Employee, Payment, Table
+from .models import Reservation, MenuImage, Restaurant, Review, MenuCategory, MenuItem, Order, OrderItem, Employee, Payment, Table
 
 # Create your views here.
 def logins(request):
@@ -53,14 +53,61 @@ def register(request):
     else:
         return render(request, 'register.html')
 
+def delete_user(request, id):
+    user = CustomUser.objects.get(id=id)
+    user.delete()
+    if user.user_type == "Super":
+        return redirect("manage_user", 2)
+    else:
+        return redirect("manage_user", 1)
+
+def deactivate_user(request, id):
+    user = CustomUser.objects.get(id=id)
+    user.is_active=False
+    user.save()
+    if user.user_type == "Super":
+        return redirect("manage_user", 2)
+    else:
+        return redirect("manage_user", 1)
+
+def activate_user(request, id):
+    user = CustomUser.objects.get(id=id)
+    user.is_active=True
+    user.save()
+    if user.user_type == "Super":
+        return redirect("manage_user", 2)
+    else:
+        return redirect("manage_user", 1)
+
 def add_user(request):
     return render(request, "add_user.html")
+
 def  manage_user(request, user):
     if user==1:
         users = CustomUser.objects.filter(user_type="customer")
     else:
         users=CustomUser.objects.exclude(user_type="customer")
     return render(request, "manage_user.html", {'users':users})
+
+def edit_user(request):
+    if request.method == "POST":
+        first_name = request.POST.get("firstname")
+        last_name = request.POST.get("lastname")
+        email = request.POST.get("email")
+        username = request.POST.get("username")
+        user_type = request.POST.get("user_type")
+        profile = request.FILES.get("image")
+        id = request.POST.get("id")
+        user = CustomUser.objects.get(id=id)
+        user.first_name=first_name
+        user.last_name = last_name
+        user.email = email
+        user.username = username
+        user.user_type = user_type
+        if profile:
+            user.profile = profile
+        user.save()
+        return redirect('userprofile', id=id)
 def home(request):
     return render(request, "home.html")
 
@@ -68,7 +115,7 @@ def add_menu_category(request):
     if request.method == "POST":
         name = request.POST['name']
         MenuCategory.objects.create(name = name)
-    return render(request, "add_menu.html")
+        return redirect("manage_menu_category")
 
 def manage_menu_category(request):
     menus = MenuCategory.objects.all()
@@ -114,6 +161,39 @@ def edit_menu_item(request, id):
         return redirect("/")
     menu_item = MenuItem.objects.get(id=id)
     return render(request, "edit_menu_item.html", {"menu_item":menu_item})
+
+def add_menu_image(request):
+    if request.method == "POST":
+        menu_id = request.POST['menu_id']
+        category_id = request.POST["category_id"]
+        image = request.FILES['image']
+        category = MenuCategory.objects.get(id=category_id)
+        menu = MenuItem.objects.get(id = menu_id)
+        MenuImage.objects.create(menu_item = menu, menu_category = category, image = image)
+        return redirect("add_menu_image")
+    menu_categories = MenuCategory.objects.all()
+    return render(request, "add_menu_image.html", {'categories': menu_categories})
+
+def manage_menu_image(request):
+    menu_images = MenuImage.objects.all()
+    return render(request, "manage_menu_image.html", {'images': menu_images})
+
+def edit_menu_image(request, id):
+    if request.method == "POST":
+        menu_id = request.POST['menu_id']
+        category_id = request.POST["category_id"]
+        image = request.FILES['image']
+        category = MenuCategory.objects.get(id=category_id)
+        menu = MenuItem.objects.get(id = menu_id)
+        menu_image = MenuImage.objects.get(id=id)
+        if image:
+            menu_image.image=image
+        menu_image.menu_item=menu
+        menu_image.menu_category = category
+        menu_image.save()
+        return redirect("edit_menu_image", id)
+    menu_image = MenuImage.objects.get(id=id)
+    return render(request, "edit_menu_image.html", {'menu_image':menu_image})
 
 def add_restaurant(request):
     if request.method == "POST":

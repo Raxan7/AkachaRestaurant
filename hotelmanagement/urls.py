@@ -13,4 +13,20 @@ urlpatterns = [
     path("add_user", views.add_user, name="add_user"),
     path("manage_user/<int:user>", views.manage_user, name="manage_user"),
     path("userprofile/<int:id>", views.userprofile, name="userprofile"),
+    path("edit_user", views.edit_user, name="edit_user"),
+    path("delete_user/<int:id>", views.delete_user, name="delete_user"),
+    path("deactivate_user/<int:id>", views.deactivate_user, name="deactivate_user"),
+    path("activate_user/<int:id>", views.activate_user, name="activate_user"),
+    
+    path("add_menu_category", views.add_menu_category, name="add_menu_category"),
+    path("edit_menu_category/<int:id>", views.edit_menu_category, name = "edit_menu_category"),
+    path("manage_menu_category", views.manage_menu_category, name="manage_menu_category"),
+    
+    path("add_menu_item", views.add_menu_item, name="add_menu_item"),
+    path("edit_menu_item/<int:id>", views.edit_menu_item, name = "edit_menu_item"),
+    path("manage_menu_item", views.manage_menu_item, name="manage_menu_item"),
+    
+    path("add_menu_image", views.add_menu_image, name="add_menu_image"),
+    path("edit_menu_image/<int:id>", views.edit_menu_image, name = "edit_menu_image"),
+    path("manage_menu_image", views.manage_menu_image, name="manage_menu_image"),
 ]
