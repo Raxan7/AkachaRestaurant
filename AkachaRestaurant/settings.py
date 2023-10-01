@@ -72,7 +72,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'hotelmanagement.processor.user_type_list',
             ],
         },
     },
@@ -128,11 +127,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-<<<<<<< Updated upstream
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, 'static'),
-# ]
-=======
 if 'DJANGO_SETTINGS_MODULE' in os.environ:
     # Production settings
     STATIC_ROOT = (os.path.join(BASE_DIR, 'static/'))
@@ -142,9 +136,7 @@ else:
         os.path.join(BASE_DIR, 'static'),
     ]
     
->>>>>>> Stashed changes
 
-STATIC_ROOT = (os.path.join(BASE_DIR, 'static/'))
 STATIC_URL = '/static/'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
