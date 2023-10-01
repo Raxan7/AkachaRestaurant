@@ -3,7 +3,7 @@ from django.contrib import messages
 from .models import CustomUser
 from .EmailBackEnd import EmailBackEnd
 from django.contrib.auth import login, logout
-from .models import Reservation, MenuImage, Restaurant, Review, MenuCategory, MenuItem, Order, OrderItem, Employee, Payment, Table
+from .models import User_type ,Reservation, MenuImage, Restaurant, Review, MenuCategory, MenuItem, Order, OrderItem, Employee, Payment, Table
 
 # Create your views here.
 def logins(request):
@@ -13,8 +13,16 @@ def logins(request):
         user = EmailBackEnd.authenticate(request, username, password)
         if user != None:
             login(request, user)
-            return redirect("home")
+            return redirect('home')
     return render(request, 'login.html')
+
+
+def home(request):
+    if request.user.is_authenticated:
+        user_type = request.user.user_type
+        return render(request, f"{user_type}/home.html")
+    else:
+        return redirect('login')
 
 def userprofile(request, id):
     user = CustomUser.objects.get(id=id)
@@ -24,12 +32,23 @@ def logout_user(request):
     logout(request)
     return redirect("login")
 
+def add_user_type(request):
+    if request.method=="POST":
+        user_type = request.POST.get('user_type')
+        User_type.objects.create(user_type=user_type)
+    return redirect('/')
+
 def register(request):
     if request.method == "POST":
         first_name = request.POST.get("firstname")
         last_name = request.POST.get("lastname")
         email = request.POST.get("email")
         password = request.POST.get("password")
+        user_types = request.POST.get("user_type")
+        if user_types != None:
+            user_type = User_type.objects.get(id=user_types)
+        else:
+            user_type = User_type.objects.get(id=5)
         if password:
             password2 = request.POST.get("password1")
             if password != password2:
@@ -41,7 +60,7 @@ def register(request):
             messages.error(request, 'Email Alredy Exists')
             return render(request, 'register.html')
         try:
-            user = CustomUser.objects.create_user(username=last_name, email=email, password=password,first_name=first_name,last_name=last_name,)
+            user = CustomUser.objects.create_user(user_type=user_type, username=first_name + last_name, email=email, password=password,first_name=first_name,last_name=last_name,)
             user.save()
         except:
             messages.error(request, 'Something Went Wrong ')
@@ -60,6 +79,13 @@ def delete_user(request, id):
         return redirect("manage_user", 2)
     else:
         return redirect("manage_user", 1)
+
+def deactivate_all_user(request):
+    users = CustomUser.objects.all()
+    for user in users:
+        user.is_active=False
+        user.save()
+        
 
 def deactivate_user(request, id):
     user = CustomUser.objects.get(id=id)
@@ -82,11 +108,8 @@ def activate_user(request, id):
 def add_user(request):
     return render(request, "add_user.html")
 
-def  manage_user(request, user):
-    if user==1:
-        users = CustomUser.objects.filter(user_type="customer")
-    else:
-        users=CustomUser.objects.exclude(user_type="customer")
+def  manage_user(request, id):
+    users=CustomUser.objects.filter(user_type=id)
     return render(request, "manage_user.html", {'users':users})
 
 def edit_user(request):
@@ -108,12 +131,10 @@ def edit_user(request):
             user.profile = profile
         user.save()
         return redirect('userprofile', id=id)
-def home(request):
-    return render(request, "home.html")
 
 def add_menu_category(request):
     if request.method == "POST":
-        name = request.POST['name']
+        name = request.POST['menu_name']
         MenuCategory.objects.create(name = name)
         return redirect("manage_menu_category")
 
