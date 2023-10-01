@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% load static %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'mystyle.css' %}" />
+    <title>Homepage</title>
+  </head>
+  <body>
+    <nav class="sidebar sidebar-offcanvas" id="sidebar">
+      <ul class="nav">
+        <li class="nav-item nav-profile">
+          <a href="{% url 'home'%}" class="nav-link">
+            <div class="nav-profile-image">
+              {% if user.profile %}
+                <img src="{{user.profile.url}}" alt="profile" />
+              {% endif %}
+              <span class="login-status online"></span>
+              <!-- change to offline or busy as needed -->
+            </div>
+            <div class="nav-profile-text d-flex flex-column">
+              <span class="font-weight-bold mb-2">{{user.username}}</span>
+              <span class="text-secondary text-small">{{user.user_type}}</span>
+            </div>
+            <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'home'%}">
+            <span class="menu-title">Dashboard</span>
+            <i class="mdi mdi-home menu-icon"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+            <span class="menu-title">Manage Users</span>
+            <i class="menu-arrow"></i>
+            <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+          </a>
+          <div class="collapse" id="ui-basic">
+            <ul class="nav flex-column sub-menu">
+              <li class="nav-item">
+                <a class="nav-link" href="{%url 'manage_user' 2%}">Employees</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{%url 'manage_user' 1%}">Customers</a>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{%url 'manage_menu_category'%}">
+            <span class="menu-title">Manage menu categories</span>
+            <i class="mdi mdi-contacts menu-icon"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'manage_menu_item'%}">
+            <span class="menu-title">Manage Menu Items</span>
+            <i class="mdi mdi-contacts menu-icon"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'manage_menu_image'%}">
+            <span class="menu-title">Manage Menu Images</span>
+            <i class="mdi mdi-contacts menu-icon"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">
+            <span class="menu-title">Manage sales</span>
+            <i class="mdi mdi-contacts menu-icon"></i>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </body>
+</html>
