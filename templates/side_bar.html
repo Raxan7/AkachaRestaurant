@@ -45,6 +45,9 @@
                 <a class="nav-link" href="{%url 'manage_user' user_type.id%}">{{user_type.user_type}}</a>
               </li>
               {%endfor%}
+              <li class="nav-item">
+                 <a class="nav-link" href="{% url 'add_user_type'%}">Add user types</a>
+              </li>
             </ul>
           </div>
         </li>

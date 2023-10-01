@@ -36,7 +36,8 @@ def add_user_type(request):
     if request.method=="POST":
         user_type = request.POST.get('user_type')
         User_type.objects.create(user_type=user_type)
-    return redirect('/')
+        return redirect('home')
+    return render(request, 'CEO/add_user_type.html')
 
 def register(request):
     if request.method == "POST":
