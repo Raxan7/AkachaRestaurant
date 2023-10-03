@@ -8,6 +8,8 @@ class CustomUser(AbstractUser):
     profile = models.ImageField(upload_to="profiles/",  default='profiles/default_profile.jpg')
     user_type = models.CharField(default="customer", max_length=50)
 
+    def __str__(self):
+        return self.id
 
 
 class Restaurant(models.Model):

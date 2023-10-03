@@ -1,28 +1,90 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import CustomUser
 from .EmailBackEnd import EmailBackEnd
 from django.contrib.auth import login, logout
-from .models import Reservation, MenuImage, Restaurant, Review, MenuCategory, MenuItem, Order, OrderItem, Employee, Payment, Table
+from .models import Reservation, MenuImage, Restaurant, Review, MenuCategory, MenuItem, Order, OrderItem, Employee, \
+    Payment, Table
+
+from allauth.account.views import SignupView
+
 
 # Create your views here.
 def logins(request):
-    if request.method=="POST":
-        username=request.POST.get('email')
-        password=request.POST.get('password')
+    if request.method == "POST":
+        username = request.POST.get('email')
+        password = request.POST.get('password')
         user = EmailBackEnd.authenticate(request, username, password)
         if user != None:
             login(request, user)
             return redirect("home")
     return render(request, 'login.html')
 
+
 def userprofile(request, id):
     user = CustomUser.objects.get(id=id)
-    return render(request, "user_details.html", {'userr':user})
+    return render(request, "user_details.html", {'userr': user})
+
 
 def logout_user(request):
     logout(request)
     return redirect("login")
+
+@login_required
+def profile(request):
+    user = request.user
+    return render(request, 'profile.html', {'user': user})
+
+
+class CustomRegistrationView(SignupView):
+    user_model = CustomUser
+    template_name = 'register.html'  # Use your custom registration template
+
+    def form_valid(self, form):
+        # Custom validation or additional logic can be added here
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Registration failed. Please check your input.')
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def signup(self, request, user):
+        # Custom user registration logic
+        first_name = request.POST.get("firstname")
+        last_name = request.POST.get("lastname")
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+
+        # You can add any other custom logic here
+        if password:
+            password2 = request.POST.get("password1")
+            if password != password2:
+                messages.error(request, 'Password do not match')
+                return redirect('register')  # Redirect to the registration page
+        else:
+            password = "12345678"
+        if CustomUser.objects.filter(email=email).exists():
+            messages.error(request, 'Email Already Exists')
+            return redirect('register')  # Redirect to the registration page
+
+        try:
+            user = CustomUser.objects.create_user(username=last_name, email=email, password=password,
+                                                  first_name=first_name, last_name=last_name)
+            user.save()
+        except:
+            messages.error(request, 'Something Went Wrong ')
+            return redirect('register')  # Redirect to the registration page
+
+        if password == "12345678":
+            messages.success(request, 'One Employee added successfully!')
+            return redirect('add_user')
+
+        # You can add any other logic after user creation
+
+        # Redirect to the success URL (e.g., login page)
+        return redirect('login.html')
+
 
 def register(request):
     if request.method == "POST":
@@ -36,22 +98,24 @@ def register(request):
                 messages.error(request, 'Password do not match')
                 return render(request, 'register.html')
         else:
-            password="12345678"
+            password = "12345678"
         if CustomUser.objects.filter(email=email).exists():
             messages.error(request, 'Email Alredy Exists')
             return render(request, 'register.html')
         try:
-            user = CustomUser.objects.create_user(username=last_name, email=email, password=password,first_name=first_name,last_name=last_name,)
+            user = CustomUser.objects.create_user(username=last_name, email=email, password=password,
+                                                  first_name=first_name, last_name=last_name, )
             user.save()
         except:
             messages.error(request, 'Something Went Wrong ')
             return render(request, 'register.html')
-        if password=="12345678":
+        if password == "12345678":
             messages.success(request, 'One Employee added successfully!')
             return redirect("add_user")
         return redirect("login")
     else:
         return render(request, 'register.html')
+
 
 def delete_user(request, id):
     user = CustomUser.objects.get(id=id)
@@ -61,33 +125,38 @@ def delete_user(request, id):
     else:
         return redirect("manage_user", 1)
 
+
 def deactivate_user(request, id):
     user = CustomUser.objects.get(id=id)
-    user.is_active=False
+    user.is_active = False
     user.save()
     if user.user_type == "Super":
         return redirect("manage_user", 2)
     else:
         return redirect("manage_user", 1)
 
+
 def activate_user(request, id):
     user = CustomUser.objects.get(id=id)
-    user.is_active=True
+    user.is_active = True
     user.save()
     if user.user_type == "Super":
         return redirect("manage_user", 2)
     else:
         return redirect("manage_user", 1)
+
 
 def add_user(request):
     return render(request, "add_user.html")
 
-def  manage_user(request, user):
-    if user==1:
+
+def manage_user(request, user):
+    if user == 1:
         users = CustomUser.objects.filter(user_type="customer")
     else:
-        users=CustomUser.objects.exclude(user_type="customer")
-    return render(request, "manage_user.html", {'users':users})
+        users = CustomUser.objects.exclude(user_type="customer")
+    return render(request, "manage_user.html", {'users': users})
+
 
 def edit_user(request):
     if request.method == "POST":
@@ -99,7 +168,7 @@ def edit_user(request):
         profile = request.FILES.get("image")
         id = request.POST.get("id")
         user = CustomUser.objects.get(id=id)
-        user.first_name=first_name
+        user.first_name = first_name
         user.last_name = last_name
         user.email = email
         user.username = username
@@ -108,29 +177,35 @@ def edit_user(request):
             user.profile = profile
         user.save()
         return redirect('userprofile', id=id)
+
+
 def home(request):
     return render(request, "home.html")
+
 
 def add_menu_category(request):
     if request.method == "POST":
         name = request.POST['name']
-        MenuCategory.objects.create(name = name)
+        MenuCategory.objects.create(name=name)
         return redirect("manage_menu_category")
+
 
 def manage_menu_category(request):
     menus = MenuCategory.objects.all()
-    return render(request, "manage_menu.html", {"menus":menus})
+    return render(request, "manage_menu.html", {"menus": menus})
+
 
 def edit_menu_category(request, id):
     if request.method == "POST":
         name = request.POST['name']
         menu = MenuCategory.objects.get(id=id)
-        menu.name=name
+        menu.name = name
         name.save()
         return redirect("/")
     menu = MenuCategory.objects.get(id=id)
-    return render(request, "edit_menu_category.html", {"menu":menu})
-    
+    return render(request, "edit_menu_category.html", {"menu": menu})
+
+
 def add_menu_item(request):
     if request.method == "POST":
         category_id = request.POST["category_id"]
@@ -138,12 +213,14 @@ def add_menu_item(request):
         description = request.POST['description']
         price = request.POST['price']
         category = MenuCategory.objects.get(id=category_id)
-        MenuItem.objects.create(name=name, description=description, price=price,category=category)
+        MenuItem.objects.create(name=name, description=description, price=price, category=category)
     return render(request, "add_menu_item.html")
+
 
 def manage_menu_item(request):
     menuItems = MenuItem.objects.all()
-    return render(request, "manage_menu_item.html", {'menuItems':menuItems})
+    return render(request, "manage_menu_item.html", {'menuItems': menuItems})
+
 
 def edit_menu_item(request, id):
     if request.method == "POST":
@@ -154,13 +231,14 @@ def edit_menu_item(request, id):
         price = request.POST['price']
         category = MenuCategory.objects.get(id=category_id)
         menuItem.name = name
-        menuItem.description=description
-        menuItem.price=price
-        menuItem.category=category
+        menuItem.description = description
+        menuItem.price = price
+        menuItem.category = category
         menuItem.save()
         return redirect("/")
     menu_item = MenuItem.objects.get(id=id)
-    return render(request, "edit_menu_item.html", {"menu_item":menu_item})
+    return render(request, "edit_menu_item.html", {"menu_item": menu_item})
+
 
 def add_menu_image(request):
     if request.method == "POST":
@@ -168,15 +246,17 @@ def add_menu_image(request):
         category_id = request.POST["category_id"]
         image = request.FILES['image']
         category = MenuCategory.objects.get(id=category_id)
-        menu = MenuItem.objects.get(id = menu_id)
-        MenuImage.objects.create(menu_item = menu, menu_category = category, image = image)
+        menu = MenuItem.objects.get(id=menu_id)
+        MenuImage.objects.create(menu_item=menu, menu_category=category, image=image)
         return redirect("add_menu_image")
     menu_categories = MenuCategory.objects.all()
     return render(request, "add_menu_image.html", {'categories': menu_categories})
 
+
 def manage_menu_image(request):
     menu_images = MenuImage.objects.all()
     return render(request, "manage_menu_image.html", {'images': menu_images})
+
 
 def edit_menu_image(request, id):
     if request.method == "POST":
@@ -184,16 +264,17 @@ def edit_menu_image(request, id):
         category_id = request.POST["category_id"]
         image = request.FILES['image']
         category = MenuCategory.objects.get(id=category_id)
-        menu = MenuItem.objects.get(id = menu_id)
+        menu = MenuItem.objects.get(id=menu_id)
         menu_image = MenuImage.objects.get(id=id)
         if image:
-            menu_image.image=image
-        menu_image.menu_item=menu
+            menu_image.image = image
+        menu_image.menu_item = menu
         menu_image.menu_category = category
         menu_image.save()
         return redirect("edit_menu_image", id)
     menu_image = MenuImage.objects.get(id=id)
-    return render(request, "edit_menu_image.html", {'menu_image':menu_image})
+    return render(request, "edit_menu_image.html", {'menu_image': menu_image})
+
 
 def add_restaurant(request):
     if request.method == "POST":
@@ -204,9 +285,11 @@ def add_restaurant(request):
         Restaurant.objects.create(name=name, location=location, description=description, contact=contact)
     return render(request, "add_restaurant.html")
 
+
 def manage_restaurant(request):
     restaurants = Restaurant.objects.all()
-    return render(request, "manage_restaurant.html", {"restaurants":restaurants})
+    return render(request, "manage_restaurant.html", {"restaurants": restaurants})
+
 
 def edit_restaurant(request, id):
     if request.method == "POST":
@@ -215,20 +298,21 @@ def edit_restaurant(request, id):
         location = request.POST['location']
         description = request.POST['description']
         contact = request.POST['contact']
-        restaurant.name=name
+        restaurant.name = name
         restaurant.location = location
-        restaurant.description=description
-        restaurant.contact=contact
+        restaurant.description = description
+        restaurant.contact = contact
         restaurant.save()
         return redirect("/")
     restaurant = Restaurant.objects.get(id=id)
-    return render(request, "edit_restaurant.html", {"restaurant":restaurant})
+    return render(request, "edit_restaurant.html", {"restaurant": restaurant})
+
 
 def add_table(request):
     if request.method == "POST":
         table_number = request.POST["table_number"]
         restaurant_id = request.POST["restaurant_id"]
         capacity = request.POST["capacity"]
-        restaurant = Restaurant.objects.get(id = restaurant_id)
+        restaurant = Restaurant.objects.get(id=restaurant_id)
         Table.objects.create(table_number=table_number, restaurant=restaurant, capacity=capacity)
     return render(request, "add_table.html")
