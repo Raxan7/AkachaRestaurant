@@ -82,6 +82,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'hotelmanagement.processor.user_type_list',
             ],
         },
     },
@@ -161,20 +162,28 @@ AUTHENTICATION_BACKENDS = (
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Email Settings
-DEFAULT_FROM_EMAIL = "manyerere201@gmail.com"
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_USE_SSL = False
-# EMAIL_HOST_USER = 'manyerere201@gmail.com'
-# EMAIL_HOST_PASSWORD = 'krishna#1#1'
+# DEFAULT_FROM_EMAIL = "manyerere201@gmail.com"
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.mailtrap.io'
+EMAIL_PORT = 2525
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = 'manyerere201@gmail.com'
+EMAIL_HOST_PASSWORD = '60062d40a3413812664f252d62b08d59'
 
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 7
 
 
-import mailtrap as mt
-
-mail = mt.Mail
+# import mailtrap as mt
+#
+# mail = mt.Mail(
+#     sender=mt.Address(email="mailtrap@example.com", name="MailTrap Test"),
+#     to=[mt.Address(email="manyerere201@gmail.com")],
+#     subject="You are awesome",
+#     text="COngrats for sending your first email",
+# )
+#
+# client = mt.MailtrapClient(token="60062d40a3413812664f252d62b08d59")
+# # client = mt.MailtrapClient(token="1696308438")
+# client.send(mail)

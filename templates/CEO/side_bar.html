@@ -42,12 +42,9 @@
             <ul class="nav flex-column sub-menu">
               {%for user_type in user_types %}
               <li class="nav-item">
-                <a class="nav-link" href="{%url 'manage_user' user_type.id%}">{{user_type.user_type}}</a>
+                <a class="nav-link" href="{%url 'manage_user' {{user_type.id}}%}">{{user_type.user_type}}</a>
               </li>
               {%endfor%}
-              <li class="nav-item">
-                 <a class="nav-link" href="{% url 'add_user_type'%}">Add user types</a>
-              </li>
             </ul>
           </div>
         </li>
@@ -73,12 +70,6 @@
           <a class="nav-link" href="#">
             <span class="menu-title">Manage sales</span>
             <i class="mdi mdi-contacts menu-icon"></i>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'food_item_list' %}">
-            <span class="menu-title">Manage Stocks</span>
-            <i class="mdi mdi mdi-stocking menu-icon"></i>
           </a>
         </li>
       </ul>

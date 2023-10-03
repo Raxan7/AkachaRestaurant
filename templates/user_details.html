@@ -40,8 +40,8 @@
                 </div>
                 <div class="row justify-content-between">
                   <h5 class="col">E-mail: <b class="text-success">{{userr.email}}</b> </h5>
-                  <p class="col btn btn-trasparent" id="togglep3"><i class="col mdi mdi-square-edit-outline menu-icon text-success mdi-24px"></i></p>
-                  <input style="display: none;" id="hiddenInput3" type="email" class="form-control form-control-lg col" name='email' value="{{userr.email}}">
+                  <p class="col btn btn-trasparent" id="togglep6"><i class="col mdi mdi-square-edit-outline menu-icon text-success mdi-24px"></i></p>
+                  <input style="display: none;" id="hiddenInput6" type="email" class="form-control form-control-lg col" name='email' value="{{userr.email}}">
                 </div>
                 <div class="row justify-content-between">
                   <h5 class="col">User Type: <b class="text-success">{{userr.user_type}}</b> </h5>
@@ -64,8 +64,9 @@
             <img class="img-fluid" src="{{userr.profile.url}}" alt="">
             {%endif%}
             <div class="row justify-content-between">
-              <p class="col btn btn-trasparent" id="togglep5"><i class="col mdi mdi-square-edit-outline menu-icon text-success mdi-24px"></i></p>
-              <input width="40px" style="display: none;" id="hiddenInput5" type="file" class="form-control form-control-lg col" name='image'>
+              <h5 class="col">profile: <b class="text-success">Profile</b> </h5>
+              <p class="col btn btn-trasparent" id="togglep3"><i class="col mdi mdi-square-edit-outline menu-icon text-success mdi-24px"></i></p>
+              <input width="40px" style="display: none;" id="hiddenInput3" type="file" class="form-control form-control-lg col" name='image'>
             </div>
             
   <center>
@@ -133,19 +134,18 @@ togglep4.addEventListener('click', function () {
       hiddenInput4.style.display = 'none'; // Hide the input field
   }
 });
-const togglep5 = document.getElementById('togglep5');
-const hiddenInput5 = document.getElementById('hiddenInput5');
-togglep5.addEventListener('click', function () {
-  // Toggle the visibility of the input field
-  if (hiddenInput5.style.display === 'none' || hiddenInput5.style.display === '') {
-      hiddenInput5.style.display = 'block'; // Show the input field
-  } else {
-      hiddenInput5.style.display = 'none'; // Hide the input field
-  }
-});
 </script>
 <script>
-
+const togglep6 = document.getElementById('togglep6');
+const hiddenInput6 = document.getElementById('hiddenInput6');
+togglep6.addEventListener('click', function () {
+  // Toggle the visibility of the input field
+  if (hiddenInput6.style.display === 'none' || hiddenInput6.style.display === '') {
+      hiddenInput6.style.display = 'block'; // Show the input field
+  } else {
+      hiddenInput6.style.display = 'none'; // Hide the input field
+  }
+});
 </script>
 </body>
 </html>
