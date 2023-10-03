@@ -13,7 +13,7 @@
                 <h3>{{message}}</h3>
                 {%endfor%}
                 <h4 class="font-weight-light">Add user</h6>
-                <form class="pt-3" action="{% url 'register'%}" method="POST">
+                <form class="pt-3" action="{% url 'add_user'%}" method="POST">
                     {% csrf_token %}
                   <div class="form-group">
                     <input type="text" class="form-control form-control-lg" id="exampleInputUsername1" name='firstname' placeholder="firstname">

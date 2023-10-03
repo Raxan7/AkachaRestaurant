@@ -18,8 +18,8 @@ urlpatterns = [
     path("delete_user/<int:id>", views.delete_user, name="delete_user"),
     path("deactivate_user/<int:id>", views.deactivate_user, name="deactivate_user"),
     path("activate_user/<int:id>", views.activate_user, name="activate_user"),
-    path("deactivate_all_user/", views.deactivate_all_user, name="deactivate_all_user"),
-    path("activate_all_user/", views.activate_all_user, name="activate_all_user"),
+    path("deactivate_all_user", views.deactivate_all_user, name="deactivate_all_user"),
+    path("activate_all_user", views.activate_all_user, name="activate_all_user"),
     
     path("add_menu_category", views.add_menu_category, name="add_menu_category"),
     path("edit_menu_category/<int:id>", views.edit_menu_category, name = "edit_menu_category"),
