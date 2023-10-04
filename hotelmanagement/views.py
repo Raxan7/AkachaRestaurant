@@ -7,7 +7,9 @@ from django.contrib.auth import login, logout
 
 from allauth.account.views import SignupView
 
-from .models import User_type ,Reservation, MenuImage, Restaurant, Review, MenuCategory, MenuItem, Order, OrderItem, Employee, Payment, Table
+from .models import User_type, Reservation, MenuImage, Restaurant, Review, MenuCategory, MenuItem, Order, OrderItem, \
+    Employee, Payment, Table
+from .user_validator import user_validator
 
 
 # Create your views here.
@@ -19,20 +21,16 @@ def logins(request):
         if user != None:
             login(request, user)
             return redirect('home')
-    return render(request, 'login.html')
+    return render(request, "login.html")
 
 
 def home(request):
-    if request.user.is_authenticated:
-        user_type = request.user.user_type
-        return render(request, f"{user_type}/home.html")
-    else:
-        return redirect('login')
+    return render(request, f"{user_validator(request)}/home.html")
 
 
 def userprofile(request, id):
     user = CustomUser.objects.get(id=id)
-    return render(request, "user_details.html", {'userr': user})
+    return render(request, f"{user_validator(request)}/user_details.html", {'userr': user})
 
 
 def logout_user(request):
@@ -96,11 +94,11 @@ class CustomRegistrationView(SignupView):
 
 
 def add_user_type(request):
-    if request.method=="POST":
+    if request.method == "POST":
         user_type = request.POST.get('user_type')
         User_type.objects.create(user_type=user_type)
         return redirect('home')
-    return render(request, 'CEO/add_user_type.html')
+    return render(request, f"{user_validator(request)}/add_user_type.html")
 
 
 def register(request):
@@ -109,34 +107,23 @@ def register(request):
         last_name = request.POST.get("lastname")
         email = request.POST.get("email")
         password = request.POST.get("password")
-        user_types = request.POST.get("user_type")
-        if user_types != None:
-            user_type = User_type.objects.get(id=user_types)
-        else:
-            user_type = User_type.objects.get(id=5)
-        if password:
-            password2 = request.POST.get("password1")
-            if password != password2:
-                messages.error(request, 'Password do not match')
-                return render(request, 'register.html')
-        else:
-            password = "12345678"
+        password2 = request.POST.get("password1")
+        user_type = User_type.objects.get(id=5)
+        fullname = first_name + last_name
+        if CustomUser.objects.filter(username=fullname).exists():
+            fullname = email
+        if password != password2:
+            messages.error(request, 'Password do not match')
+            return render(request, "register.html")
         if CustomUser.objects.filter(email=email).exists():
             messages.error(request, 'Email Alredy Exists')
-            return render(request, 'register.html')
-        try:
-            user = CustomUser.objects.create_user(user_type=user_type, username=first_name + last_name, email=email,
-                                                  password=password,first_name=first_name,last_name=last_name,)
-            user.save()
-        except:
-            messages.error(request, 'Something Went Wrong ')
-            return render(request, 'register.html')
-        if password == "12345678":
-            messages.success(request, 'One Employee added successfully!')
-            return redirect("add_user")
+            return render(request, "register.html")
+        user = CustomUser.objects.create_user(user_type=user_type, username=fullname, email=email, password=password,
+                                              first_name=first_name, last_name=last_name, )
+        user.save()
         return redirect("login")
     else:
-        return render(request, 'register.html')
+        return render(request, "register.html")
 
 
 def delete_user(request, id):
@@ -148,40 +135,67 @@ def delete_user(request, id):
         return redirect("manage_user", 1)
 
 
-def deactivate_all_user(request):
-    users = CustomUser.objects.all()
+def activate_all_user(request):
+    users = CustomUser.objects.exclude(user_type=4)
     for user in users:
-        user.is_active=False
-        user.save()
+        user.is_active = True
+    return redirect("manage_user", 0)
+
+
+def deactivate_all_user(request):
+    users = CustomUser.objects.exclude(user_type=4)
+    for user in users:
+        user.is_active = False
+    return redirect("manage_user", 0)
 
 
 def deactivate_user(request, id):
     user = CustomUser.objects.get(id=id)
-    user.is_active = False
+    if user.user_type != "CEO":
+        user.is_active = False
+        user.save()
     user.save()
-    if user.user_type == "Super":
-        return redirect("manage_user", 2)
-    else:
-        return redirect("manage_user", 1)
+    user_type = user.user_type
+    user_types = User_type.objects.get(user_type=user_type)
+    type_id = user_types.id
+    return redirect("manage_user", type_id)
 
 
 def activate_user(request, id):
     user = CustomUser.objects.get(id=id)
     user.is_active = True
     user.save()
-    if user.user_type == "Super":
-        return redirect("manage_user", 2)
-    else:
-        return redirect("manage_user", 1)
+    user_type = user.user_type
+    user_types = User_type.objects.get(user_type=user_type)
+    type_id = user_types.id
+    return redirect("manage_user", type_id)
 
 
 def add_user(request):
-    return render(request, "add_user.html")
+    if request.method == "POST":
+        first_name = request.POST.get("firstname")
+        last_name = request.POST.get("lastname")
+        email = request.POST.get("email")
+        user_type = request.POST.get("user_type")
+        password = "12345678"
+        fullname = first_name + last_name
+        if CustomUser.objects.filter(username=fullname).exists():
+            fullname = email
+        if CustomUser.objects.filter(email=email).exists():
+            messages.error(request, 'Email Alredy Exists')
+            return render(request, f"{user_validator(request)}/add_user.html")
+        user = CustomUser.objects.create_user(user_type=user_type, username=fullname, email=email, password=password,
+                                              first_name=first_name, last_name=last_name, )
+        user.save()
+    return render(request, f"{user_validator(request)}/add_user.html")
 
 
-def  manage_user(request, id):
-    users=CustomUser.objects.filter(user_type=id)
-    return render(request, "manage_user.html", {'users':users})
+def manage_user(request, id):
+    if id == 0:
+        users = CustomUser.objects.all()
+    else:
+        users = CustomUser.objects.filter(user_type=id)
+    return render(request, f"{user_validator(request)}/manage_user.html", {'users': users})
 
 
 def edit_user(request):
@@ -208,13 +222,13 @@ def edit_user(request):
 def add_menu_category(request):
     if request.method == "POST":
         name = request.POST['menu_name']
-        MenuCategory.objects.create(name = name)
+        MenuCategory.objects.create(name=name)
         return redirect("manage_menu_category")
 
 
 def manage_menu_category(request):
     menus = MenuCategory.objects.all()
-    return render(request, "manage_menu.html", {"menus": menus})
+    return render(request, f"{user_validator(request)}/manage_menu.html", {"menus": menus})
 
 
 def edit_menu_category(request, id):
@@ -225,7 +239,7 @@ def edit_menu_category(request, id):
         name.save()
         return redirect("/")
     menu = MenuCategory.objects.get(id=id)
-    return render(request, "edit_menu_category.html", {"menu": menu})
+    return render(request, f"{user_validator(request)}/edit_menu_category.html", {"menu": menu})
 
 
 def add_menu_item(request):
@@ -236,12 +250,12 @@ def add_menu_item(request):
         price = request.POST['price']
         category = MenuCategory.objects.get(id=category_id)
         MenuItem.objects.create(name=name, description=description, price=price, category=category)
-    return render(request, "add_menu_item.html")
+    return render(request, f"{user_validator(request)}/add_menu_item.html")
 
 
 def manage_menu_item(request):
     menuItems = MenuItem.objects.all()
-    return render(request, "manage_menu_item.html", {'menuItems': menuItems})
+    return render(request, f"{user_validator(request)}/manage_menu_item.html", {'menuItems': menuItems})
 
 
 def edit_menu_item(request, id):
@@ -259,7 +273,7 @@ def edit_menu_item(request, id):
         menuItem.save()
         return redirect("/")
     menu_item = MenuItem.objects.get(id=id)
-    return render(request, "edit_menu_item.html", {"menu_item": menu_item})
+    return render(request, f"{user_validator(request)}/edit_menu_item.html", {"menu_item": menu_item})
 
 
 def add_menu_image(request):
@@ -272,12 +286,12 @@ def add_menu_image(request):
         MenuImage.objects.create(menu_item=menu, menu_category=category, image=image)
         return redirect("add_menu_image")
     menu_categories = MenuCategory.objects.all()
-    return render(request, "add_menu_image.html", {'categories': menu_categories})
+    return render(request, f"{user_validator(request)}/add_menu_image.html", {'categories': menu_categories})
 
 
 def manage_menu_image(request):
     menu_images = MenuImage.objects.all()
-    return render(request, "manage_menu_image.html", {'images': menu_images})
+    return render(request, f"{user_validator(request)}/manage_menu_image.html", {'images': menu_images})
 
 
 def edit_menu_image(request, id):
@@ -295,7 +309,7 @@ def edit_menu_image(request, id):
         menu_image.save()
         return redirect("edit_menu_image", id)
     menu_image = MenuImage.objects.get(id=id)
-    return render(request, "edit_menu_image.html", {'menu_image': menu_image})
+    return render(request, f"{user_validator(request)}/edit_menu_image.html", {'menu_image': menu_image})
 
 
 def add_restaurant(request):
@@ -305,12 +319,12 @@ def add_restaurant(request):
         description = request.POST['description']
         contact = request.POST['contact']
         Restaurant.objects.create(name=name, location=location, description=description, contact=contact)
-    return render(request, "add_restaurant.html")
+    return render(request, f"{user_validator(request)}/add_restaurant.html")
 
 
 def manage_restaurant(request):
     restaurants = Restaurant.objects.all()
-    return render(request, "manage_restaurant.html", {"restaurants": restaurants})
+    return render(request, f"{user_validator(request)}/manage_restaurant.html", {"restaurants": restaurants})
 
 
 def edit_restaurant(request, id):
@@ -327,7 +341,7 @@ def edit_restaurant(request, id):
         restaurant.save()
         return redirect("/")
     restaurant = Restaurant.objects.get(id=id)
-    return render(request, "edit_restaurant.html", {"restaurant": restaurant})
+    return render(request, f"{user_validator(request)}/edit_restaurant.html", {"restaurant": restaurant})
 
 
 def add_table(request):
@@ -337,4 +351,4 @@ def add_table(request):
         capacity = request.POST["capacity"]
         restaurant = Restaurant.objects.get(id=restaurant_id)
         Table.objects.create(table_number=table_number, restaurant=restaurant, capacity=capacity)
-    return render(request, "add_table.html")
+    return render(request, f"{user_validator(request)}/add_table.html")

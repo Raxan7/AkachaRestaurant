@@ -42,27 +42,21 @@
             <ul class="nav flex-column sub-menu">
               {%for user_type in user_types %}
               <li class="nav-item">
-                <a class="nav-link" href="{%url 'manage_user' {{user_type.id}}%}">{{user_type.user_type}}</a>
+                <a class="nav-link" href="{%url 'manage_user' user_type.id%}">{{user_type.user_type}}</a>
               </li>
               {%endfor%}
+              <li class="nav-item">
+                <a class="nav-link" href="{%url 'manage_user' 0%}">All</a>
+              </li>
+              <li class="nav-item">
+                 <a class="nav-link" href="{% url 'add_user_type'%}">Add user types</a>
+              </li>
             </ul>
           </div>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{%url 'manage_menu_category'%}">
             <span class="menu-title">Manage menu categories</span>
-            <i class="mdi mdi-contacts menu-icon"></i>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'manage_menu_item'%}">
-            <span class="menu-title">Manage Menu Items</span>
-            <i class="mdi mdi-contacts menu-icon"></i>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'manage_menu_image'%}">
-            <span class="menu-title">Manage Menu Images</span>
             <i class="mdi mdi-contacts menu-icon"></i>
           </a>
         </li>

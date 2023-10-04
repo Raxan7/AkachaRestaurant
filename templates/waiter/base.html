@@ -32,22 +32,13 @@
     <div class="container-scroller">
         {% include 'navigation.html'%}
         <div class="container-fluid page-body-wrapper">
-          {% if user.user_type == "CEO" %}
-          {% include 'side_bar.html'%}
-          {%else%}
-            {% include 'side_bar.html'%}
-            {%endif%}
+          {% include 'waiter/side_bar.html'%}
             <div class="main-panel">
                 {% block content%}
                 {%endblock%}
                 {% include 'footer.html' with user=user id=id %}
             </div>
         </div>
-        {% if user.user_type == 'CEO' %}
-        anana
-        {%else%}
-        sdfghjkl;
-        {%endif%}
     </div>
        <!-- container-scroller -->
     <!-- plugins:js -->

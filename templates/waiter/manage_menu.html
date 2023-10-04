@@ -1,0 +1,55 @@
+{% extends 'waiter/base.html' %}
+{% block content%}
+<form action="{% url 'add_menu_category'%}" method="post">
+    {% csrf_token %}
+    <div class="row justify-content-between">
+        <center>
+        <button style="margin-top: 1rem;margin-bottom: 1rem;" type="button" class="btn btn-block btn-gradient-primary" id="togglep">Add Menu Category</i></button>
+        
+        <div style="display: none;"  id="hiddenInput">
+            <input style="width: 50%;" type="text" class="form-control form-control-lg col" name='menu_name' placeholder="Category Name">
+                
+            <div class="mt-3">
+                <button type="submit" class="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn">Save</a>
+            </div>
+        </div>
+        </center>
+    </div>
+</form>
+<div class="card" style="margin: 1rem;">
+    <div class="card-body">
+      <h4 class="card-title">Menu Categories</h4>
+      <table class="table table-white table-responsive">
+        <thead>
+          <tr>
+            <th> Category Id</th>
+            <th> Category name </th>
+            <th colspan="2" style="text-align: center;"><a href="{%url 'manage_menu_item'%}"></a>Menu Items</th>
+          </tr>
+        </thead>
+        <tbody>
+            {%for menu in menus%}
+          <tr>
+            <td>{{menu.id}}</td>
+            <td> {{menu.name}}</td>
+            <td></td>
+          </tr>
+          {%endfor%}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <script>
+    const togglep = document.getElementById('togglep');
+    const hiddenInput = document.getElementById('hiddenInput');
+    // Add a click event listener to the p
+    togglep.addEventListener('click', function () {
+        // Toggle the visibility of the input field
+        if (hiddenInput.style.display === 'none' || hiddenInput.style.display === '') {
+            hiddenInput.style.display = 'block'; // Show the input field
+        } else {
+            hiddenInput.style.display = 'none'; // Hide the input field
+        }
+    });
+  </script>
+{%endblock%}
