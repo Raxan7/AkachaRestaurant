@@ -42,12 +42,12 @@ def register(request):
         last_name = request.POST.get("lastname")
         email = request.POST.get("email")
         password = request.POST.get("password")
-        password2 = request.POST.get("password2")
+        password1 = request.POST.get("password1")
         user_type = User_type.objects.get(id=5)
         fullname = first_name+last_name
         if CustomUser.objects.filter(username=fullname).exists():
             fullname = email
-        if password != password2:
+        if password != password1:
             messages.error(request, 'Password do not match')
             return render(request, "register.html")
         if CustomUser.objects.filter(email=email).exists():
