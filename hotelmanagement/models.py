@@ -16,9 +16,6 @@ class CustomUser(AbstractUser):
     profile = models.ImageField(upload_to="profiles/", default='profiles/default_profile.jpg')
     user_type = models.ForeignKey(User_type, on_delete=models.SET_NULL, null=True, default=None)
 
-    def __str__(self):
-        return self.id
-
 
 class Restaurant(models.Model):
     id = models.AutoField(primary_key=True)
@@ -108,8 +105,8 @@ class Payment(models.Model):
 
 
 class Messages(models.Model):
-    sender = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
-    receiver = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
+    sender = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE, related_name="message_sender")
+    receiver = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE, related_name="message_receiver")
     time_sent = models.TimeField(auto_now=True)
     opened = models.BooleanField(default=False)
     message = models.TextField()
