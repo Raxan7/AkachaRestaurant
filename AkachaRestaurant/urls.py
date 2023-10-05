@@ -24,8 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('hotelmanagement.urls')),
     path("stock/", include("StockManagerApp.urls")),
-
-    path('accounts/', include('allauth.urls'))
+    path("Email/", include("EmailApp.urls")),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

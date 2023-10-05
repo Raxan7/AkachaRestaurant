@@ -1,11 +1,19 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.sites.shortcuts import get_current_site
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode
+
+from EmailApp.token import account_activation_token
 from .models import CustomUser
 from .EmailBackEnd import EmailBackEnd
 from django.contrib.auth import login, logout
 
-from allauth.account.views import SignupView
+from django.utils.encoding import force_bytes
+from django.core.mail import EmailMessage
+
 
 from .models import User_type, Reservation, MenuImage, Restaurant, Review, MenuCategory, MenuItem, Order, OrderItem, \
     Employee, Payment, Table
@@ -19,7 +27,7 @@ def logins(request):
         password = request.POST.get('password')
         user = EmailBackEnd.authenticate(request, username, password)
         if user != None:
-            login(request, user)
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             return redirect('home')
     return render(request, "login.html")
 
@@ -42,55 +50,6 @@ def logout_user(request):
 def profile(request):
     user = request.user
     return render(request, 'profile.html', {'user': user})
-
-
-class CustomRegistrationView(SignupView):
-    user_model = CustomUser
-    template_name = 'register.html'  # Use your custom registration template
-
-    def form_valid(self, form):
-        # Custom validation or additional logic can be added here
-        return super().form_valid(form)
-
-    def form_invalid(self, form):
-        messages.error(self.request, 'Registration failed. Please check your input.')
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def signup(self, request, user):
-        # Custom user registration logic
-        first_name = request.POST.get("firstname")
-        last_name = request.POST.get("lastname")
-        email = request.POST.get("email")
-        password = request.POST.get("password")
-
-        # You can add any other custom logic here
-        if password:
-            password2 = request.POST.get("password1")
-            if password != password2:
-                messages.error(request, 'Password do not match')
-                return redirect('register')  # Redirect to the registration page
-        else:
-            password = "12345678"
-        if CustomUser.objects.filter(email=email).exists():
-            messages.error(request, 'Email Already Exists')
-            return redirect('register')  # Redirect to the registration page
-
-        try:
-            user = CustomUser.objects.create_user(username=last_name, email=email, password=password,
-                                                  first_name=first_name, last_name=last_name)
-            user.save()
-        except:
-            messages.error(request, 'Something Went Wrong ')
-            return redirect('register')  # Redirect to the registration page
-
-        if password == "12345678":
-            messages.success(request, 'One Employee added successfully!')
-            return redirect('add_user')
-
-        # You can add any other logic after user creation
-
-        # Redirect to the success URL (e.g., login page)
-        return redirect('login.html')
 
 
 def add_user_type(request):
@@ -120,8 +79,24 @@ def register(request):
             return render(request, "register.html")
         user = CustomUser.objects.create_user(user_type=user_type, username=fullname, email=email, password=password,
                                               first_name=first_name, last_name=last_name, )
+        user.is_active = False
         user.save()
-        return redirect("login")
+
+        current_site = get_current_site(request)
+        mail_subject = 'Activation link has been sent to your email account'
+        message = render_to_string('acc_active_email.html', {
+            'user': user,
+            'domain': current_site.domain,
+            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+            'token': account_activation_token.make_token(user),
+        })
+        to_email = email
+        email = EmailMessage(
+            mail_subject, message, to=[to_email]
+        )
+        email.send()
+        return HttpResponse('Please confirm your email address to complete the registration')
+        # return redirect("login")
     else:
         return render(request, "register.html")
 
