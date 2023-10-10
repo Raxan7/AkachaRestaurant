@@ -1,0 +1,15 @@
+<!-- templates/inventory/food_item_list.html -->
+{% extends 'Storekeeper/base.html' %}
+
+{% block content %}
+<br>
+
+<div class="col-md-4 grid-margin stretch-card" style="margin-left: 20px;">
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">Manage Your Sales</h4>
+      <a href="{% url 'purchases_register' %}">Enter the Purchases Made</a>
+    </div>
+  </div>
+</div>
+{% endblock content %}
