@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-from allauth.account import app_settings as allauth_settings
 from pathlib import Path
 import os
 
@@ -31,7 +30,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -45,14 +44,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.facebook',
+    'elasticemailbackend',
+    'djrill',
+    'sms',
 
     'hotelmanagement',
     'StockManagerApp',
+    'EmailApp',
 ]
 
 MIDDLEWARE = [
@@ -64,7 +62,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'AkachaRestaurant.urls'
@@ -152,28 +149,38 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 AUTH_USER_MODEL = "hotelmanagement.CustomUser"
-AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
-
-    'hotelmanagement.EmailBackEnd.EmailBackEnd',
-)
+# AUTHENTICATION_BACKENDS = (
+#     'hotelmanagement.EmailBackEnd.EmailBackEnd',
+# )
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Email Settings
 # DEFAULT_FROM_EMAIL = "manyerere201@gmail.com"
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.mailtrap.io'
-EMAIL_PORT = 2525
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
-EMAIL_HOST_USER = 'manyerere201@gmail.com'
-EMAIL_HOST_PASSWORD = '60062d40a3413812664f252d62b08d59'
+# EMAIL_BACKEND = 'elasticemailbackend.backend.ElasticEmailBackend'
+# ELASTICEMAIL_API_KEY = '6CE59081AF3E89613C696A6738677D09333854132FB9857B476584BAEDF9A15EA8BC96F1442300C783FED0EB598927BB'
 
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
-ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 7
+# EMAIL_BACKEND = 'djrill.mail.backends.djrill.DjrillBackend'
+# MANDRILL_API_KEY = '27954D4610C8FDA10DD9DA75D8645089103516CA7F974BAF4A79915F6DA29D55D1AC270BBB416358CC9223CF7767F0DF'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_HOST = 'smtp.elasticemail.com'
+# EMAIL_PORT = 2525
+# EMAIL_USE_TLS = True
+# EMAIL_USE_SSL = False
+# EMAIL_HOST_USER = 'manyerere201@gmail.com'
+# EMAIL_HOST_PASSWORD = '60062d40a3413812664f252d62b08d59'
 
+# EMAIL_HOST = 'smtp.sendgrid.net'
+# EMAIL_PORT = 25
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = 'apikey'
+# EMAIL_HOST_PASSWORD = '7ejCV29NqXPs61mAQlMXUUAOtSMquEuU'
+
+# MAILCHIMP_API_KEY = 'ed94a621a05d489d278a2e0c9952d92e-us21'
+# MAILCHIMP_LIST_ID = '7136a05b56'
+
+TWILLIO_ACCOUNT_SID = 'SKa383992c58ca633572af69c62afd8473'
+TWILLIO_AUTH_TOKEN = '57ccbaaaa717ae61fb949da7b808078e'
 
 # import mailtrap as mt
 #
@@ -187,3 +194,15 @@ ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 7
 # client = mt.MailtrapClient(token="60062d40a3413812664f252d62b08d59")
 # # client = mt.MailtrapClient(token="1696308438")
 # client.send(mail)
+
+# from twilio.rest import Client
+#
+# account_sid = "SKa383992c58ca633572af69c62afd8473"
+# auth_token = "57ccbaaaa717ae61fb949da7b808078e"
+# client = Client(account_sid, auth_token)
+# message = client.messages.create(
+#     body="Hi there from Django",
+#     from_= "+17272337364",
+#     to="+255742106833"
+# )
+# print(message.sid)
