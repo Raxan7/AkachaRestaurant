@@ -79,22 +79,22 @@ def register(request):
             return render(request, "register.html")
         user = CustomUser.objects.create_user(user_type=user_type, username=fullname, email=email, password=password,
                                               first_name=first_name, last_name=last_name, )
-        user.is_active = False
+        # user.is_active = False --> Code to disable login until user verification
         user.save()
 
-        current_site = get_current_site(request)
-        mail_subject = 'Activation link has been sent to your email account'
-        message = render_to_string('acc_active_email.html', {
-            'user': user,
-            'domain': current_site.domain,
-            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-            'token': account_activation_token.make_token(user),
-        })
-        to_email = email
-        email = EmailMessage(
-            mail_subject, message, to=[to_email]
-        )
-        email.send()
+        # current_site = get_current_site(request)
+        # mail_subject = 'Activation link has been sent to your email account'
+        # message = render_to_string('acc_active_email.html', {
+        #     'user': user,
+        #     'domain': current_site.domain,
+        #     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+        #     'token': account_activation_token.make_token(user),
+        # })
+        # to_email = email
+        # email = EmailMessage(
+        #     mail_subject, message, to=[to_email]
+        # )
+        # email.send()
         return HttpResponse('Please confirm your email address to complete the registration')
         # return redirect("login")
     else:
@@ -159,7 +159,8 @@ def add_user(request):
         if CustomUser.objects.filter(email=email).exists():
             messages.error(request, 'Email Alredy Exists')
             return render(request, f"{user_validator(request)}/add_user.html")
-        user = CustomUser.objects.create_user(user_type=user_type, username=fullname, email=email, password=password,
+        user_type_obj = User_type.objects.get(id=user_type)
+        user = CustomUser.objects.create_user(user_type=user_type_obj, username=fullname, email=email, password=password,
                                               first_name=first_name, last_name=last_name, )
         user.save()
     return render(request, f"{user_validator(request)}/add_user.html")

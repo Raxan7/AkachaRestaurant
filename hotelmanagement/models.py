@@ -106,8 +106,30 @@ class Payment(models.Model):
 
 
 class Messages(models.Model):
+
+    MESSAGE_TYPE = (
+        ("Authorization", "Authorization"),
+        ("Request", "Request"),
+        ("Denial", "Denial"),
+        ("Unknown", "Unknown")
+    )
+
+    USER_CATEGORY = (
+        ("CEO", "CEO"),
+        ("StoreKeeper", "StoreKeeper"),
+        ("Chef", "Chef"),
+        ("Waiter", "Waiter"),
+        ("Customer", "Customer"),
+        ("None", "None")
+    )
+
+    objects = models.Manager()
     sender = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE, related_name="message_sender")
+    sender_category = models.CharField(choices=USER_CATEGORY, max_length=255, default=USER_CATEGORY[5])
     receiver = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE, related_name="message_receiver")
+    receiver_category = models.CharField(choices=USER_CATEGORY, max_length=255, default=USER_CATEGORY[5])
     time_sent = models.TimeField(auto_now=True)
     opened = models.BooleanField(default=False)
     message = models.TextField()
+    message_type = models.CharField(choices=MESSAGE_TYPE, max_length=255, default=MESSAGE_TYPE[3])
+
