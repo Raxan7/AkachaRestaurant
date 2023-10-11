@@ -1,0 +1,22 @@
+<!-- templates/inventory/food_item_list.html -->
+{% extends 'Storekeeper/base.html' %}
+
+{% block content %}
+<br>
+
+<div class="col-md-4 grid-margin stretch-card" style="margin-left: 20px;">
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">All Purchases Made</h4>
+      <ul class="list-star">
+        {% for obj in objs %}
+          <li>
+            <a href="{% url 'view_purchase_item' obj.pk %}">{{ food_item.name }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+      <a href="{% url 'add_food_item' %}">Add Food Item</a>
+    </div>
+  </div>
+</div>
+{% endblock content %}

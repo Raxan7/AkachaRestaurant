@@ -6,14 +6,16 @@ from django.contrib.auth.models import AbstractUser
 class User_type(models.Model):
     id = models.AutoField(primary_key=True)
     user_type = models.CharField(max_length=50)
+
     def __str__(self):
         return self.user_type
-    
+
+
 class CustomUser(AbstractUser):
     id = models.AutoField(primary_key=True)
-    profile = models.ImageField(upload_to="profiles/",  default='profiles/default_profile.jpg')
+    profile = models.ImageField(upload_to="profiles/", default='profiles/default_profile.jpg')
     user_type = models.ForeignKey(User_type, on_delete=models.SET_NULL, null=True, default=None)
-
+    is_active = models.BooleanField(default=False)
 
 
 class Restaurant(models.Model):
@@ -23,6 +25,7 @@ class Restaurant(models.Model):
     contact = models.CharField(max_length=255)
     rating = models.DecimalField(max_digits=3, decimal_places=2)
     description = models.TextField()
+
 
 class Table(models.Model):
     id = models.AutoField(primary_key=True)
@@ -34,6 +37,7 @@ class Table(models.Model):
 class MenuCategory(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
+
 
 class MenuItem(models.Model):
     id = models.AutoField(primary_key=True)
@@ -48,11 +52,13 @@ class MenuItemRating(models.Model):
     menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
     rating = models.PositiveIntegerField()
 
+
 class MenuImage(models.Model):
     id = models.AutoField(primary_key=True)
     image = models.ImageField(upload_to="menus/")
     menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
     is_primary = models.BooleanField(default=False)
+
 
 class Reservation(models.Model):
     id = models.AutoField(primary_key=True)
@@ -62,6 +68,7 @@ class Reservation(models.Model):
     reservation_date = models.DateTimeField()
     party_size = models.PositiveIntegerField()
 
+
 class Order(models.Model):
     id = models.AutoField(primary_key=True)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
@@ -69,11 +76,13 @@ class Order(models.Model):
     menu_items = models.ManyToManyField(MenuItem, through='OrderItem')
     order_date = models.DateTimeField()
 
+
 class OrderItem(models.Model):
     id = models.AutoField(primary_key=True)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
+
 
 class Review(models.Model):
     id = models.AutoField(primary_key=True)
@@ -82,6 +91,7 @@ class Review(models.Model):
     rating = models.DecimalField(max_digits=3, decimal_places=2)
     comment = models.TextField()
     date = models.DateTimeField()
+
 
 class Employee(models.Model):
     id = models.AutoField(primary_key=True)
@@ -92,9 +102,40 @@ class Employee(models.Model):
     role = models.CharField(max_length=255)
     salary = models.DecimalField(max_digits=10, decimal_places=2)
 
+
 class Payment(models.Model):
     id = models.AutoField(primary_key=True)
     reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     payment_date = models.DateTimeField()
     payment_method = models.CharField(max_length=255)
+
+
+class Messages(models.Model):
+
+    MESSAGE_TYPE = (
+        ("Authorization", "Authorization"),
+        ("Request", "Request"),
+        ("Denial", "Denial"),
+        ("Unknown", "Unknown")
+    )
+
+    USER_CATEGORY = (
+        ("CEO", "CEO"),
+        ("StoreKeeper", "StoreKeeper"),
+        ("Chef", "Chef"),
+        ("Waiter", "Waiter"),
+        ("Customer", "Customer"),
+        ("None", "None")
+    )
+
+    objects = models.Manager()
+    sender = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE, related_name="message_sender")
+    sender_category = models.CharField(choices=USER_CATEGORY, max_length=255, default=USER_CATEGORY[5])
+    receiver = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE, related_name="message_receiver")
+    receiver_category = models.CharField(choices=USER_CATEGORY, max_length=255, default=USER_CATEGORY[5])
+    time_sent = models.TimeField(auto_now=True)
+    opened = models.BooleanField(default=False)
+    message = models.TextField()
+    message_type = models.CharField(choices=MESSAGE_TYPE, max_length=255, default=MESSAGE_TYPE[3])
+

@@ -1,0 +1,21 @@
+<!-- templates/inventory/edit_food_item.html -->
+{% extends 'Chef/base.html' %}
+
+{% block content %}
+<br>
+<div class="col-md-6 grid-margin stretch-card" style="margin-left: auto; margin-right: auto;">
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">Edit Stock Item</h4>
+      <p class="card-description"> Basic form layout </p>
+      <form class="forms-sample" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+        <button class="btn btn-light">Cancel</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

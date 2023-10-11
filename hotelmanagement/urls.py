@@ -7,6 +7,10 @@ from . import views
 
 urlpatterns = [
     path("", views.logins, name="login"),
+    # path("login", views.logins, name="login"),
+
+    path('accounts/profile/', views.profile, name='profile'),
+    # path("register", views.CustomRegistrationView.as_view(), name="register"),
     path("register", views.register, name="register"),
     path("home", views.home, name="home"),
     path("logout", views.logout_user, name="logout"),
