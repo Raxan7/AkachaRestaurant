@@ -40,13 +40,19 @@ class MenuItem(models.Model):
     category = models.ForeignKey(MenuCategory, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     description = models.TextField()
-    price = models.DecimalField(max_digits=6, decimal_places=2)
+    price = models.FloatField()
+    average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
+
+class MenuItemRating(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)  # Link the rating to a user
+    menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
+    rating = models.PositiveIntegerField()
 
 class MenuImage(models.Model):
     id = models.AutoField(primary_key=True)
     image = models.ImageField(upload_to="menus/")
-    menu_category = models.ForeignKey(MenuCategory, on_delete=models.CASCADE)
     menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
+    is_primary = models.BooleanField(default=False)
 
 class Reservation(models.Model):
     id = models.AutoField(primary_key=True)

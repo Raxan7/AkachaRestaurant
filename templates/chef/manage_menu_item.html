@@ -1,4 +1,45 @@
 {% extends 'chef/base.html' %}
 {% block content%}
 
+<div class="col-lg-12 grid-margin stretch-card" style="margin: 5px;">
+    <div class="card">
+      <div class="card-body">
+
+        <div class="row">
+          <div class="col">
+            <div class="row">
+              <h4 class="col card-title">Menu Items Management</h4>
+              <h4><a href="{% url 'add_menu_item'%}">Add menu item</a></h4>
+            </div>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Name</th>
+                <th>Descriptions</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for categories in menuitems %}
+                <tr>
+                  <td class="py-1">
+                    {{categories.category.name}}
+                  </td>
+                  <td>{{categories.name}}</td>
+                  <td>{{categories.description}}</td>
+                  <td>{{categories.price}}</td>
+                  <td>{{ userr.user_type }}</td>
+                  
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 {%endblock%}

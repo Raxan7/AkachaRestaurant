@@ -3,8 +3,11 @@ from django.contrib import messages
 from .models import CustomUser
 from .EmailBackEnd import EmailBackEnd
 from django.contrib.auth import login, logout
-from .models import User_type ,Reservation, MenuImage, Restaurant, Review, MenuCategory, MenuItem, Order, OrderItem, Employee, Payment, Table
+from .models import User_type ,Reservation, MenuItemRating, MenuImage, Restaurant, Review, MenuCategory, MenuItem, Order, OrderItem, Employee, Payment, Table
 from .user_validator import user_validator
+from django.http import JsonResponse
+from django.shortcuts import render, get_object_or_404, redirect
+from django.db.models import Avg
 
 # Create your views here.
 def logins(request):
@@ -67,12 +70,14 @@ def delete_user(request, id):
     else:
         return redirect("manage_user", 1)
 
+#0 means all user types present
 def activate_all_user(request):
     users = CustomUser.objects.exclude(user_type=4)
     for user in users:
         user.is_active = True
     return redirect("manage_user", 0)  
  
+ #0 means all user types present
 def deactivate_all_user(request):
     users = CustomUser.objects.exclude(user_type=4)
     for user in users:
@@ -167,16 +172,48 @@ def edit_menu_category(request, id):
 def add_menu_item(request):
     if request.method == "POST":
         category_id = request.POST["category_id"]
-        name = request.POST['name']
+        name = request.POST['item_name']
         description = request.POST['description']
-        price = request.POST['price']
+        price = float(request.POST['price'])
         category = MenuCategory.objects.get(id=category_id)
         MenuItem.objects.create(name=name, description=description, price=price,category=category)
-    return render(request, f"{user_validator(request)}/add_menu_item.html")
+    categories = MenuCategory.objects.all()
+    return render(request, f"{user_validator(request)}/add_menu_item.html", {'menucategories':categories})
 
 def manage_menu_item(request):
     menuItems = MenuItem.objects.all()
-    return render(request, f"{user_validator(request)}/manage_menu_item.html", {'menuItems':menuItems})
+    menu_items = []
+    for menuitem in menuItems:
+        primary_image = MenuImage.objects.filter(menu_item=menuitem).first()
+        menu_items.append({
+            'menuitems':menuitem,
+            'menuimage':primary_image
+        })
+    return render(request, f"{user_validator(request)}/manage_menu_item.html", {'menu_items':menu_items})
+
+def menu_item_description(request, item_id):
+    menuitem = MenuItem.objects.get(id = item_id)
+    images = MenuImage.objects.filter(menu_item = menuitem)
+    return render(request, f"{user_validator(request)}/menu_description.html", {'images':images, 'menuitem':menuitem})
+
+
+def rate_menu_item(request, menu_item_id):
+    menu_item = get_object_or_404(MenuItem, pk=menu_item_id)
+    has_rated = MenuItemRating.objects.filter(user=request.user, menu_item=menu_item).exists()
+
+    if request.method == 'POST' and not has_rated:
+        rating = int(request.POST.get('rating'))
+        menu_item_rating = MenuItemRating(user=request.user, menu_item=menu_item, rating=rating)
+        menu_item_rating.save()
+
+        # Calculate and update the average rating for the menu item
+        menu_item.average_rating = MenuItemRating.objects.filter(menu_item=menu_item).aggregate(Avg('rating'))['rating__avg']
+        menu_item.save()
+
+        return redirect('menu_item_detail', menu_item_id=menu_item_id)
+
+    return render(request, f"{user_validator(request)}/rate_menu_item.html", {'menu_item': menu_item, 'has_rated': has_rated})
+
 
 def edit_menu_item(request, id):
     if request.method == "POST":
@@ -198,14 +235,18 @@ def edit_menu_item(request, id):
 def add_menu_image(request):
     if request.method == "POST":
         menu_id = request.POST['menu_id']
-        category_id = request.POST["category_id"]
-        image = request.FILES['image']
-        category = MenuCategory.objects.get(id=category_id)
+        image = request.FILES.get('image')
         menu = MenuItem.objects.get(id = menu_id)
-        MenuImage.objects.create(menu_item = menu, menu_category = category, image = image)
+        MenuImage.objects.create(menu_item = menu, image = image)
         return redirect("add_menu_image")
-    menu_categories = MenuCategory.objects.all()
-    return render(request, f"{user_validator(request)}/add_menu_image.html", {'categories': menu_categories})
+    menuitems = MenuItem.objects.all()
+    return render(request, f"{user_validator(request)}/add_menu_image.html", {'menuitems':menuitems})
+
+#ajax to get menu items when adding imge
+def get_items(request):
+    category_id = request.GET.get('category_id')
+    items = MenuItem.objects.filter(menucategory__id = category_id).values('id', 'name')
+    return JsonResponse({'items': list(items)})
 
 def manage_menu_image(request):
     menu_images = MenuImage.objects.all()

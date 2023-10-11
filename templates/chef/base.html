@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="{% static 'assets/vendors/css/vendor.bundle.base.css'%}">
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css'%}">
     <link rel="stylesheet" href="{% static 'awesome/css/all.css'%}">
+    <!--jQuery-->
+    <link rel="stylesheet" href="{% static "jqvmap/jqvmap.min.css" %}">
     <!-- endinject -->
     <!-- Plugin css for this page -->
     <!-- End plugin css for this page -->
@@ -53,6 +55,19 @@
     <script src="{% static 'assets/js/hoverable-collapse.js'%}"></script>
     <script src="{% static 'assets/js/misc.js'%}"></script>
     <script src=""{% static 'awesome/js/all.css'%}""></script>
+    <!-- jQuery -->
+<script src="{% static "jquery/jquery.min.js"  %}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="{% static "jquery-ui/jquery-ui.min.js"  %}"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+  $.widget.bridge('uibutton', $.ui.button)
+</script>
+    <!-- JQVMap -->
+    <script src="{% static "jqvmap/jquery.vmap.min.js"  %}"></script>
+    <script src="{% static "jqvmap/maps/jquery.vmap.usa.js"  %}"></script>
+    <!-- jQuery Knob Chart -->
+    <script src="{% static "jquery-knob/jquery.knob.min.js"  %}"></script>
     <!-- endinject -->
     <!-- Custom js for this page -->
     <script src="{% static 'assets/js/dashboard.js'%}"></script>
