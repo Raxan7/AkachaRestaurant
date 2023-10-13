@@ -11,8 +11,8 @@
       <ul class="list-star">
         {% for food_item in food_items %}
           <li>
-            <a href="{% url 'view_food_item' food_item.pk %}">{{ food_item.name }}</a>
-            - <a href="{% url 'request_food_items' %}">Request</a>
+            <a href="{% url 'view_food_item' food_item.pk %}"><strong style="font-size: 15px;">{{ food_item.name }}</strong></a>
+            - <a href="{% url 'request_food_items' %}"><button class="btn btn-secondary me-2">Request</button></a>
           </li>
         {% endfor %}
       </ul>
