@@ -65,9 +65,11 @@ width: 10rem;
 .submit input:hover{
 background-color: #ffb7b7;
 }
-h2{
+h1, h2, h3, h4, h5, h6{
 color: #75bb6d;
+text-align: center;
 }
+
 a{
   text-decoration: none;
 }

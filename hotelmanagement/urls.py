@@ -32,8 +32,10 @@ urlpatterns = [
     path("add_menu_item", views.add_menu_item, name="add_menu_item"),
     path("edit_menu_item/<int:id>", views.edit_menu_item, name = "edit_menu_item"),
     path("manage_menu_item", views.manage_menu_item, name="manage_menu_item"),
+     path("menu_item_description/<int:item_id>", views.menu_item_description, name="menu_item_description"),
     
     path("add_menu_image", views.add_menu_image, name="add_menu_image"),
     path("edit_menu_image/<int:id>", views.edit_menu_image, name = "edit_menu_image"),
     path("manage_menu_image", views.manage_menu_image, name="manage_menu_image"),
+    path("get_items", views.get_items, name="get_items"),
 ]
