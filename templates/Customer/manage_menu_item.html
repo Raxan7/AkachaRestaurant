@@ -15,51 +15,54 @@
                 <h6 class="card-text">Food Price: {{menu_item.menuitems.price}}/=</h6>
                 <div class="col">
                     <center>
-                        <a style="margin-bottom: 2px;" href="" class="col btn btn-warning"><i class="fa fa-plus fa-solid"></i>Cart</a>
+                      <button class="btn btn-warning rate-button" data-item-id="{{menu_item.menuitems.id}}"><i class="fa fa-plus fa-solid"></i>Cart</button>
                         <a style="margin-bottom: 2px;"  href="{% url 'menu_item_description' menu_item.menuitems.id %}" class="col btn btn-success">Descriptions</a>
                         
-                        <button class="btn btn-primary rate-button" data-item-id="{{ menu_item.id }}">Rate this item</button>
+                        <button class="btn btn-primary rate-buttonn" data-item-id="{{ menu_item.menuitems.id }}">Rate this item</button>
                     </center>
                 </div>
             </div>
 
         </div>
-        <div id="modal-{{ menu_item.id }}" class="modal" tabindex="-1">
+        <div id="modal-{{ menu_item.menuitems.id }}" class="modal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title">Rate {{ menu_item.name }}</h5>
-                  <button type="button" class="close" data-dismiss="modal" data-item-id="{{ menu_item.id }}">
+                  <h5 class="modal-title">Rate {{ menu_item.menuitems.name }}</h5>
+                  <button type="button" class="close" data-dismiss="modal" data-item-id="{{ menu_item.menuitems.id }}">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
                 <div class="modal-body">
-                  <form class="rating-form">
+                  <form method="POST" action="{% url 'add_order'%}">
                     {% csrf_token %}
                     <div class="form-group">
-                      <label for="rating">Rating:</label>
+                      <label for="rating">Ordering</label>
                       <input type="hidden" name="rating" value="0" class="form-control rating-value">
                     </div>
                     <div class="rating">
-                      <i class="fa fa-star" data-star="1"></i>
-                      <i class="fa fa-star" data-star="2"></i>
-                      <i class="fa fa-star" data-star="3"></i>
-                      <i class="fa fa-star" data-star="4"></i>
-                      <i class="fa fa-star" data-star="5"></i>
+                        <div class="form-group">
+                          <select class="form-control form-control-lg" name="table_id" id="">
+                            {% for table in tables %}
+                            <option class="form-control form-control-lg" value="{{table.id}}">{{table.table_number}}</option>
+                            {% endfor %}
+                          </select>
+                          <div class="form-group">
+                            <input type="text" name="menu_id" value="{{menu_item.menuitems.id}}">
+                          </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="close btn btn-secondary" data-dismiss="modal">Cancell Order</button>
+                      <button type="submit" class="btn btn-primary">Submit Order</button>
                     </div>
                   </form>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <button type="submit" class="btn btn-primary">Submit Rating</button>
                 </div>
               </div>
             </div>
           </div>
     </div>
+    </div>
     {% endfor %}
- </div>
-</div>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       const rateButtons = document.querySelectorAll(".rate-button");
@@ -118,6 +121,8 @@
       });
     });
   </script>
+
+
   {% comment %} <h1>Menu Items</h1>
 
   {% for menu_item in menu_items %}

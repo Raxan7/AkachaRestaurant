@@ -9,7 +9,7 @@ urlpatterns = [
     path("", views.logins, name="login"),
     # path("login", views.logins, name="login"),
 
-    path('accounts/profile/', views.profile, name='profile'),
+    # path('accounts/profile/', views.profile, name='profile'),
     # path("register", views.CustomRegistrationView.as_view(), name="register"),
     path("register", views.register, name="register"),
     path("home", views.home, name="home"),
@@ -38,4 +38,9 @@ urlpatterns = [
     path("edit_menu_image/<int:id>", views.edit_menu_image, name = "edit_menu_image"),
     path("manage_menu_image", views.manage_menu_image, name="manage_menu_image"),
     path("get_items", views.get_items, name="get_items"),
+    
+    path("add_table", views.add_table, name="add_table"),
+    path("manage_table", views.manage_table, name="manage_table"),
+    
+    path("add_order", views.add_order, name = "add_order"),
 ]

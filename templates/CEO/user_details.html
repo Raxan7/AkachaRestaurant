@@ -46,7 +46,11 @@
                 <div class="row justify-content-between">
                   <h5 class="col">User Type: <b class="text-success">{{userr.user_type}}</b> </h5>
                   <p class="col btn btn-trasparent" id="togglep4"><i class="col mdi mdi-square-edit-outline menu-icon text-success mdi-24px"></i></p>
-                  <input style="display: none;" id="hiddenInput4" type="text" class="form-control form-control-lg col" name='user_type' value="{{userr.user_type}}">
+                  <select style="display: none;" id="hiddenInput4" name="user_type" id="">
+                    {% for user_type in user_types%}
+                    <option value="{{user_type.id}}">{{user_type.user_type}}</option>
+                    {% endfor %}
+                  </select>
                 </div>
             </div>
         </div>

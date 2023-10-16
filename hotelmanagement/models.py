@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-
+import datetime
 
 # Create your models here.
 class User_type(models.Model):
@@ -29,7 +29,7 @@ class Restaurant(models.Model):
 
 class Table(models.Model):
     id = models.AutoField(primary_key=True)
-    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+    # restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     table_number = models.CharField(max_length=10)
     capacity = models.PositiveIntegerField()
 
@@ -71,18 +71,18 @@ class Reservation(models.Model):
 
 class Order(models.Model):
     id = models.AutoField(primary_key=True)
-    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+    # restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     table = models.ForeignKey(Table, on_delete=models.CASCADE)
     menu_items = models.ManyToManyField(MenuItem, through='OrderItem')
-    order_date = models.DateTimeField()
-
+    ordered_time = models.DateTimeField(auto_now_add=True)
+    received_time = models.DateTimeField(auto_now_add=True)
+    send = models.BooleanField(default=False)
 
 class OrderItem(models.Model):
     id = models.AutoField(primary_key=True)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
-
 
 class Review(models.Model):
     id = models.AutoField(primary_key=True)
@@ -138,4 +138,3 @@ class Messages(models.Model):
     opened = models.BooleanField(default=False)
     message = models.TextField()
     message_type = models.CharField(choices=MESSAGE_TYPE, max_length=255, default=MESSAGE_TYPE[3])
-
