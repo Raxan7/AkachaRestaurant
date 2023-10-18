@@ -3,7 +3,7 @@ from django.contrib import messages
 from .models import CustomUser
 from .EmailBackEnd import EmailBackEnd
 from django.contrib.auth import login, logout
-from .models import User_type ,Reservation, MenuItemRating, MenuImage, Restaurant, Review, MenuCategory, MenuItem, Order, OrderItem, Employee, Payment, Table
+from .models import User_type ,Reservation,Messages, MenuItemRating, MenuImage, Restaurant, Review, MenuCategory, MenuItem, Order, OrderItem, Employee, Payment, Table
 from .user_validator import user_validator
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -323,6 +323,23 @@ def add_order(request):
         # quantity = request.POST.get('quantity')
         table = Table.objects.get(id = table_id)
         menu_item = MenuItem.objects.get(id = menu_id)
-        Order.objects.create(table = table , menu_items=menu_item)
+        receiver_id = request.user.id
+        receiver = CustomUser.objects.get(id = receiver_id)
+        order = Order.objects.create(table = table , menu_items=menu_item, order_receiver = receiver)
+        order.save()
+        user_type = User_type.objects.get(id = 5)
+        message = f"There is a {menu_item.name} request at table number {table.table_number}"
+        Messages.objects.create(sender = receiver, order= order, message=message, receiver_category=user_type )
     return redirect('manage_menu_item')
         
+def my_order(request):
+    user = request.user
+    orders = Order.objects.filter(order_receiver = user)
+    myorders=[]
+    for order in orders:
+        primary_image = MenuImage.objects.filter(menu_item=order.menu_items).first()
+        myorders.append({
+            'orders':order,
+            'menuimage':primary_image
+        })
+    return render(request, f"{user_validator(request)}/myorder.html", {'myorders':myorders})

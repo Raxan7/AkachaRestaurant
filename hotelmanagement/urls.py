@@ -43,4 +43,5 @@ urlpatterns = [
     path("manage_table", views.manage_table, name="manage_table"),
     
     path("add_order", views.add_order, name = "add_order"),
+    path("my_order", views.my_order, name = "my_order"),
 ]

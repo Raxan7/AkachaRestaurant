@@ -1,9 +1,12 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
+
+from hotelmanagement.models import Messages
 from hotelmanagement.user_validator import user_validator
 
 from .forms import StockForm, PurchasesForm, RequestFoodFromStore
 from .models import Stock, StockPurchases, ChefStockResource
+from hotelmanagement.message_handler import send_message
 from .helper import get_context
 
 
@@ -73,6 +76,9 @@ def purchases_detail(request, pk):
 
 
 def request_food_items_view(request):
+
+    # display messages
+    system_sms = Messages.objects.all().order_by('-time_sent')
     # Request food item from Store
     if request.method == 'POST':
         form = RequestFoodFromStore(request.POST)
@@ -83,24 +89,33 @@ def request_food_items_view(request):
             stock_object = Stock.objects.get(pk=name_request)
             is_authorized = False
             if int(quantity_request) > stock_object.quantity:
-                messages.error(request, "The requested amount is not available", fail_silently=True)
+                messages.error(request,
+                               f"The amount of {stock_object.name} available is {stock_object.quantity} units",
+                               fail_silently=True)
             else:
                 stock_object.quantity = stock_object.quantity - int(quantity_request)
                 is_authorized = True
                 stock_object.save()
 
             if is_authorized:
-                chef_model = ChefStockResource.objects.create(
-                    name=stock_object.name,
-                    description=stock_object.description,
-                    quantity=int(quantity_request),
-                    expiration_date=stock_object.expiration_date,
-                    reorder_quantity=(3/4*int(quantity_request))
-                )
+                if ChefStockResource.objects.get(pk=name_request):
+                    chef_model = ChefStockResource.objects.get(pk=name_request)
+                    chef_model.quantity = chef_model.quantity + int(quantity_request)
+                else:
+                    chef_model = ChefStockResource.objects.create(
+                        name=stock_object.name,
+                        description=stock_object.description,
+                        quantity=int(quantity_request),
+                        expiration_date=stock_object.expiration_date,
+                        reorder_quantity=(3 / 4 * int(quantity_request))
+                    )
                 chef_model.save()
-            # form.save(commit=False)
+                message = f"{request.user} - {str(request.user.user_type)} has taken {quantity_request} from Store"
+                send_message(request.user, str(request.user.user_type),
+                             message, "Request")
             form.save()
+            return redirect('food_item_list')
     else:
         form = RequestFoodFromStore()
     return render(request, f'StockManagerApp/{user_validator(request)}/request_food_item.html',
-                  {'form': form})
+                  {'form': form, 'system_sms': system_sms})

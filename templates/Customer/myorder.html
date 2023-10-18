@@ -4,32 +4,37 @@
  <h3 style="text-align: center;">Food Menu</h3>
 <div class="container">
  <div class="row">
-    {% for menu_item in menu_items %}
+    {% for myorder in myorders %}
     <div class="col-md-4">
         <div class="card mb-4">
-            {% if menu_item.menuimage.image %}
-            <img src="{{menu_item.menuimage.image.url}}" class="card-img-top" alt="{{item.name}}">
+            {% if myorder.menuimage.image %}
+            <img src="{{myorder.menuimage.image.url}}" class="card-img-top" alt="{{item.name}}">
             {% endif %}
             <div class="card-body">
-                <h5 class="card-title">Food Name: {{menu_item.menuitems.name}}</h5>
-                <h6 class="card-text">Food Price: {{menu_item.menuitems.price}}/=</h6>
+                <h5 class="card-title">Food Name: {{myorder.orders.menu_items.name}}</h5>
+                <h5 class="card-title">Food Name: {{myorder.orders.send}}</h5>
+                {% if myorder.orders.order_processor == None %}
+                {% else %}
+                <h5 class="card-title">Food Name: {{myorder.orders.order_processor}}</h5>
+                {% endif %}
+                <h6 class="card-text">Food Price: {{myorder.orders.menu_items.price}}/=</h6>
                 <div class="col">
                     <center>
-                      <button class="btn btn-warning rate-button" data-item-id="{{menu_item.menuitems.id}}"><i class="fa fa-plus fa-solid"></i>Cart</button>
-                        <a style="margin-bottom: 2px;"  href="{% url 'menu_item_description' menu_item.menuitems.id %}" class="col btn btn-success">Descriptions</a>
+                      <button class="btn btn-warning rate-button" data-item-id="{{myorder.orders.id}}"><i class="fa fa-plus fa-solid"></i>Cart</button>
+                        <a style="margin-bottom: 2px;"  href="{% url 'menu_item_description' myorder.orders.id %}" class="col btn btn-success">Descriptions</a>
                         
-                        <button class="btn btn-primary rate-buttonn" data-item-id="{{ menu_item.menuitems.id }}">Rate this item</button>
+                        <button class="btn btn-primary rate-buttonn" data-item-id="{{ myorder.orders.id }}">Rate this item</button>
                     </center>
                 </div>
             </div>
 
         </div>
-        <div id="modal-{{ menu_item.menuitems.id }}" class="modal" tabindex="-1">
+        <div id="modal-{{ myorder.orders.id }}" class="modal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title">Order {{ menu_item.menuitems.name }}</h5>
-                  <button type="button" class="close" data-dismiss="modal" data-item-id="{{ menu_item.menuitems.id }}">
+                  <h5 class="modal-title">Order {{ myorder.orders.name }}</h5>
+                  <button type="button" class="close" data-dismiss="modal" data-item-id="{{ myorder.orders.id }}">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
@@ -48,7 +53,7 @@
                             {% endfor %}
                           </select>
                           <br><br>
-                            <input class="form-control form-control-lg" type="hidden" name="menu_id" value="{{menu_item.menuitems.id}}">
+                            <input class="form-control form-control-lg" type="hidden" name="menu_id" value="{{myorder.orders.id}}">
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="close btn btn-secondary" data-dismiss="modal">Cancell Order</button>
@@ -124,7 +129,7 @@
 
   {% comment %} <h1>Menu Items</h1>
 
-  {% for menu_item in menu_items %}
+  {% for menu_item in myorders %}
     <div class="menu-item">
       <h2>{{ menu_item.name }}</h2>
       <p>{{ menu_item.description }}</p>
