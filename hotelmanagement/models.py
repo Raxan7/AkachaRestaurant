@@ -75,7 +75,7 @@ class Order(models.Model):
     table = models.ForeignKey(Table, on_delete=models.CASCADE)
     # menu_items = models.ManyToManyField(MenuItem, through='OrderItem')
     menu_items = models.ForeignKey(MenuItem, on_delete=models.CASCADE, null=True)
-    ordered_time = models.DateTimeField(auto_now=True)
+    ordered_time = models.DateTimeField(default=datetime.datetime.now())
     start_processing_time = models.DateTimeField(null=True, blank=True)
     received_time = models.DateTimeField(null=True, blank=True)
     order_processor = models.ForeignKey(CustomUser, related_name="processor", on_delete=models.DO_NOTHING, null=True)

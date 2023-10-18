@@ -8,6 +8,7 @@ from .user_validator import user_validator
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Avg
+import datetime
 
 # Create your views here.
 def logins(request):
@@ -325,9 +326,9 @@ def add_order(request):
         menu_item = MenuItem.objects.get(id = menu_id)
         receiver_id = request.user.id
         receiver = CustomUser.objects.get(id = receiver_id)
-        order = Order.objects.create(table = table , menu_items=menu_item, order_receiver = receiver)
+        order = Order.objects.create(table = table, ordered_time = datetime.datetime.now() , menu_items=menu_item, order_receiver = receiver)
         order.save()
-        user_type = User_type.objects.get(id = 5)
+        user_type = User_type.objects.get(id = 1)
         message = f"There is a {menu_item.name} request at table number {table.table_number}"
         Messages.objects.create(sender = receiver, order= order, message=message, receiver_category=user_type )
     return redirect('manage_menu_item')
@@ -343,3 +344,25 @@ def my_order(request):
             'menuimage':primary_image
         })
     return render(request, f"{user_validator(request)}/myorder.html", {'myorders':myorders})
+
+def process_order(request, id):
+    order = Order.objects.get(id = id)
+    order.order_processor = request.user
+    order.start_processing_time = datetime.datetime.now()
+    order.save()
+    return redirect('home')
+
+def send_order(request, id):
+    order = Order.objects.get(id = id)
+    order.send = True
+    order.received_time = datetime.datetime.now()
+    order.save()
+    return redirect('home')
+
+def waiter_activity_check(request):
+    orders = Order.objects.all()
+    return render(request, f"{user_validator(request)}/waiter_activity_check.html", {'orders':orders})
+
+def manage_sale(request):
+    orders = Order.objects.all()
+    return render(request, f"{user_validator(request)}/manage_sales.html", {'orders':orders})

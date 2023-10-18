@@ -8,7 +8,7 @@ def user_type_list(request):
 def message_analyser(request):
     try:
         user = request.user
-        messages = Messages.objects.filter(receiver_category=user.user_type)
+        messages = Messages.objects.filter(receiver_category=user.user_type, order__send=False)
         return {'messagess':messages}
     except:
         

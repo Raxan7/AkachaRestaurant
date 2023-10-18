@@ -1,0 +1,26 @@
+{% extends 'CEO/base.html' %}
+{% block content%}
+<div class="card" style="margin: 1rem;">
+    <div class="card-body">
+      <h4 class="card-title">Sales Measures</h4>
+      <table class="table table-white table-responsive">
+        <thead>
+          <tr>
+            <th>Menu Item</th>
+            <th> Price </th>
+            <th> Date Time</th>
+          </tr>
+        </thead>
+        <tbody>
+            {%for order in orders%}
+          <tr>
+            <td>{{order.menu_items.name}}</td>
+            <td> {{order.menu_items.price}}</td>
+            <td>{{order.ordered_time}}</td>
+          </tr>
+          {%endfor%}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{%endblock%}

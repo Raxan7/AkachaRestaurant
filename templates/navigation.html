@@ -65,9 +65,22 @@
                     <h6 class="preview-subject ellipsis mb-1 font-weight-normal">{{ sms.message }}</h6>
                     <p class="text-gray mb-0">{{ sms.sender.first_name }} {{  sms.sender.last_name  }}</p>
                   </div>
+                  
+                {% if sms.order.menu_items %}
+                  <!--Check if there is one processing the order-->
+                  {% if sms.order.order_processor %}
+                  <!--check if order processor is current user-->
+                  {% if sms.order.order_processor == user %}
+                  <a href="{% url 'send_order' sms.order.id%}" class="btn-success col">Send order</a>
+                  {% endif %}
+                  {% else %}
+                  <a href="{% url 'process_order' sms.order.id%}" class="btn-warning p-3 mb-0">process order</a>
+                  {%endif%}
+                {% endif %}
                 </a>
                 <div class="dropdown-divider"></div>
               {% endfor %}
+            </div>
 <!--              <div class="dropdown-divider"></div>-->
 <!--              <a class="dropdown-item preview-item">-->
 <!--                <div class="preview-thumbnail">-->
