@@ -3,11 +3,12 @@ from django.contrib import messages
 from .models import CustomUser
 from .EmailBackEnd import EmailBackEnd
 from django.contrib.auth import login, logout
-from .models import User_type ,Reservation, MenuItemRating, MenuImage, Restaurant, Review, MenuCategory, MenuItem, Order, OrderItem, Employee, Payment, Table
+from .models import User_type ,Reservation,Messages, MenuItemRating, MenuImage, Restaurant, Review, MenuCategory, MenuItem, Order, OrderItem, Employee, Payment, Table
 from .user_validator import user_validator
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Avg
+import datetime
 
 # Create your views here.
 def logins(request):
@@ -75,6 +76,7 @@ def activate_all_user(request):
     users = CustomUser.objects.exclude(user_type=4)
     for user in users:
         user.is_active = True
+        user.save()
     return redirect("manage_user", 0)  
  
  #0 means all user types present
@@ -82,6 +84,7 @@ def deactivate_all_user(request):
     users = CustomUser.objects.exclude(user_type=4)
     for user in users:
         user.is_active = False
+        user.save()
     return redirect("manage_user", 0)       
 
 def deactivate_user(request, id):
@@ -110,7 +113,8 @@ def add_user(request):
         first_name = request.POST.get("firstname")
         last_name = request.POST.get("lastname")
         email = request.POST.get("email")
-        user_type = request.POST.get("user_type")
+        user_types = request.POST.get("user_type")
+        user_type = User_type.objects.get(id = user_types)
         password = "12345678"
         fullname = first_name+last_name
         if CustomUser.objects.filter(username=fullname).exists():
@@ -135,9 +139,10 @@ def edit_user(request):
         last_name = request.POST.get("lastname")
         email = request.POST.get("email")
         username = request.POST.get("username")
-        user_type = request.POST.get("user_type")
+        user_types = request.POST.get("user_type")
         profile = request.FILES.get("image")
         id = request.POST.get("id")
+        user_type = User_type.objects.get(id = user_types)
         user = CustomUser.objects.get(id=id)
         user.first_name=first_name
         user.last_name = last_name
@@ -181,7 +186,7 @@ def add_menu_item(request):
     return render(request, f"{user_validator(request)}/add_menu_item.html", {'menucategories':categories})
 
 def manage_menu_item(request):
-    menuItems = MenuItem.objects.all()
+    menuItems = MenuItem.objects.all().order_by('-name')
     menu_items = []
     for menuitem in menuItems:
         primary_image = MenuImage.objects.filter(menu_item=menuitem).first()
@@ -189,7 +194,8 @@ def manage_menu_item(request):
             'menuitems':menuitem,
             'menuimage':primary_image
         })
-    return render(request, f"{user_validator(request)}/manage_menu_item.html", {'menu_items':menu_items})
+    tables = Table.objects.all()
+    return render(request, f"{user_validator(request)}/manage_menu_item.html", {'menu_items':menu_items, 'tables':tables})
 
 def menu_item_description(request, item_id):
     menuitem = MenuItem.objects.get(id = item_id)
@@ -301,8 +307,62 @@ def edit_restaurant(request, id):
 def add_table(request):
     if request.method == "POST":
         table_number = request.POST["table_number"]
-        restaurant_id = request.POST["restaurant_id"]
-        capacity = request.POST["capacity"]
-        restaurant = Restaurant.objects.get(id = restaurant_id)
-        Table.objects.create(table_number=table_number, restaurant=restaurant, capacity=capacity)
-    return render(request, f"{user_validator(request)}/add_table.html")
+        # restaurant_id = request.POST["restaurant_id"]
+        capacity = request.POST["table_capacity"]
+        # restaurant = Restaurant.objects.get(id = restaurant_id)
+        Table.objects.create(table_number=table_number, capacity=capacity)
+    return redirect("manage_table")
+
+def manage_table(request):
+    tables = Table.objects.all()
+    return render(request, f"{user_validator(request)}/manage_table.html", {'tables':tables})
+
+def add_order(request):
+    if request.method == "POST":
+        table_id = request.POST.get('table_id')
+        menu_id = request.POST.get('menu_id')
+        # quantity = request.POST.get('quantity')
+        table = Table.objects.get(id = table_id)
+        menu_item = MenuItem.objects.get(id = menu_id)
+        receiver_id = request.user.id
+        receiver = CustomUser.objects.get(id = receiver_id)
+        order = Order.objects.create(table = table, ordered_time = datetime.datetime.now() , menu_items=menu_item, order_receiver = receiver)
+        order.save()
+        user_type = User_type.objects.get(id = 1)
+        message = f"There is a {menu_item.name} request at table number {table.table_number}"
+        Messages.objects.create(sender = receiver, order= order, message=message, receiver_category=user_type )
+    return redirect('manage_menu_item')
+        
+def my_order(request):
+    user = request.user
+    orders = Order.objects.filter(order_receiver = user)
+    myorders=[]
+    for order in orders:
+        primary_image = MenuImage.objects.filter(menu_item=order.menu_items).first()
+        myorders.append({
+            'orders':order,
+            'menuimage':primary_image
+        })
+    return render(request, f"{user_validator(request)}/myorder.html", {'myorders':myorders})
+
+def process_order(request, id):
+    order = Order.objects.get(id = id)
+    order.order_processor = request.user
+    order.start_processing_time = datetime.datetime.now()
+    order.save()
+    return redirect('home')
+
+def send_order(request, id):
+    order = Order.objects.get(id = id)
+    order.send = True
+    order.received_time = datetime.datetime.now()
+    order.save()
+    return redirect('home')
+
+def waiter_activity_check(request):
+    orders = Order.objects.all()
+    return render(request, f"{user_validator(request)}/waiter_activity_check.html", {'orders':orders})
+
+def manage_sale(request):
+    orders = Order.objects.all()
+    return render(request, f"{user_validator(request)}/manage_sales.html", {'orders':orders})

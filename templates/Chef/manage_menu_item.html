@@ -9,7 +9,7 @@
           <div class="col">
             <div class="row">
               <h4 class="col card-title">Menu Items Management</h4>
-              <h4><a href="{% url 'add_menu_item'%}">Add menu item</a></h4>
+              <h4><a class="btn btn-success" href="{% url 'add_menu_item'%}">Add menu item</a></h4>
             </div>
           </div>
         </div>
@@ -24,15 +24,20 @@
               </tr>
             </thead>
             <tbody>
-              {% for categories in menuitems %}
+              {% for menu_item in menu_items %}
                 <tr>
                   <td class="py-1">
-                    {{categories.category.name}}
+                    {{categories.name}}
                   </td>
-                  <td>{{categories.name}}</td>
-                  <td>{{categories.description}}</td>
-                  <td>{{categories.price}}</td>
-                  <td>{{ userr.user_type }}</td>
+                  <td>{{menu_item.menuitems.name}}</td>
+                  <td>{{menu_item.menuitems.price}}</td>
+                  <td>
+                    {% if menu_item.menuimage.image %}
+                    <a href="{{menu_item.menuimage.image.url}}">
+                    <img src="{{menu_item.menuimage.image.url}}" style="border-radius: 0px; width: 100px; height: 150px;" class="img-fluid" alt="{{item.name}}">
+                  </a>
+                    {% endif %}
+                  </td>
                   
                 </tr>
               {% endfor %}

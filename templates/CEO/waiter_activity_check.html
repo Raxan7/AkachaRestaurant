@@ -1,0 +1,32 @@
+{% extends 'CEO/base.html' %}
+{% block content%}
+<div class="card" style="margin: 1rem;">
+    <div class="card-body">
+      <h4 class="card-title">Ordering and waiter performance</h4>
+      <table class="table table-white table-responsive">
+        <thead>
+          <tr>
+            <th> Order Id</th>
+            <th> processor </th>
+            <th> Menu</th>
+            <th> Ordered Time</th>
+            <th> Order received</th>
+            <th>Order Sent</th>
+          </tr>
+        </thead>
+        <tbody>
+            {%for order in orders%}
+          <tr>
+            <td>{{order.id}}</td>
+            <td> {{order.order_processor}}</td>
+            <td>{{order.menu_items.name}}</td>
+            <td>{{order.ordered_time}}</td>
+            <td>{{order.start_processing_time}}</td>
+            <td>{{order.received_time}}</td>
+          </tr>
+          {%endfor%}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{%endblock%}

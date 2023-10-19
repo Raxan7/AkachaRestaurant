@@ -38,4 +38,16 @@ urlpatterns = [
     path("edit_menu_image/<int:id>", views.edit_menu_image, name = "edit_menu_image"),
     path("manage_menu_image", views.manage_menu_image, name="manage_menu_image"),
     path("get_items", views.get_items, name="get_items"),
+    
+    path("add_table", views.add_table, name="add_table"),
+    path("manage_table", views.manage_table, name="manage_table"),
+    
+    path("add_order", views.add_order, name = "add_order"),
+    path("my_order", views.my_order, name = "my_order"),
+    path("process_order/<int:id>", views.process_order, name="process_order"),
+    path("send_order/<int:id>", views.send_order, name="send_order"),
+    
+    path("waiter_activity_check", views.waiter_activity_check, name="waiter_activity_check"),
+    
+    path("manage_sale", views.manage_sale, name = "manage_sale"),
 ]
