@@ -1,4 +1,4 @@
-from .models import Messages
+# from .models import Messages
 
 
 def send_message(sender, sender_category, message,

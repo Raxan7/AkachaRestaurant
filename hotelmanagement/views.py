@@ -3,7 +3,7 @@ from django.contrib import messages
 from .models import CustomUser
 from .EmailBackEnd import EmailBackEnd
 from django.contrib.auth import login, logout
-from .models import User_type ,Reservation,Messages, MenuItemRating, MenuImage, Restaurant, Review, MenuCategory, MenuItem, Order, OrderItem, Employee, Payment, Table
+from .models import User_type ,Reservation, MenuItemRating, MenuImage, Restaurant, Review, MenuCategory, MenuItem, Order, OrderItem, Employee, Payment, Table
 from .user_validator import user_validator
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -330,7 +330,7 @@ def add_order(request):
         order.save()
         user_type = User_type.objects.get(id = 1)
         message = f"There is a {menu_item.name} request at table number {table.table_number}"
-        Messages.objects.create(sender = receiver, order= order, message=message, receiver_category=user_type )
+        # Messages.objects.create(sender = receiver, order= order, message=message, receiver_category=user_type )
     return redirect('manage_menu_item')
         
 def my_order(request):
