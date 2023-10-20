@@ -4,14 +4,41 @@
 {% block content %}
 <br>
 
-<div class="col-md-4 grid-margin stretch-card" style="margin-left: 20px;">
+<div class="col-lg-12 grid-margin stretch-card">
   <div class="card">
     <div class="card-body">
       <h4 class="card-title">Stocks Available</h4>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Food Name</th>
+            <th>Available In Store</th>
+            <th>Request</th>
+            <th>Use</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for food_item in food_items %}
+            <tr>
+              <td><a href="{% url 'view_food_item' food_item.pk %}"><strong style="font-size: 15px;">{{ food_item.name|upper }}</strong></a></td>
+              <td>{{ food_item.quantity }} Units</td>
+              <td><a href="{% url 'request_food_items' %}"><button type="button" class="btn btn-outline-success btn-fw">Request</button></a></td>
+              <td><a href="{% url 'use_food_item' %}"><button type="button" class="btn btn-outline-danger btn-fw">Use</button></a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+<div class="card">
+    <div class="card-body">
       <ul class="list-star">
         {% for food_item in food_items %}
           <li>
-            <a href="{% url 'view_food_item' food_item.pk %}"><strong style="font-size: 15px;">{{ food_item.name }}</strong></a>
+
             - <a href="{% url 'request_food_items' %}"><button>Request</button></a> - <a href="{% url 'request_food_items' %}"><button>Use</button></a>
           </li>
         {% endfor %}
@@ -19,5 +46,3 @@
 <!--      <a href="{% url 'add_food_item' %}">Add Food Item</a>-->
     </div>
   </div>
-</div>
-{% endblock content %}
