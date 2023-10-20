@@ -17,7 +17,6 @@ class PurchasesForm(forms.ModelForm):
 
 
 class RequestFoodFromStore(forms.ModelForm):
-
     quantity = forms.IntegerField(required=True)
 
     class Meta:
@@ -26,7 +25,6 @@ class RequestFoodFromStore(forms.ModelForm):
 
 
 class UseFoodItemForm(forms.ModelForm):
-
     quantity = forms.IntegerField(required=True)
 
     class Meta:
