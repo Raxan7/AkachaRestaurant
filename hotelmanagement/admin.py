@@ -1,11 +1,11 @@
 from django.contrib import admin
 from .models import (
-    Reservation, User_type, MenuImage, CustomUser, Restaurant, Review, MenuCategory, MenuItem, Order,
+    Reservation, User_type, MenuImage, Messages, CustomUser, Restaurant, Review, MenuCategory, MenuItem, Order,
     OrderItem, Employee, Payment
 )
 
 
-# admin.site.register(Messages)
+admin.site.register(Messages)
 admin.site.register(CustomUser)
 admin.site.register(Restaurant)
 admin.site.register(Review)

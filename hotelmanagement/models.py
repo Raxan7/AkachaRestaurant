@@ -115,36 +115,36 @@ class Payment(models.Model):
     payment_method = models.CharField(max_length=255)
 
 
-# class Messages(models.Model):
-#
-#     MESSAGE_TYPE = (
-#         ("Authorization", "Authorization"),
-#         ("Request", "Request"),
-#         ("Denial", "Denial"),
-#         ("Information", "Information"),
-#         ("Unknown", "Unknown")
-#     )
-#
-#     USER_CATEGORY = (
-#         ("CEO", "CEO"),
-#         ("storekeeper", "Storekeeper"),
-#         ("chef", "Chef"),
-#         ("waiter", "Waiter"),
-#         ("customer", "Customer"),
-#         ("None", "None")
-#     )
-#
-#     objects = models.Manager()
-#     sender = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE, related_name="message_sender")
-#     receiver_category = models.ForeignKey(User_type, on_delete=models.CASCADE, null=True)
-#     # receiver = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE, related_name="message_receiver")
-#     # receiver_category = models.CharField(choices=USER_CATEGORY, max_length=255, default=USER_CATEGORY[5])
-#     time_sent = models.DateTimeField(auto_now=True)
-#     time_opened = models.DateTimeField(null=True, blank=True)
-#     opened = models.BooleanField(default=False)
-#     message = models.TextField()
-#     message_type = models.CharField(choices=MESSAGE_TYPE, max_length=255, default=MESSAGE_TYPE[3])
-#     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
-#
-#     def __str__(self):
-#         return f"{self.message}"
+class Messages(models.Model):
+
+    MESSAGE_TYPE = (
+        ("Authorization", "Authorization"),
+        ("Request", "Request"),
+        ("Denial", "Denial"),
+        ("Information", "Information"),
+        ("Unknown", "Unknown")
+    )
+
+    USER_CATEGORY = (
+        ("CEO", "CEO"),
+        ("storekeeper", "Storekeeper"),
+        ("chef", "Chef"),
+        ("Waiter", "Waiter"),
+        ("customer", "Customer"),
+        ("None", "None")
+    )
+
+    objects = models.Manager()
+    sender = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE, related_name="message_sender")
+    receiver_category = models.ForeignKey(User_type, on_delete=models.CASCADE, null=True)
+    # receiver = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE, related_name="message_receiver")
+    # receiver_category = models.CharField(choices=USER_CATEGORY, max_length=255, default=USER_CATEGORY[5])
+    time_sent = models.DateTimeField(auto_now=True)
+    time_opened = models.DateTimeField(null=True, blank=True)
+    opened = models.BooleanField(default=False)
+    message = models.TextField()
+    message_type = models.CharField(choices=MESSAGE_TYPE, max_length=255, default=MESSAGE_TYPE[3])
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return f"{self.message}"
