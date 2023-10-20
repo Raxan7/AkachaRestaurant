@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
 
-# from hotelmanagement.models import Messages
+from hotelmanagement.models import Messages
 from hotelmanagement.user_validator import user_validator
 
 from .forms import StockForm, PurchasesForm, RequestFoodFromStore, UseFoodItemForm
@@ -164,5 +164,5 @@ def use_food_item(request):
             return redirect('food_item_list')
     else:
         form = UseFoodItemForm()
-    return render(request, f'StockManagerApp/{user_validator(request)}/request_food_item.html',
+    return render(request, f'StockManagerApp/{user_validator(request)}/use_food_item.html',
                   {'form': form, 'system_sms': system_sms})
