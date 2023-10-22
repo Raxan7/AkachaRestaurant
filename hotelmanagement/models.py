@@ -2,8 +2,10 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 import datetime
 
+
 # Create your models here.
 class User_type(models.Model):
+    objects = models.Manager()
     id = models.AutoField(primary_key=True)
     user_type = models.CharField(max_length=50)
 
@@ -47,6 +49,7 @@ class MenuItem(models.Model):
     price = models.FloatField()
     average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
 
+
 class MenuItemRating(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)  # Link the rating to a user
     menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
@@ -82,11 +85,13 @@ class Order(models.Model):
     order_receiver = models.ForeignKey(CustomUser, on_delete=models.DO_NOTHING, null=True)
     send = models.BooleanField(default=False)
 
+
 class OrderItem(models.Model):
     id = models.AutoField(primary_key=True)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
+
 
 class Review(models.Model):
     id = models.AutoField(primary_key=True)
@@ -116,7 +121,6 @@ class Payment(models.Model):
 
 
 class Messages(models.Model):
-
     MESSAGE_TYPE = (
         ("Authorization", "Authorization"),
         ("Request", "Request"),

@@ -1,7 +1,7 @@
 from .models import Messages
 
 
-def send_message(sender, sender_category, message,
+def send_message(sender, receiver_category, message,
                  message_type):
     """
         This function creates the message object and then the message is
@@ -23,7 +23,7 @@ def send_message(sender, sender_category, message,
     """
     message_object = Messages.objects.create(
         sender=sender,
-        sender_category=sender_category,
+        receiver_category=receiver_category,
         message=message,
         message_type=message_type,
     )
