@@ -14,6 +14,10 @@ class Stock(models.Model):
     def is_low_inventory(self):
         return self.quantity < self.reorder_quantity
 
+    def save(self, *args, **kwargs):
+        self.name = self.name.lower()
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.name
 
@@ -33,6 +37,11 @@ class ChefStockResource(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class UseChefResources(models.Model):
+    objects = models.Manager()
+    name = models.ForeignKey(to=ChefStockResource, on_delete=models.CASCADE)
 
 
 class StockPurchases(models.Model):

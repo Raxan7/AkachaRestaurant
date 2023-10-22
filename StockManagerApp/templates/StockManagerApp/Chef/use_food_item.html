@@ -11,9 +11,11 @@
       {% for message in messages %}
         <h4>{{ message }}</h4>
       {% endfor %}
-      <form class="forms-sample">
+      <form class="forms-sample" method="POST">
         {% csrf_token %}
         {{ form.as_p }}
+        <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+        <button class="btn btn-light">Cancel</button>
       </form>
     </div>
   </div>

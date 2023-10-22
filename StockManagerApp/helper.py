@@ -1,8 +1,13 @@
+import StockManagerApp.models
 from .models import Stock, ChefStockResource
+from django.shortcuts import redirect
 
 
-def get_context(user_type, pk):
+def get_context(user_type, name):
     if user_type == "Storekeeper":
-        return Stock.objects.get(pk=pk)
+        return Stock.objects.get(name=name)
     elif user_type == "Chef":
-        return ChefStockResource.objects.get(pk=pk)
+        try:
+            return ChefStockResource.objects.get(name=name)
+        except Exception as e:
+            return redirect("home")

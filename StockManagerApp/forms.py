@@ -1,7 +1,7 @@
 # forms.py
 
 from django import forms
-from .models import Stock, StockPurchases, RequestStock, ChefStockResource
+from .models import Stock, StockPurchases, RequestStock, UseChefResources
 
 
 class StockForm(forms.ModelForm):
@@ -28,5 +28,5 @@ class UseFoodItemForm(forms.ModelForm):
     quantity = forms.IntegerField(required=True)
 
     class Meta:
-        model = ChefStockResource
+        model = UseChefResources
         fields = ['name']
