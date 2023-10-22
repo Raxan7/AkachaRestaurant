@@ -20,7 +20,7 @@
         <tbody>
           {% for food_item in food_items %}
             <tr>
-              <td><a href="{% url 'view_food_item' food_item.pk %}"><strong style="font-size: 15px;">{{ food_item.name|upper }}</strong></a></td>
+              <td><a href="{% url 'view_food_item' food_item.name|lower %}"><strong style="font-size: 15px;">{{ food_item.name|upper }}</strong></a></td>
               <td>{{ food_item.quantity }} Units</td>
               <td><a href="{% url 'request_food_items' %}"><button type="button" class="btn btn-outline-success btn-fw">Request</button></a></td>
               <td><a href="{% url 'use_food_item' %}"><button type="button" class="btn btn-outline-danger btn-fw">Use</button></a></td>
