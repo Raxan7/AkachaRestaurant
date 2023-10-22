@@ -2,6 +2,7 @@
 {% extends 'Chef/base.html' %}
 
 {% block content %}
+{% load widget_tweaks %}
 <br>
 <div style="margin-left: auto; margin-right: auto;" class="col-md-6 grid-margin stretch-card">
   <div class="card">
@@ -14,6 +15,10 @@
       <form class="forms-sample" method="POST">
         {% csrf_token %}
         {{ form.as_p }}
+        <div class="form-group">
+          <label for="exampleInputEmail3">Email address</label>
+          {{ form.name|add_class:"form-control" }}
+        </div>
         <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
         <button class="btn btn-light">Cancel</button>
       </form>
