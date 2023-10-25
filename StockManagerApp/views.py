@@ -126,7 +126,7 @@ def request_food_items_view(request):
 
 def use_food_item(request):
     # display messages
-    system_sms = Messages.objects.all().order_by('-time_sent')
+    sys_messages = Messages.objects.filter(receiver_category="Storekeeper", opened=False)
     # Request food item from Store
     if request.method == 'POST':
         form = UseFoodItemForm(request.POST)
@@ -153,4 +153,4 @@ def use_food_item(request):
     else:
         form = UseFoodItemForm()
     return render(request, f'StockManagerApp/{user_validator(request)}/use_food_item.html',
-                  {'form': form, 'system_sms': system_sms})
+                  {'form': form, 'system_message': sys_messages})
