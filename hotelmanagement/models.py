@@ -21,6 +21,7 @@ class CustomUser(AbstractUser):
     profile = models.ImageField(upload_to="profiles/", default='profiles/default_profile.jpg')
     user_type = models.ForeignKey(User_type, on_delete=models.SET_NULL, null=True, default=None)
     is_active = models.BooleanField(default=False)
+    objects = models.Manager()
 
 
 class Restaurant(models.Model):
@@ -30,6 +31,7 @@ class Restaurant(models.Model):
     contact = models.CharField(max_length=255)
     rating = models.DecimalField(max_digits=3, decimal_places=2)
     description = models.TextField()
+    objects = models.Manager()
 
 
 class Table(models.Model):
@@ -37,11 +39,13 @@ class Table(models.Model):
     # restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     table_number = models.CharField(max_length=10)
     capacity = models.PositiveIntegerField()
+    objects = models.Manager()
 
 
 class MenuCategory(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
+    objects = models.Manager()
 
 
 class MenuItem(models.Model):
@@ -52,6 +56,7 @@ class MenuItem(models.Model):
     price = models.FloatField()
     average_rating = models.DecimalField(max_digits=1, decimal_places=0, default=0)
     cost = models.FloatField( default=0)
+    objects = models.Manager()
     
     def update_cost(instance):
         menu_item = instance
@@ -64,13 +69,15 @@ class MenuItemRating(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)  # Link the rating to a user
     menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
     rating = models.PositiveIntegerField()
+    objects = models.Manager()
 
 
 class MenuImage(models.Model):
     id = models.AutoField(primary_key=True)
-    image = models.ImageField(upload_to="menus/")
+    image = models.ImageField(upload_to = "menus/")
     menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
     is_primary = models.BooleanField(default=False)
+    objects = models.Manager()
 
 
 class Reservation(models.Model):
@@ -80,6 +87,7 @@ class Reservation(models.Model):
     table = models.ForeignKey(Table, on_delete=models.CASCADE)
     reservation_date = models.DateTimeField()
     party_size = models.PositiveIntegerField()
+    objects = models.Manager()
 
 
 class Order(models.Model):
@@ -94,6 +102,7 @@ class Order(models.Model):
     order_processor = models.ForeignKey(CustomUser, related_name="processor", on_delete=models.DO_NOTHING, null=True)
     order_receiver = models.ForeignKey(CustomUser, on_delete=models.DO_NOTHING, null=True)
     send = models.BooleanField(default=False)
+    objects = models.Manager()
 
 
 class OrderItem(models.Model):
@@ -101,6 +110,7 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
+    objects = models.Manager()
 
 
 class Review(models.Model):
@@ -110,6 +120,7 @@ class Review(models.Model):
     rating = models.DecimalField(max_digits=3, decimal_places=2)
     comment = models.TextField()
     date = models.DateTimeField()
+    objects = models.Manager()
     
 class Ingredient(models.Model):
     id = models.AutoField(primary_key = True)
@@ -118,6 +129,7 @@ class Ingredient(models.Model):
     measured_in = models.CharField(max_length=50)
     quantity = models.FloatField()
     price = models.FloatField()
+    objects = models.Manager()
     
 
 class Employee(models.Model):
@@ -128,6 +140,7 @@ class Employee(models.Model):
     address = models.TextField()
     role = models.CharField(max_length=255)
     salary = models.DecimalField(max_digits=10, decimal_places=2)
+    objects = models.Manager()
 
 
 class Payment(models.Model):
@@ -136,6 +149,7 @@ class Payment(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     payment_date = models.DateTimeField()
     payment_method = models.CharField(max_length=255)
+    objects = models.Manager()
 
 
 class Messages(models.Model):
