@@ -7,7 +7,9 @@
         <thead>
           <tr>
             <th>Menu Item</th>
-            <th> Price </th>
+            <th>Ingredient Price</th>
+            <th>Selling Price </th>
+            <th>Profit</th>
             <th> Date Time</th>
           </tr>
         </thead>
@@ -15,9 +17,15 @@
             {%for order in orders%}
           <tr>
             <td>{{order.menu_items.name}}</td>
+            <td>{{order.menu_items.cost}}</td>
             <td> {{order.menu_items.price}}</td>
+            <td id="{{order.id}}"></td>
             <td>{{order.ordered_time}}</td>
           </tr>
+          <script>
+            var profit = {{order.menu_items.price}} - {{order.menu_items.cost}};
+            document.getElementById("{{order.id}}").innerHTML=profit;
+          </script>
           {%endfor%}
         </tbody>
       </table>

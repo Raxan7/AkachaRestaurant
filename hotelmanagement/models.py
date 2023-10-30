@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 import datetime
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
+from django.db.models import Sum
 
 
 # Create your models here.
@@ -47,7 +50,14 @@ class MenuItem(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
     price = models.FloatField()
-    average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
+    average_rating = models.DecimalField(max_digits=1, decimal_places=0, default=0)
+    cost = models.FloatField( default=0)
+    
+    def update_cost(instance):
+        menu_item = instance
+        total_cost = Ingredient.objects.filter(menu_item=menu_item).aggregate(Sum('price'))['price__sum'] or 0
+        menu_item.cost = total_cost
+        menu_item.save()
 
 
 class MenuItemRating(models.Model):
@@ -100,7 +110,15 @@ class Review(models.Model):
     rating = models.DecimalField(max_digits=3, decimal_places=2)
     comment = models.TextField()
     date = models.DateTimeField()
-
+    
+class Ingredient(models.Model):
+    id = models.AutoField(primary_key = True)
+    menu_item = models.ForeignKey(MenuItem, on_delete = models.CASCADE)
+    ingredient_name = models.CharField(max_length=50)
+    measured_in = models.CharField(max_length=50)
+    quantity = models.FloatField()
+    price = models.FloatField()
+    
 
 class Employee(models.Model):
     id = models.AutoField(primary_key=True)
@@ -152,3 +170,8 @@ class Messages(models.Model):
 
     def __str__(self):
         return f"{self.message}"
+
+@receiver(post_save, sender=Ingredient)
+@receiver(post_delete, sender=Ingredient)
+def update_menu_item(sender, instance, **kwargs):
+    instance.menu_item.update_cost()

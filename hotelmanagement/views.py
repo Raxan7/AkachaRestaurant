@@ -3,12 +3,14 @@ from django.contrib import messages
 from .models import CustomUser
 from .EmailBackEnd import EmailBackEnd
 from django.contrib.auth import login, logout
-from .models import User_type ,Reservation, Messages, MenuItemRating, MenuImage, Restaurant, Review, MenuCategory, MenuItem, Order, OrderItem, Employee, Payment, Table
+from .models import *
 from .user_validator import user_validator
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Avg
 import datetime
+from django.http import JsonResponse
+from django.contrib.auth import update_session_auth_hash
 
 # Create your views here.
 def logins(request):
@@ -62,6 +64,29 @@ def register(request):
         return redirect("login")
     else:
         return render(request, "register.html")
+
+def password_change(request):
+    if request.method == 'POST':
+        current_password = request.POST['current_password']
+        new_password = request.POST['new_password']
+        confirm_password = request.POST['confirm_password']
+        user = request.user
+
+        if user.check_password(current_password):
+            if new_password == confirm_password:
+                user.set_password(new_password)
+                user.save()
+                update_session_auth_hash(request, user)  # Update the user's session
+                messages.success(request, 'Password changed successfully.')
+                return redirect('profile')  # Redirect to the user's profile page
+            else:
+                messages.error(request, 'New passwords do not match.')
+        else:
+            messages.error(request, 'Current password is incorrect.')
+    base_template = f'{request.user.user_type}/base.html'
+
+    return render(request, 'password_change.html', {'base_template':base_template})
+
 
 def delete_user(request, id):
     user = CustomUser.objects.get(id=id)
@@ -189,6 +214,7 @@ def manage_menu_item(request):
     menuItems = MenuItem.objects.all().order_by('-name')
     menu_items = []
     for menuitem in menuItems:
+        menuitem.profit = menuitem.price - menuitem.cost
         primary_image = MenuImage.objects.filter(menu_item=menuitem).first()
         menu_items.append({
             'menuitems':menuitem,
@@ -203,22 +229,30 @@ def menu_item_description(request, item_id):
     return render(request, f"{user_validator(request)}/menu_description.html", {'images':images, 'menuitem':menuitem})
 
 
-def rate_menu_item(request, menu_item_id):
-    menu_item = get_object_or_404(MenuItem, pk=menu_item_id)
-    has_rated = MenuItemRating.objects.filter(user=request.user, menu_item=menu_item).exists()
+# views.py
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 
-    if request.method == 'POST' and not has_rated:
-        rating = int(request.POST.get('rating'))
-        menu_item_rating = MenuItemRating(user=request.user, menu_item=menu_item, rating=rating)
-        menu_item_rating.save()
+def rate_menu_item_ajax(request, menu_item_id):
+    if request.method == 'POST':
+        menu_item = get_object_or_404(MenuItem, pk=menu_item_id)
+        has_rated = MenuItemRating.objects.filter(user=request.user, menu_item=menu_item).exists()
 
-        # Calculate and update the average rating for the menu item
-        menu_item.average_rating = MenuItemRating.objects.filter(menu_item=menu_item).aggregate(Avg('rating'))['rating__avg']
-        menu_item.save()
+        if not has_rated:
+            rating = int(request.POST.get('rating'))
+            menu_item_rating = MenuItemRating(user=request.user, menu_item=menu_item, rating=rating)
+            menu_item_rating.save()
 
-        return redirect('menu_item_detail', menu_item_id=menu_item_id)
+            # Calculate and update the average rating for the menu item
+            menu_item.average_rating = MenuItemRating.objects.filter(menu_item=menu_item).aggregate(Avg('rating'))['rating__avg']
+            menu_item.save()
 
-    return render(request, f"{user_validator(request)}/rate_menu_item.html", {'menu_item': menu_item, 'has_rated': has_rated})
+            return JsonResponse({'message': 'Rating submitted successfully'})
+        else:
+            return JsonResponse({'message': 'You have already rated this item'})
+    else:
+        return JsonResponse({'message': 'Invalid request'})
+
 
 
 def edit_menu_item(request, id):
@@ -330,7 +364,7 @@ def add_order(request):
         order.save()
         user_type = User_type.objects.get(id = 1)
         message = f"There is a {menu_item.name} request at table number {table.table_number}"
-        # Messages.objects.create(sender = receiver, order= order, message=message, receiver_category=user_type )
+        Messages.objects.create(sender = receiver, order= order, message=message, receiver_category=user_type )
     return redirect('manage_menu_item')
         
 def my_order(request):
@@ -366,3 +400,20 @@ def waiter_activity_check(request):
 def manage_sale(request):
     orders = Order.objects.all()
     return render(request, f"{user_validator(request)}/manage_sales.html", {'orders':orders})
+
+def add_ingredient(request):
+    if request.method == "POST":
+        ingredient_name = request.POST['ingredient_name']
+        quantity = float(request.POST['quantity'])
+        measure = request.POST['measure']
+        menu_id = request.POST['menu_id']
+        price_one= float(request.POST['price'])
+        
+        menu_item  = MenuItem.objects.get(id = menu_id)
+        Ingredient.objects.create(ingredient_name=ingredient_name, quantity=quantity, measured_in = measure, price = price_one * quantity, menu_item = menu_item )
+    return redirect('manage_ingredient')
+
+def manage_ingredient(request):
+    menu_items = MenuItem.objects.all().order_by('-name')
+    ingredients = Ingredient.objects.all().order_by('-menu_item')
+    return render(request, f"{user_validator(request)}/manage_ingredient.html", {'ingredients':ingredients, 'menu_items': menu_items})

@@ -14,6 +14,7 @@ urlpatterns = [
     path("register", views.register, name="register"),
     path("home", views.home, name="home"),
     path("logout", views.logout_user, name="logout"),
+    path("password_change", views.password_change, name="password_change"),
     path("add_user", views.add_user, name="add_user"),
     path("add_user_type", views.add_user_type, name="add_user_type"),
     path("manage_user/<int:id>", views.manage_user, name="manage_user"),
@@ -50,4 +51,8 @@ urlpatterns = [
     path("waiter_activity_check", views.waiter_activity_check, name="waiter_activity_check"),
     
     path("manage_sale", views.manage_sale, name = "manage_sale"),
+    path("manage_ingredient", views.manage_ingredient, name = "manage_ingredient"),
+    path("add_ingredient", views.add_ingredient, name = "add_ingredient"),
+    
+    path('rate_menu_item_ajax/<int:menu_item_id>/', views.rate_menu_item_ajax, name='rate_menu_item_ajax'),
 ]

@@ -1,0 +1,55 @@
+{% extends 'CEO/base.html' %}
+{% block content%}
+
+<div class="col-lg-12 grid-margin stretch-card" style="margin: 5px;">
+    <div class="card">
+      <div class="card-body">
+
+        <div class="row">
+          <div class="col">
+            <div class="row">
+              <h4 class="col card-title">Menu Items Management</h4>
+              <h4><a class="btn btn-success" href="{% url 'add_menu_item'%}">Add menu item</a></h4>
+            </div>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Menu Item Name</th>
+                <th>Ingredients Price</th>
+                <th>Selling Price</th>
+                <th>Profit / one</th>
+                <th>Descriptions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for menu_item in menu_items %}
+                <tr>
+                  <td>
+                    {{menu_item.menuitems.category.name}}
+                  </td>
+                  <td>{{menu_item.menuitems.name}}</td>
+                  <td>{{menu_item.menuitems.cost}}</td>
+                  <td>{{menu_item.menuitems.price}}</td>
+                  <td>{{menu_item.menuitems.profit}}</td>
+                  <td> <a href="{% url 'menu_item_description' menu_item.menuitems.id%}">Description</a></td>
+                  {% comment %} <td>
+                    {% if menu_item.menuimage.image %}
+                    <a href="{{menu_item.menuimage.image.url}}">
+                    <img src="{{menu_item.menuimage.image.url}}" style="border-radius: 0px; width: 100px; height: 150px;" class="img-fluid" alt="{{item.name}}">
+                  </a>
+                    {% endif %}
+                  </td> {% endcomment %}
+                  
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{%endblock%}

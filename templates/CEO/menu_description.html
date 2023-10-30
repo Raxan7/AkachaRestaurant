@@ -1,0 +1,33 @@
+{% extends 'CEO/base.html' %}
+{% block content%}
+
+ <h3 style="text-align: center;">{{menuitem.name}} Descriptions</h3>
+<div class="container">
+ <div class="row">
+    {% for image in images %}
+    <div class="col-md-4">
+        <div class="card mb-4">
+            {% if image.image %}
+            <a href="{{image.image.url}}">
+                <img src="{{image.image.url}}" class="card-img-top" alt="{{item.name}}">
+            </a>
+            {% endif %}
+
+        </div>
+
+    </div>
+    {% endfor %}
+ </div>
+ <div class="row">
+    <h5>{{menuitem.description}}</h5>
+ </div>
+    <div class="card-body">
+        <h5 class="card-title">Food Name: {{menuitem.name}}</h5>
+        <h6 class="card-text">Food Price: {{menuitem.price}}/=</h6>
+        <div class="row">
+            <a style="margin-right: 2px;" href="" class="col btn btn-warning"><i class="fa fa-plus fa-solid"></i> Add To Cart</a>
+        </div>
+    </div>
+</div>
+
+{%endblock%}
