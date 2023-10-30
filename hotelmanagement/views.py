@@ -6,6 +6,7 @@ from django.contrib.auth import login, logout
 from .models import *
 from .user_validator import user_validator
 from django.http import JsonResponse
+from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Avg
 import datetime
@@ -277,7 +278,12 @@ def add_menu_image(request):
         menu_id = request.POST['menu_id']
         image = request.FILES.get('image')
         menu = MenuItem.objects.get(id = menu_id)
-        MenuImage.objects.create(menu_item = menu, image = image)
+        menuimage = MenuImage.objects.create(menu_item = menu)
+        fs = FileSystemStorage()
+        filename = fs.save(image.name, image)
+        menuimage_url = fs.url(filename)
+        menuimage.image = menuimage_url
+        menuimage.save()
         return redirect("add_menu_image")
     menuitems = MenuItem.objects.all()
     return render(request, f"{user_validator(request)}/add_menu_image.html", {'menuitems':menuitems})
