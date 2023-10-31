@@ -107,15 +107,15 @@ def activate_all_user(request):
  
  #0 means all user types present
 def deactivate_all_user(request):
-    users = CustomUser.objects.exclude(user_type=1)
+    user = CustomUser.objects.all()
     for user in users:
-        user.is_active = False
-        user.save()
+        if user.user_type != "CEO":
+            user.is_active = False
+            user.save()
     return redirect("manage_user", 0)       
 
 def deactivate_user(request, id):
-    user = CustomUser.objects.get(id=id)
-    if user.user_type != "CEO":
+      if user.user_type != "CEO":
             user.is_active=False
             user.save()
     user.save()
