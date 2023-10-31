@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+wefrom django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import CustomUser
 from .EmailBackEnd import EmailBackEnd
@@ -99,7 +99,7 @@ def delete_user(request, id):
 
 #0 means all user types present
 def activate_all_user(request):
-    users = CustomUser.objects.exclude(user_type=1)
+    users = CustomUser.objects.all()
     for user in users:
         user.is_active = True
         user.save()
