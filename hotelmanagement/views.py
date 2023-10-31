@@ -1,4 +1,4 @@
-wefrom django.shortcuts import render, redirect
+from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import CustomUser
 from .EmailBackEnd import EmailBackEnd
