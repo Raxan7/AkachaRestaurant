@@ -99,7 +99,7 @@ def delete_user(request, id):
 
 #0 means all user types present
 def activate_all_user(request):
-    users = CustomUser.objects.exclude(user_type=4)
+    users = CustomUser.objects.exclude(user_type=1)
     for user in users:
         user.is_active = True
         user.save()
@@ -107,7 +107,7 @@ def activate_all_user(request):
  
  #0 means all user types present
 def deactivate_all_user(request):
-    users = CustomUser.objects.exclude(user_type=4)
+    users = CustomUser.objects.exclude(user_type=1)
     for user in users:
         user.is_active = False
         user.save()
