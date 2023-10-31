@@ -93,9 +93,9 @@ def delete_user(request, id):
     user = CustomUser.objects.get(id=id)
     user.delete()
     if user.user_type == "Super":
-        return redirect("manage_user", 2)
+        return redirect("manage_user", user.user_type.id)
     else:
-        return redirect("manage_user", 1)
+        return redirect("manage_user", user.user_type.id)
 
 #0 means all user types present
 def activate_all_user(request):
@@ -418,4 +418,4 @@ def add_ingredient(request):
 def manage_ingredient(request):
     menu_items = MenuItem.objects.all().order_by('-name')
     ingredients = Ingredient.objects.all().order_by('-menu_item')
-    return render(request, f"{user_validator(request)}/manage_ingredient.html", {'ingredients':ingredients, 'menu_items': menu_items})
+    return render(request, f"{user_validator(request)}/manage_ingredients.html", {'ingredients':ingredients, 'menu_items': menu_items})
