@@ -115,7 +115,7 @@ def deactivate_all_user(request):
     return redirect("manage_user", 0)       
 
 def deactivate_user(request, id):
-      if user.user_type != "CEO":
+    if user.user_type != "CEO":
             user.is_active=False
             user.save()
     user.save()
