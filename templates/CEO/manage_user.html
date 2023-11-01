@@ -12,15 +12,96 @@
             </div>
           </div>
         </div>
+
+        <!--Adding user-->        
+        <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="updateModalLabel">Add user</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <!-- Add a form for updating the menu -->
+                <form method="post" action="{% url 'add_user'%}">
+                  {% csrf_token %}
+                  <div class="form-group">
+                    <input type="text" class="form-control form-control-lg" id="exampleInputUsername1" name='firstname' placeholder="firstname">
+                  </div>
+                  <div class="form-group">
+                    <input type="text" class="form-control form-control-lg" id="exampleInputUsername1" name='lastname' placeholder="lastname">
+                  </div>
+                  <div class="form-group">
+                    <input type="email" class="form-control form-control-lg" id="exampleInputEmail1" name='email' placeholder="Email">
+                  </div>
+                  <div class="form-group">
+                    <select class="form-control form-control-lg" name="user_type" id="">
+                      {%for user_type in user_types%}
+                      <option value="{{user_type.id}}">{{user_type.user_type}}</option>
+                      {%endfor%}
+                    </select>
+                   </div>
+                    <!-- This will render the form fields for updating the menu -->
+                  <button type="submit" class="btn btn-primary">Add User</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!--Confirm deactivate-->
+        <div class="modal fade" id="deactivate" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="updateModalLabel">Deactivate all user</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <p>Are you sure you want to deactivate all users?</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-danger" href="{% url 'deactivate_all_user'%}">Deactivate</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal fade" id="activate" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="updateModalLabel">activate all user</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <p>Are you sure you want to activate all users?</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-success" href="{% url 'activate_all_user'%}">Activate</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="row">
           <div class="col">
-            <h4><a class="btn-success" href="{% url 'add_user' %}" class=""><i class="mdi mdi-account-plus me-2 text-success"></i> Add user</a></h4>
+            <a href="#" class="add-button btn-success" data-toggle="modal" data-target="#add">Add User</a>
           </div>
           <div class="col">
-            <h4><a class="btn-success" href="{% url 'activate_all_user' %}" class=""> activate all user</a></h4>
+            <a href="#" class="deactivate-button btn-success" data-toggle="modal" data-target="#activate">acivate all users</a></h4>
           </div>
           <div class="col">
-            <h4><a class="btn-danger" href="{% url 'deactivate_all_user' %}" class=""></i>deactivate all user</a></h4>
+            <a href="#" class="deactivate-button btn-danger" data-toggle="modal" data-target="#deactivate">Deacivate all users</a></h4>
           </div>
         </div>
         <div class="table-responsive">
@@ -37,37 +118,6 @@
             </thead>
             <tbody>
               {% for userr in users %}
-              <div id="modal-{{ userr.id }}" class="modal" tabindex="-1">
-                <div class="modal-dialog modal-dialog-centered">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title">Delete {{ userr.first_name }} {{ userr.last_name }}</h5>
-                      <button type="button" class="close" data-dismiss="modal" data-item-id="{{ userr.id }}">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      <form class="rating-form">
-                        {% csrf_token %}
-                        <div class="form-group">
-                          <label for="rating">Delete User</label>
-                          <input type="hidden" name="rating" value="0" class="form-control rating-value">
-                        </div>
-                        <div class="rating">
-                          <p>You are about to delete, Permanently the User named as</p>
-                          <h4>{{userr.first_name}}  {{userr.last_name}}</h4>
-                          <p>with id <b>{{userr.id}}</b> and email <b>{{userr.email}}</b> Whose duties is <b>{{userr.user_type}}</b>
-                          </b> information will never Appear again Confirm bellow to delete</p>
-                        </div>
-                      </form>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="close btn btn-secondary" data-dismiss="modal">Close</button>
-                      <a href="{% url 'delete_user' userr.id%}" class="btn btn-danger">Confirm Delete</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
                 <tr>
                   <td class="py-1">
                     {% if userr.profile %}
@@ -79,20 +129,85 @@
                   <td>{{ userr.username }}</td>
                   <td>{{ userr.user_type }}</td>
                   <td>
-                    <a href="{% url 'userprofile'  userr.id  %}" style="color: green;"><i class="fa-solid fa-eye"></i> view</a>
+                    <form method="post" action="{% url 'userprofile'%}">
+                      {% csrf_token %}
+                      <input type="hidden" name = "id" value="{{userr.id}}">
+                      <button class="btn-success" type="submit"> View</button>
+                    </form>
                   </td>
-                  <td>
-                    <button class="btn-warning rate-button" data-item-id="{{ userr.id }}">delete</button>
-                  </td>
+                  <td><button class="update-button btn-danger" data-toggle="modal" data-target="#deleteModal{{ userr.id }}">Delete</button></td>
                   {%if userr.is_active %}
-                  <td>
-                    <a class="btn-warning rate-button" href="{% url 'deactivate_user'  userr.id  %}">deactivate</a>
-                  </td>
+                  <td><button class="update-button btn-warning" data-toggle="modal" data-target="#deactivateModal{{ userr.id }}">Deactivate</button></td>
                   {%else%}
-                  <td>
-                    <a class="btn-success rate-button" href="{% url 'activate_user'  userr.id  %}">activate</a>
-                  </td>
+                  <td><button class="update-button btn-success" data-toggle="modal" data-target="#updateModal{{ userr.id }}">Activate</button></td>
                   {%endif%}
+
+
+                  <!-- Modal for Update Confirmation -->
+                  <div class="modal fade" id="updateModal{{ userr.id }}" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="updateModalLabel">Activate {{userr.username}}</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <p>Are you sure you want to Activate this user?</p>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                          <a class="btn btn-success" href="{% url 'activate_user'  userr.id  %}">Activate</a>
+                        </div>
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Modal for Update Confirmation -->
+                  <div class="modal fade" id="deactivateModal{{ userr.id }}" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="updateModalLabel">Deactivate {{userr.username}}</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <p>Are you sure you want to deactivate {{userr.username}}</p>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                          <a class="btn btn-danger" href="{% url 'deactivate_user' userr.id %}">Deacivte</a>
+                        </div>
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Modal for Delete Confirmation -->
+                  <div class="modal fade" id="deleteModal{{ userr.id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="deleteModalLabel">Confirm Delete {{userr.username}}</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <p>Are you sure you want to delete {{userr.username}}?</p>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                          <a class="btn btn-danger" href="{% url 'delete_user' userr.id %}">Delete</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                 </tr>
               {% endfor %}
             </tbody>
@@ -101,52 +216,4 @@
       </div>
     </div>
   </div>
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const rateButtons = document.querySelectorAll(".rate-button");
-      const modals = document.querySelectorAll(".modal");
-
-      rateButtons.forEach(button => {
-        button.addEventListener("click", () => {
-          const itemId = button.getAttribute("data-item-id");
-          const modal = document.getElementById(`modal-${itemId}`);
-          modal.style.display = "block";
-        });
-      });
-
-      modals.forEach(modal => {
-        const closeButtons = modal.querySelectorAll(".close");
-        const ratingForm = modal.querySelector(".rating-form");
-        const ratingValue = modal.querySelector(".rating-value");
-        const stars = modal.querySelectorAll(".fa-star");
-
-        closeButtons.forEach(closeButton => {
-          closeButton.addEventListener("click", () => {
-            modal.style.display = "none";
-          });
-        });
-
-
-        ratingForm.addEventListener("submit", event => {
-          event.preventDefault();
-          const itemId = modal.getAttribute("id").replace("modal-", "");
-          const rating = ratingValue.value;
-
-          // Send the rating to the server using JavaScript (e.g., via AJAX) and handle the confirmation on the server side.
-
-          // Optionally, you can provide user feedback (success/error messages) based on the server's response.
-
-          modal.style.display = "none";
-        });
-      });
-
-      window.addEventListener("click", event => {
-        modals.forEach(modal => {
-          if (event.target === modal) {
-            modal.style.display = "none";
-          }
-        });
-      });
-    });
-  </script>
 {% endblock %}

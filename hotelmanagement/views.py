@@ -28,9 +28,12 @@ def logins(request):
 def home(request):
     return render(request, f"{user_validator(request)}/home.html")
 
-def userprofile(request, id):
-    user = CustomUser.objects.get(id=id)
-    return render(request, f"{user_validator(request)}/user_details.html", {'userr':user})
+def userprofile(request):
+    if request.method == "POST":
+        id = int(request.POST.get('id'))
+        user = CustomUser.objects.get(id=id)
+        base_template = f'{request.user.user_type}/base.html'
+        return render(request, 'user_details.html', {'base_template':base_template, 'userr':user})
 
 def logout_user(request):
     logout(request)
@@ -179,7 +182,7 @@ def edit_user(request):
         if profile:
             user.profile = profile
         user.save()
-        return redirect('userprofile', id=id)
+    return redirect('userprofile', id=id)
 
 def add_menu_category(request):
     if request.method == "POST":

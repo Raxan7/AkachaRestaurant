@@ -1,0 +1,77 @@
+{% extends base_template %}
+{% block content%}
+<style>
+  h5{
+    text-align: left;
+  }
+</style>
+
+<div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateModalLabel">Edit Profile</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Add a form for updating the menu -->
+        <form method="post" enctype="multipart/form-data" action="{% url 'edit_user'%}">
+          {% csrf_token %}
+          <br>
+          <input type="text" class="form-control" name='firstname' value="{{userr.first_name}}">
+          <br>
+          <input type="text" class="form-control" name='lastname' value="{{userr.last_name}}">
+          <br>
+          <input type="text" class="form-control" name='username' value="{{userr.username}}">
+          <br>
+          <input type="email" class="form-control" name='email' value="{{userr.email}}">
+          <br>
+          {% if userr.profile %}
+          <img class="img-fluid" style="width: 120px;" src="{{userr.profile.url}}" alt="">{% endif %}
+          <input type="file" class="form-control" name='image'>
+          <br>
+          <input type="hidden" name="id" value="{{userr.id}}">
+          {% if user.user_type.user_type == "CEO" %}
+          <select class="form-control" name="user_type" id="">
+            {% for user_type in user_types %}
+            <option value="{{user_type.id}}" {% if user_type.id == userr.user_type.id %} selected {% endif %}>{{user_type.user_type}}</option>
+            {% endfor %}
+          </select>
+          {% endif %}
+          <br>
+          <!-- This will render the form fields for updating the menu -->
+          <button type="submit" class="btn btn-primary">Add</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<h4><a href="#" class="add-button btn btn-success" data-toggle="modal" data-target="#add">Edit Profile</a></h4>
+
+
+<div class="row" style="margin: 2px; margin-top: 1rem;">
+  <div class="col-md-7 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <div>
+          <h4 class="col card-title">User's details</h4>
+        </div>
+          <div>
+              <h5 >Firstname: <b class="text-success">{{userr.first_name}}</b> </h5><br>
+             <h5 >Lastname: <b class="text-success">{{userr.last_name}}</b> </h5><br>
+              <h5 >Username: <b class="text-success">{{userr.username}}</b> </h5><br>
+              <h5 >E-mail: <b class="text-success">{{userr.email}}</b> </h5><br>
+              <h5 >User Type: <b class="text-success">{{userr.user_type}}</b> </h5>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-5 grid-margin stretch-card">
+   {% if userr.profile %}
+   <img class="img-fluid" src="{{userr.profile.url}}" alt="image">
+   {% endif %}
+  </div>
+</div>
+{% endblock %}
