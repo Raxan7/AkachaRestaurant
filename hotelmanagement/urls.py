@@ -56,6 +56,8 @@ urlpatterns = [
     path("manage_sale", views.manage_sale, name = "manage_sale"),
     path("manage_ingredient", views.manage_ingredient, name = "manage_ingredient"),
     path("add_ingredient", views.add_ingredient, name = "add_ingredient"),
+    path("edit_ingredient/<int:id>", views.edit_ingredient, name = "edit_ingredient"),
+    path("delete_ingredient/<int:id>", views.delete_ingredient, name = "delete_ingredient"),
     
     path('rate_menu_item_ajax/<int:menu_item_id>/', views.rate_menu_item_ajax, name='rate_menu_item_ajax'),
 ]

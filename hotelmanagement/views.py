@@ -220,7 +220,7 @@ def edit_menu_item(request, id):
     if request.method == "POST":
         menuItem = MenuItem.objects.get(id=id)
         category_id = request.POST["category_id"]
-        name = request.POST['name']
+        name = request.POST['item_name']
         description = request.POST['description']
         price = request.POST['price']
         category = MenuCategory.objects.get(id=category_id)
@@ -229,9 +229,7 @@ def edit_menu_item(request, id):
         menuItem.price=price
         menuItem.category=category
         menuItem.save()
-        return redirect("/")
-    menu_item = MenuItem.objects.get(id=id)
-    return render(request, f"{user_validator(request)}/edit_menu_item.html", {"menu_item":menu_item})
+    return redirect("manage_menu_item")
 
 def delete_menu_item(request, id):
     menu_item = MenuItem.objects.get(id = id)
@@ -433,3 +431,26 @@ def manage_ingredient(request):
     menu_items = MenuItem.objects.all().order_by('-name')
     ingredients = Ingredient.objects.all().order_by('-menu_item')
     return render(request, f"{user_validator(request)}/manage_ingredients.html", {'ingredients':ingredients, 'menu_items': menu_items})
+
+def delete_ingredient(request, id):
+    ingredient = Ingredient.objects.get(id = id)
+    ingredient.delete()
+    return redirect("manage_ingredient")
+
+def edit_ingredient(request, id):
+    if request.method == "POST":
+        ingredient_name = request.POST['ingredient_name']
+        quantity = float(request.POST['quantity'])
+        measure = request.POST['measure']
+        menu_id = request.POST['menu_id']
+        price_one= float(request.POST['price'])
+        
+        menu_item  = MenuItem.objects.get(id = menu_id)
+        ingredient = Ingredient.objects.get(id = id)
+        ingredient.ingredient_name = ingredient_name
+        ingredient.quantity = quantity
+        ingredient.measured_in = measure
+        ingredient.price = price_one * quantity
+        ingredient.menu_item = menu_item
+        ingredient.save()
+    return redirect("manage_ingredient")

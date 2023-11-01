@@ -64,7 +64,7 @@
               {% for menu_item in menu_items %}
                 <tr>
                   <td class="py-1">
-                    {{categories.name}}
+                    {{menu_item.menuitems.category.name}}
                   </td>
                   <td>{{menu_item.menuitems.name}}</td>
                   <td>{{menu_item.menuitems.price}}</td>
@@ -89,7 +89,7 @@
                 </div>
                 <div class="modal-body">
                   <!-- Add a form for updating the menu_item.menuitems -->
-                  <form method="post" action="{% url 'add_menu_item'%}">
+                  <form method="post" action="{% url 'edit_menu_item' menu_item.menuitems.id%}">
                     {% csrf_token %}
                     <br>
                     <div class="form-group">
