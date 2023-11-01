@@ -11,7 +11,7 @@
         <div class="content-wrapper d-flex align-items-center auth">
           <div class="row flex-grow">
             <div class="col-lg-7 mx-auto">
-              <div class="auth-form-light text-left p-5">
+              <div class="auth-form-light text-left p-3">
                 <div class="brand-logo">
                   brand-logo
                 </div>
@@ -24,19 +24,19 @@
                 <form class="pt-3" action="{% url 'register'%}" method="POST">
                     {% csrf_token %}
                   <div class="form-group">
-                    <input type="text" class="form-control form-control-lg" id="exampleInputUsername1" name='firstname' placeholder="firstname">
+                    <input type="text" class="form-control" name='firstname' placeholder="firstname">
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control form-control-lg" id="exampleInputUsername1" name='lastname' placeholder="lastname">
+                    <input type="text" class="form-control" name='lastname' placeholder="lastname">
                   </div>
                   <div class="form-group">
-                    <input type="email" class="form-control form-control-lg" id="exampleInputEmail1" name='email' placeholder="Email">
+                    <input type="email" class="form-control" name='email' placeholder="Email">
                   </div>
                   <div class="form-group">
-                    <input type="password" class="form-control form-control-lg" id="exampleInputEmail1" name='password' placeholder="password">
+                    <input type="password" class="form-control" name='password' placeholder="password">
                   </div>
                   <div class="form-group">
-                    <input type="password" class="form-control form-control-lg" id="exampleInputEmail1" name='password1' placeholder="confirm password">
+                    <input type="password" class="form-control" name='password1' placeholder="confirm password">
                   </div>
                   <div class="mt-3">
                     <button type="submit" class="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn">Register now</a>
