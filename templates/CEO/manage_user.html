@@ -14,13 +14,13 @@
         </div>
         <div class="row">
           <div class="col">
-            <h4><a class="btn btn-success" href="{% url 'add_user' %}" class=""><i class="mdi mdi-account-plus me-2 text-success"></i> Add user</a></h4>
+            <h4><a class="btn-success" href="{% url 'add_user' %}" class=""><i class="mdi mdi-account-plus me-2 text-success"></i> Add user</a></h4>
           </div>
           <div class="col">
-            <h4><a class="btn btn-success" href="{% url 'activate_all_user' %}" class=""> activate all user</a></h4>
+            <h4><a class="btn-success" href="{% url 'activate_all_user' %}" class=""> activate all user</a></h4>
           </div>
           <div class="col">
-            <h4><a class="btn btn-danger" href="{% url 'deactivate_all_user' %}" class=""></i>deactivate all user</a></h4>
+            <h4><a class="btn-danger" href="{% url 'deactivate_all_user' %}" class=""></i>deactivate all user</a></h4>
           </div>
         </div>
         <div class="table-responsive">
@@ -79,18 +79,18 @@
                   <td>{{ userr.username }}</td>
                   <td>{{ userr.user_type }}</td>
                   <td>
-                    <a href="{% url 'userprofile'  userr.id  %}" style="color: green;"><i class="fa-solid fa-eye"></i></a>
+                    <a href="{% url 'userprofile'  userr.id  %}" style="color: green;"><i class="fa-solid fa-eye"></i> view</a>
                   </td>
                   <td>
-                    <button class="btn btn-warning rate-button" data-item-id="{{ userr.id }}">delete</button>
+                    <button class="btn-warning rate-button" data-item-id="{{ userr.id }}">delete</button>
                   </td>
                   {%if userr.is_active %}
                   <td>
-                    <a class="btn btn-warning rate-button" href="{% url 'deactivate_user'  userr.id  %}">deactivate</a>
+                    <a class="btn-warning rate-button" href="{% url 'deactivate_user'  userr.id  %}">deactivate</a>
                   </td>
                   {%else%}
                   <td>
-                    <a class="btn btn-success rate-button" href="{% url 'activate_user'  userr.id  %}">activate</a>
+                    <a class="btn-success rate-button" href="{% url 'activate_user'  userr.id  %}">activate</a>
                   </td>
                   {%endif%}
                 </tr>

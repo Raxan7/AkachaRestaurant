@@ -4,20 +4,51 @@
     <div class="card">
       <div class="card-body">
 
-        <div class="row">
-          <div class="col">
-            <div class="row">
-              <h4 class="col card-title">Menu Items Management</h4>
-              <h4><a class="btn btn-success" href="{% url 'add_menu_image'%}">Add Menu Image</a></h4>
+<h4>Menu Image Mangement</h4>
+
+        <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="updateModalLabel">Add Menu Image</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <!-- Add a form for updating the menu -->
+                <form method="post" enctype="multipart/form-data" action="{% url 'add_menu_image'%}">
+                  {% csrf_token %}
+                  <br>
+                  <div class="form-group">
+                    <select class="form-control form-control-lg" name="menu_id" id="id_category">
+                        <option value="">Select</option>
+                        {%for menuitem in menuitems%}
+                        <option value="{{menuitem.id}}">{{menuitem.name}}</option>
+                        {%endfor%}
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <h5 style="text-align: center;">Add Item Image</h5>
+                    <input type="file" class="form-control form-control-lg" id="exampleInputUsername1" name='image'>
+                  </div>
+                    <!-- This will render the form fields for updating the menu -->
+                  <button type="submit" class="btn btn-primary">Add</button>
+                </form>
+              </div>
             </div>
           </div>
         </div>
+        <h4><a href="#" class="add-button btn btn-success" data-toggle="modal" data-target="#add">Add Menu image</a></h4>
+
+
         <div class="table-responsive">
           <table class="table table-striped">
             <thead>
               <tr>
                 <th>Menu Item</th>
                 <th>Menu Image</th>
+                <th colspan="2">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -31,6 +62,71 @@
                     </a>
                     {%endif%}
                 </td>
+
+                          
+                              
+            <!-- Modal for Update Confirmation -->
+          <div class="modal fade" id="updateModal{{ image.id }}" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="updateModalLabel">Update {{image.name}}</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <!-- Add a form for updating the image -->
+                  <form method="post" enctype="multipart/form-data" action="{% url 'edit_menu_image' image.id%}">
+                    {% csrf_token %}
+                    <br>
+                    <div class="form-group">
+                      <select class="form-control form-control-lg" name="menu_id">
+                          <option value="">Select</option>
+                          {%for menuitem in menuitems%}
+                          <option value="{{menuitem.id}}" {% if image.menu_item.id == menuitem.id %} selected {% endif %}>{{menuitem.name}}</option>
+                          {%endfor%}
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      {% if image.image %}
+                      <h5><img width="120px" src="{{image.image.url}}" alt="image"></h5>
+                      {% endif %}
+                      <h5 style="text-align: center;">edit Item Image</h5>
+                      <input type="file" class="form-control form-control-lg" id="exampleInputUsername1" name='image'>
+                    </div>
+                      <!-- This will render the form fields for updating the menu -->
+                    <button type="submit" class="btn btn-primary">Add</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modal for Delete Confirmation -->
+          <div class="modal fade" id="deleteModal{{ image.id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="deleteModalLabel">Confirm Delete {{image.name}}</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <p>Are you sure you want to delete this menu item?</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                  <a class="btn btn-danger" href="{% url 'delete_menu_image' image.id %}">Delete</a>
+                </div>
+              </div>
+            </div>
+          </div>
+            <td><button class="update-button btn btn-primary" data-toggle="modal" data-target="#updateModal{{ image.id }}">Update</button></td>
+            <td><button class="delete-button btn btn-danger" data-toggle="modal" data-target="#deleteModal{{ image.id }}">Delete</button></td>
+
+
                 </tr>
               {% endfor %}
             </tbody>

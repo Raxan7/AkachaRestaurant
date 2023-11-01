@@ -193,14 +193,19 @@ def manage_menu_category(request):
 
 def edit_menu_category(request, id):
     if request.method == "POST":
-        name = request.POST['name']
+        name = request.POST['menu_name']
         menu = MenuCategory.objects.get(id=id)
         menu.name=name
-        name.save()
-        return redirect("/")
+        menu.save()
+        return redirect("manage_menu_category")
     menu = MenuCategory.objects.get(id=id)
     return render(request, f"{user_validator(request)}/edit_menu_category.html", {"menu":menu})
-    
+
+def delete_menu_category(request, id):
+    menu_category = MenuCategory.objects.get(id = id)
+    menu_category.delete()
+    return redirect('manage_menu_category')
+
 def add_menu_item(request):
     if request.method == "POST":
         category_id = request.POST["category_id"]
@@ -209,11 +214,47 @@ def add_menu_item(request):
         price = float(request.POST['price'])
         category = MenuCategory.objects.get(id=category_id)
         MenuItem.objects.create(name=name, description=description, price=price,category=category)
-    categories = MenuCategory.objects.all()
-    return render(request, f"{user_validator(request)}/add_menu_item.html", {'menucategories':categories})
+        return redirect("manage_menu_item")
+
+def edit_menu_item(request, id):
+    if request.method == "POST":
+        menuItem = MenuItem.objects.get(id=id)
+        category_id = request.POST["category_id"]
+        name = request.POST['name']
+        description = request.POST['description']
+        price = request.POST['price']
+        category = MenuCategory.objects.get(id=category_id)
+        menuItem.name = name
+        menuItem.description=description
+        menuItem.price=price
+        menuItem.category=category
+        menuItem.save()
+        return redirect("/")
+    menu_item = MenuItem.objects.get(id=id)
+    return render(request, f"{user_validator(request)}/edit_menu_item.html", {"menu_item":menu_item})
+
+def delete_menu_item(request, id):
+    menu_item = MenuItem.objects.get(id = id)
+    menu_item.delete()
+    return redirect('manage_menu_item')
 
 def manage_menu_item(request):
     menuItems = MenuItem.objects.all().order_by('-name')
+    menu_items = []
+    for menuitem in menuItems:
+        menuitem.profit = menuitem.price - menuitem.cost
+        primary_image = MenuImage.objects.filter(menu_item=menuitem).first()
+        menu_items.append({
+            'menuitems':menuitem,
+            'menuimage':primary_image
+        })
+    categories = MenuCategory.objects.all()
+    tables = Table.objects.all()
+    return render(request, f"{user_validator(request)}/manage_menu_item.html", {'menu_items':menu_items, 'tables':tables, 'menucategories': categories})
+
+def filter_menu_item(request, id):
+    menu_category = MenuCategory.objects.get(id = id)
+    menuItems = MenuItem.objects.filter(category = menu_category).order_by('-name')
     menu_items = []
     for menuitem in menuItems:
         menuitem.profit = menuitem.price - menuitem.cost
@@ -248,68 +289,41 @@ def rate_menu_item_ajax(request, menu_item_id):
             # Calculate and update the average rating for the menu item
             menu_item.average_rating = MenuItemRating.objects.filter(menu_item=menu_item).aggregate(Avg('rating'))['rating__avg']
             menu_item.save()
-
-            return JsonResponse({'message': 'Rating submitted successfully'})
+            messages.success(request, "Rating Submitted successfully")
         else:
-            return JsonResponse({'message': 'You have already rated this item'})
-    else:
-        return JsonResponse({'message': 'Invalid request'})
+            messages.error(request, "You have alredy rated this food menu item")
+    return redirect('my_order')
 
-
-
-def edit_menu_item(request, id):
-    if request.method == "POST":
-        menuItem = MenuItem.objects.get(id=id)
-        category_id = request.POST["category_id"]
-        name = request.POST['name']
-        description = request.POST['description']
-        price = request.POST['price']
-        category = MenuCategory.objects.get(id=category_id)
-        menuItem.name = name
-        menuItem.description=description
-        menuItem.price=price
-        menuItem.category=category
-        menuItem.save()
-        return redirect("/")
-    menu_item = MenuItem.objects.get(id=id)
-    return render(request, f"{user_validator(request)}/edit_menu_item.html", {"menu_item":menu_item})
 
 def add_menu_image(request):
     if request.method == "POST":
         menu_id = request.POST['menu_id']
-        image = request.FILES['image']
+        image = request.FILES.get('image')
         menu = MenuItem.objects.get(id = menu_id)
         MenuImage.objects.create(menu_item = menu, image=image)
-        return redirect("add_menu_image")
-    menuitems = MenuItem.objects.all()
-    return render(request, f"{user_validator(request)}/add_menu_image.html", {'menuitems':menuitems})
-
-#ajax to get menu items when adding imge
-def get_items(request):
-    category_id = request.GET.get('category_id')
-    items = MenuItem.objects.filter(menucategory__id = category_id).values('id', 'name')
-    return JsonResponse({'items': list(items)})
+        return redirect("manage_menu_image")
 
 def manage_menu_image(request):
     menu_images = MenuImage.objects.all()
-    return render(request, f"{user_validator(request)}/manage_menu_image.html", {'images': menu_images})
+    menuitems = MenuItem.objects.all()
+    return render(request, f"{user_validator(request)}/manage_menu_image.html", {'images': menu_images, 'menuitems':menuitems})
 
 def edit_menu_image(request, id):
     if request.method == "POST":
-        menu_id = request.POST['menu_id']
-        category_id = request.POST["category_id"]
-        image = request.FILES['image']
-        category = MenuCategory.objects.get(id=category_id)
+        menu_id = int(request.POST.get('menu_id'))
+        image = request.FILES.get('image')
         menu = MenuItem.objects.get(id = menu_id)
         menu_image = MenuImage.objects.get(id=id)
         if image:
             menu_image.image=image
         menu_image.menu_item=menu
-        menu_image.menu_category = category
         menu_image.save()
-        return redirect("edit_menu_image", id)
-    menu_image = MenuImage.objects.get(id=id)
-    return render(request, f"{user_validator(request)}/edit_menu_image.html", {'menu_image':menu_image})
+    return redirect("manage_menu_image")
+
+def delete_menu_image(request, id):
+    menu_image = MenuImage.objects.get(id = id)
+    menu_image.delete()
+    return redirect("manage_menu_image")
 
 def add_restaurant(request):
     if request.method == "POST":

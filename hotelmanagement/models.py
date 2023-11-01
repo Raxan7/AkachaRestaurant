@@ -131,7 +131,7 @@ class Ingredient(models.Model):
     price = models.FloatField()
     
     
-
+    
 class Employee(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)

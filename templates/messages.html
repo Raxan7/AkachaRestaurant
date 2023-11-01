@@ -1,0 +1,14 @@
+
+{% if messages %}
+<div class="container" style="position: fixed; z-index: 1000;"  tabindex="-1">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      {% for message in messages %}
+        <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %} alert-dismissible fade show" role="alert">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>  
+{% endif %}
