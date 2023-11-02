@@ -5,13 +5,22 @@ from .EmailBackEnd import EmailBackEnd
 from django.contrib.auth import login, logout
 from .models import *
 from .user_validator import user_validator
-from django.http import JsonResponse
-from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Avg
 import datetime
-from django.http import JsonResponse
 from django.contrib.auth import update_session_auth_hash
+from django.http import JsonResponse
+
+def check_username_availability(request):
+    username = request.GET.get('username')
+    exists = CustomUser.objects.filter(username=username).exists()
+    return JsonResponse({'exists': exists})
+
+def check_email_availability(request):
+    email = request.GET.get('email')
+    exists = CustomUser.objects.filter(email=email).exists()
+    return JsonResponse({'exists': exists})
+
 
 # Create your views here.
 def logins(request):
