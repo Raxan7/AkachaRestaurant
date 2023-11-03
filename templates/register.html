@@ -5,46 +5,51 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="{% static 'style.css'%}">
+    <link rel="stylesheet" href="{% static 'mystyle.css'%}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 
-    <div class="container-scroller">
-      <div class="container-fluid page-body-wrapper full-page-wrapper">
+      <div class="container-fluid">
         <div class="content-wrapper d-flex align-items-center auth">
           <div class="row flex-grow">
+            {% include 'messages.html'%}
             <div class="col-lg-7 mx-auto">
               <div class="auth-form-light text-left p-3">
+                <h5>AKACHA RESTAURANT</h5>
                 <div class="brand-logo">
-                  brand-logo
+                  <img class="img-fluid mx-auto d-block" src="../media/profiles/default_profile.jpg" alt="">
                 </div>
-                {% for message in messages%}
-                <h3>{{message}}</h3>
-                {%endfor%}
-                <center>
-                <h4 class="font-weight-light">Register</h4>
-                </center>
+              <center>
+                <h4 class="font-weight-light">Register now</h4>
                 <form class="pt-3" action="{% url 'register'%}" method="POST">
                     {% csrf_token %}
                   <div class="form-group">
-                    <input type="text" class="form-control" name='firstname' placeholder="firstname">
+                    <input type="text" class="form-control" name='firstname' placeholder="first name">
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control" name='lastname' placeholder="lastname">
                   </div>
                   <div class="form-group">
-                    <input type="email" class="form-control" name='email' placeholder="Email">
+                    <input type="email" class="form-control" id="email" name='email' placeholder="Email">
+                    <span id="email-available"></span>
                   </div>
                   <div class="form-group">
-                    <input type="password" class="form-control" name='password' placeholder="password">
+                    <input type="password" class="form-control" id="password" name='password' placeholder="password">
+                    <span style="color: green;" id="password-message"></span><br>
+                    <span style="color: green;" id="password-strength-meter"></span>
                   </div>
                   <div class="form-group">
                     <input type="password" class="form-control" name='password1' placeholder="confirm password">
                   </div>
                   <div class="mt-3">
-                    <button type="submit" class="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn">Register now</a>
+                    <button id="submit-button" type="submit" class="btn btn-success">Register now</button>
                   </div>
                 </form>
                 <br><br><br>
               <span>Have an account? <a href="{% url 'login'%}">login now</a></span>
               </div>
+            </center>
             </div>
           </div>
         </div>
@@ -52,5 +57,72 @@
       </div>
       <!-- page-body-wrapper ends -->
     </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+
+<script>
+  const submitButton = document.getElementById('submit-button');
+  $(document).ready(function() {
+    // Function to check username availability
+    function checkUsernameAvailability(username) {
+      $.get('/check_username_availability/', { 'username': username }, function(data) {
+        if (data.exists) {
+          $('#username-message').text('Username is already taken');
+        } else {
+          $('#username-message').text('Username is available');
+        }
+      });
+    }
+
+    // Function to check email availability
+    function checkEmailAvailability(email) {
+      $.get('/check_email_availability/', { 'email': email }, function(data) {
+        if (data.exists) {
+          $('#email-available').text("Email is already in use");
+          $('#email-available').addClass('text-danger');
+          submitButton.disabled = true;
+        } else {
+          $('#email-available').text('Email is available');
+          $('#email-available').addClass('text-success');
+          submitButton.disabled = false;
+        }
+      });
+    }
+
+    // Function to validate password strength
+    function validatePasswordStrength(password) {
+      // You can use a library like zxcvbn or write your own validation logic
+      // For example, using zxcvbn:
+      const result = zxcvbn(password);
+      const strengthMessage = result.feedback.suggestions.join(', ');
+      $('#password-message').text(strengthMessage);
+      $('#password-strength-meter').text(`Password strength: ${result.score}/4`);
+    }
+
+    // Event listeners for input fields
+    $('#username').on('input', function() {
+      const username = $(this).val();
+      if (username.length > 0) {
+        checkUsernameAvailability(username);
+      }
+    });
+
+    $('#email').on('input', function() {
+      const email = $(this).val();
+      if (email.length > 0) {
+        checkEmailAvailability(email);
+      }
+    });
+
+    $('#password').on('input', function() {
+      const password = $(this).val();
+      if (password.length > 0) {
+        validatePasswordStrength(password);
+      }
+    });
+  });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js"></script>
   </body>
 </html>
