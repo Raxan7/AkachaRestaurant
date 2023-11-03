@@ -21,6 +21,12 @@ class CustomUser(AbstractUser):
     profile = models.ImageField(upload_to="profiles/", default='profiles/default_profile.jpg')
     user_type = models.ForeignKey(User_type, on_delete=models.SET_NULL, null=True, default=None)
     is_active = models.BooleanField(default=False)
+    customer_profit = models.FloatField(default=0.0)
+    def update_customer_profit(instance):
+        order = instance
+        total_profit = Order.objects.filter(order_receiver=order).aggregate(Sum('menu_items__item_profit'))['menu_items__item_profit__sum'] or 0
+        order.customer_profit = total_profit
+        order.save()
     
 
 
@@ -54,21 +60,30 @@ class MenuItem(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
     price = models.FloatField()
-    average_rating = models.DecimalField(max_digits=1, decimal_places=0, default=0)
-    cost = models.FloatField( default=0)
-    
-    
+    average_rating = models.DecimalField(max_digits=2, decimal_places=1, default=0.0)
+    ingredient_cost = models.FloatField( default=0)
+    item_profit = models.FloatField(default=0)
+    orders_number = models.FloatField(default=0)
+    def save(self, *args, **kwargs):
+        self.item_profit = self.price - self.ingredient_cost
+        super(MenuItem, self).save(*args, **kwargs)
     def update_cost(instance):
         menu_item = instance
         total_cost = Ingredient.objects.filter(menu_item=menu_item).aggregate(Sum('price'))['price__sum'] or 0
-        menu_item.cost = total_cost
+        menu_item.ingredient_cost = total_cost
+        menu_item.save()
+    def update_orders_number(instance):
+        menu_item = instance
+        total_number = Order.objects.filter(menu_items=menu_item).count()
+        menu_item.orders_number = total_number
         menu_item.save()
 
 
 class MenuItemRating(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)  # Link the rating to a user
     menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
-    rating = models.PositiveIntegerField()
+    rating = models.DecimalField(decimal_places=1, max_digits=2)
+    comment = models.TextField(max_length=200, default="The food is too good")
     
 
 
@@ -189,3 +204,12 @@ class Messages(models.Model):
 @receiver(post_delete, sender=Ingredient)
 def update_menu_item(sender, instance, **kwargs):
     instance.menu_item.update_cost()
+
+@receiver(post_save, sender=Order)
+def update_menu_item(sender, instance, **kwargs):
+    instance.order_receiver.update_customer_profit()
+    
+@receiver(post_save, sender=Order)
+@receiver(post_delete, sender=Order)
+def update_menu_item(sender, instance, **kwargs):
+    instance.menu_items.update_orders_number()

@@ -31,6 +31,8 @@ def logins(request):
         if user != None:
             login(request, user)
             return redirect('home')
+        else:
+            messages.error(request, "Invalid credentials!.")
     return render(request, "login.html")
 
 
@@ -252,7 +254,6 @@ def manage_menu_item(request):
     menuItems = MenuItem.objects.all().order_by('-name')
     menu_items = []
     for menuitem in menuItems:
-        menuitem.profit = menuitem.price - menuitem.cost
         primary_image = MenuImage.objects.filter(menu_item=menuitem).first()
         menu_items.append({
             'menuitems':menuitem,
@@ -277,23 +278,23 @@ def filter_menu_item(request, id):
     return render(request, f"{user_validator(request)}/manage_menu_item.html", {'menu_items':menu_items, 'tables':tables})
 
 def menu_item_description(request, item_id):
+    rating_data = MenuItemRating.objects.filter(menu_item__id = item_id)
+    ratings = rating_data.values('rating').annotate(count=models.Count('rating'), percent =models.Count('rating') *100/(rating_data.count())).order_by('rating')
     menuitem = MenuItem.objects.get(id = item_id)
     images = MenuImage.objects.filter(menu_item = menuitem)
-    return render(request, f"{user_validator(request)}/menu_description.html", {'images':images, 'menuitem':menuitem})
+    return render(request, f"{user_validator(request)}/menu_description.html", {'images':images, 'menuitem':menuitem, 'ratings':ratings, 'rating_data':rating_data})
 
-
-# views.py
-from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 
 def rate_menu_item_ajax(request, menu_item_id):
     if request.method == 'POST':
+        comment = request.POST['comment']
         menu_item = get_object_or_404(MenuItem, pk=menu_item_id)
         has_rated = MenuItemRating.objects.filter(user=request.user, menu_item=menu_item).exists()
 
         if not has_rated:
             rating = int(request.POST.get('rating'))
-            menu_item_rating = MenuItemRating(user=request.user, menu_item=menu_item, rating=rating)
+            menu_item_rating = MenuItemRating(user=request.user, menu_item=menu_item, rating=rating, comment = comment)
             menu_item_rating.save()
 
             # Calculate and update the average rating for the menu item
@@ -303,8 +304,7 @@ def rate_menu_item_ajax(request, menu_item_id):
         else:
             messages.error(request, "You have alredy rated this food menu item")
     return redirect('my_order')
-
-
+        
 def add_menu_image(request):
     if request.method == "POST":
         menu_id = request.POST['menu_id']
