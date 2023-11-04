@@ -165,7 +165,7 @@ def add_user(request):
             return render(request, f"{user_validator(request)}/add_user.html")
         user = CustomUser.objects.create_user(user_type=user_type, username=fullname, email=email, password=password,first_name=first_name,last_name=last_name,)
         user.save()
-    return render(request, f"{user_validator(request)}/add_user.html")
+    return redirect('manage_user', user_type)
 
 def  manage_user(request, id):
     if id==0:

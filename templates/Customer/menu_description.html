@@ -43,7 +43,7 @@
         <div class="col">{{rating.comment}}</div>
     </div>
     <script>
-        var ratings = {{rating.rating}} + 0.5;
+        var ratings = {{rating.rating}};
         var starRating = document.getElementById("{{rating.user.id}}");
         for(let i = 1; i <= 5; i++){
         var star = document.createElement('span');
@@ -68,7 +68,7 @@
  <br>
  <h4 class="text-black"> Brief descriptions of a food menu</h4>
  <div class="row">
-    <h5>{{menuitem.description}}</h5>
+    <h5 class="text-black text-left">{{menuitem.description}}</h5>
  </div>
     <div class="card-body">
         <h5 class="card-title">Food Name: {{menuitem.name}}</h5>

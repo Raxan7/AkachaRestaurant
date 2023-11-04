@@ -14,17 +14,16 @@
   </head>
   <body>
 
-    <div class="container-scroller">
+    <div class="container-scroller m-0">
         {% include 'navigation.html'%}
-        <div class="container-fluid page-body-wrapper">
+        <div class="page-body-wrapper m-0" style="background-color: whitesmoke;" >
         
         {% block links %}
 
         {% endblock links %}
 
-        <div class="main-panel">
+        <div class="main-panel m-2" style="background-color: white;">
             {% include 'messages.html'%}
-
             {% block content%}
 
             {%endblock%}
