@@ -25,12 +25,22 @@
                       <i class="btn-info"><a class = "text-white" href="#">rating details</a></i>
                     </p>
                     <script>
-                      var numStars = {{menu_item.menuitems.average_rating}} + 0.5;
+                      var ratings = {{menu_item.menuitems.average_rating}};
                       var starRating = document.getElementById("{{menu_item.menuitems.id}}");
-                      for(let i = 1; i <= numStars; i++){
+                      for(let i = 1; i <= 5; i++){
                         var star = document.createElement('span');
-                        star.style.color = "gold";
-                        star.className = "mdi mdi-18px mdi-star";
+                        if(i <= ratings || i<=(ratings+0.25)){
+                          star.style.color = "gold";
+                          star.className = "mdi mdi-18px mdi-star";
+                        }else{
+                          if(i <= (ratings + 0.75)){
+                          star.style.color = "gold";
+                          star.className = "mdi mdi-18px mdi-star-half";
+                        }else{
+                          star.style.color = "gray";
+                          star.className = "mdi mdi-18px mdi-star";
+                        }
+                        }
                         starRating.appendChild(star);
                       }
                     </script>
@@ -46,7 +56,7 @@
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="updateModalLabel">Update {{menu_item.menuitems.name}}</h5>
+                  <h5 class="modal-title" id="updateModalLabel">Cart {{menu_item.menuitems.name}}</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
@@ -57,7 +67,7 @@
                     {% csrf_token %}
                     <br>
                     <div class="form-group">
-                      <label for="rating">Ordering</label>
+                      <label for="rating">Food carting</label>
                       <input type="hidden" name="rating" value="0" class="form-control rating-value">
                     </div>
                     <div class="rating">
@@ -70,7 +80,7 @@
                             <input class="form-control form-control-lg" type="hidden" name="menu_id" value="{{menu_item.menuitems.id}}">
                     </div>
                     <!-- This will render the form fields for updating the menu -->
-                    <button type="submit" class="btn btn-primary">Update</button>
+                    <button type="submit" class="btn btn-primary">Submit Order</button>
                   </form>
                 </div>
               </div>

@@ -60,7 +60,7 @@ class MenuItem(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
     price = models.FloatField()
-    average_rating = models.DecimalField(max_digits=2, decimal_places=1, default=0.0)
+    average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
     ingredient_cost = models.FloatField( default=0)
     item_profit = models.FloatField(default=0)
     orders_number = models.FloatField(default=0)

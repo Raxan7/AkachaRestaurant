@@ -43,12 +43,22 @@
         <div class="col">{{rating.comment}}</div>
     </div>
     <script>
-        var numStars = {{rating.rating}} + 0.5;
+        var ratings = {{rating.rating}} + 0.5;
         var starRating = document.getElementById("{{rating.user.id}}");
-        for(let i = 1; i <= numStars; i++){
+        for(let i = 1; i <= 5; i++){
         var star = document.createElement('span');
-        star.style.color = "gold";
-        star.className = "mdi mdi-18px mdi-star";
+        if(i <= ratings || i<=(ratings+0.25)){
+            star.style.color = "gold";
+            star.className = "mdi mdi-18px mdi-star";
+        }else{
+            if(i <= (ratings + 0.75)){
+            star.style.color = "gold";
+            star.className = "mdi mdi-18px mdi-star-half";
+        }else{
+            star.style.color = "gray";
+            star.className = "mdi mdi-18px mdi-star";
+        }
+        }
         starRating.appendChild(star);
         }
     </script>
