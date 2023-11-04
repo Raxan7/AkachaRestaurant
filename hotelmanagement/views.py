@@ -3,12 +3,24 @@ from django.contrib import messages
 from .models import CustomUser
 from .EmailBackEnd import EmailBackEnd
 from django.contrib.auth import login, logout
-from .models import User_type, Reservation, Messages, MenuItemRating, MenuImage, Restaurant, Review, MenuCategory, MenuItem, Order, OrderItem, Employee, Payment, Table
+from .models import *
 from .user_validator import user_validator
-from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Avg
 import datetime
+from django.contrib.auth import update_session_auth_hash
+from django.http import JsonResponse
+
+def check_username_availability(request):
+    username = request.GET.get('username')
+    exists = CustomUser.objects.filter(username=username).exists()
+    return JsonResponse({'exists': exists})
+
+def check_email_availability(request):
+    email = request.GET.get('email')
+    exists = CustomUser.objects.filter(email=email).exists()
+    return JsonResponse({'exists': exists})
+
 
 # Create your views here.
 def logins(request):
@@ -19,15 +31,20 @@ def logins(request):
         if user != None:
             login(request, user)
             return redirect('home')
+        else:
+            messages.error(request, "Invalid credentials!.")
     return render(request, "login.html")
 
 
 def home(request):
     return render(request, f"{user_validator(request)}/home.html")
 
-def userprofile(request, id):
-    user = CustomUser.objects.get(id=id)
-    return render(request, f"{user_validator(request)}/user_details.html", {'userr':user})
+def userprofile(request):
+    if request.method == "POST":
+        id = int(request.POST.get('id'))
+        user = CustomUser.objects.get(id=id)
+        base_template = f'{request.user.user_type}/base.html'
+        return render(request, 'user_details.html', {'base_template':base_template, 'userr':user})
 
 def logout_user(request):
     logout(request)
@@ -63,17 +80,40 @@ def register(request):
     else:
         return render(request, "register.html")
 
+def password_change(request):
+    if request.method == 'POST':
+        current_password = request.POST['current_password']
+        new_password = request.POST['new_password']
+        confirm_password = request.POST['confirm_password']
+        user = request.user
+
+        if user.check_password(current_password):
+            if new_password == confirm_password:
+                user.set_password(new_password)
+                user.save()
+                update_session_auth_hash(request, user)  # Update the user's session
+                messages.success(request, 'Password changed successfully.')
+                return redirect('profile')  # Redirect to the user's profile page
+            else:
+                messages.error(request, 'New passwords do not match.')
+        else:
+            messages.error(request, 'Current password is incorrect.')
+    base_template = f'{request.user.user_type}/base.html'
+
+    return render(request, 'password_change.html', {'base_template':base_template})
+
+
 def delete_user(request, id):
     user = CustomUser.objects.get(id=id)
     user.delete()
     if user.user_type == "Super":
-        return redirect("manage_user", 2)
+        return redirect("manage_user", user.user_type.id)
     else:
-        return redirect("manage_user", 1)
+        return redirect("manage_user", user.user_type.id)
 
 #0 means all user types present
 def activate_all_user(request):
-    users = CustomUser.objects.exclude(user_type=4)
+    users = CustomUser.objects.all()
     for user in users:
         user.is_active = True
         user.save()
@@ -81,10 +121,11 @@ def activate_all_user(request):
  
  #0 means all user types present
 def deactivate_all_user(request):
-    users = CustomUser.objects.exclude(user_type=4)
+    users = CustomUser.objects.exclude(user_type = 1)
     for user in users:
-        user.is_active = False
-        user.save()
+        if user.user_type != "CEO":
+            user.is_active = False
+            user.save()
     return redirect("manage_user", 0)       
 
 def deactivate_user(request, id):
@@ -152,7 +193,7 @@ def edit_user(request):
         if profile:
             user.profile = profile
         user.save()
-        return redirect('userprofile', id=id)
+    return redirect('userprofile', id=id)
 
 def add_menu_category(request):
     if request.method == "POST":
@@ -166,14 +207,19 @@ def manage_menu_category(request):
 
 def edit_menu_category(request, id):
     if request.method == "POST":
-        name = request.POST['name']
+        name = request.POST['menu_name']
         menu = MenuCategory.objects.get(id=id)
         menu.name=name
-        name.save()
-        return redirect("/")
+        menu.save()
+        return redirect("manage_menu_category")
     menu = MenuCategory.objects.get(id=id)
     return render(request, f"{user_validator(request)}/edit_menu_category.html", {"menu":menu})
-    
+
+def delete_menu_category(request, id):
+    menu_category = MenuCategory.objects.get(id = id)
+    menu_category.delete()
+    return redirect('manage_menu_category')
+
 def add_menu_item(request):
     if request.method == "POST":
         category_id = request.POST["category_id"]
@@ -182,8 +228,27 @@ def add_menu_item(request):
         price = float(request.POST['price'])
         category = MenuCategory.objects.get(id=category_id)
         MenuItem.objects.create(name=name, description=description, price=price,category=category)
-    categories = MenuCategory.objects.all()
-    return render(request, f"{user_validator(request)}/add_menu_item.html", {'menucategories':categories})
+        return redirect("manage_menu_item")
+
+def edit_menu_item(request, id):
+    if request.method == "POST":
+        menuItem = MenuItem.objects.get(id=id)
+        category_id = request.POST["category_id"]
+        name = request.POST['item_name']
+        description = request.POST['description']
+        price = request.POST['price']
+        category = MenuCategory.objects.get(id=category_id)
+        menuItem.name = name
+        menuItem.description=description
+        menuItem.price=price
+        menuItem.category=category
+        menuItem.save()
+    return redirect("manage_menu_item")
+
+def delete_menu_item(request, id):
+    menu_item = MenuItem.objects.get(id = id)
+    menu_item.delete()
+    return redirect('manage_menu_item')
 
 def manage_menu_item(request):
     menuItems = MenuItem.objects.all().order_by('-name')
@@ -194,86 +259,81 @@ def manage_menu_item(request):
             'menuitems':menuitem,
             'menuimage':primary_image
         })
+    categories = MenuCategory.objects.all()
+    tables = Table.objects.all()
+    return render(request, f"{user_validator(request)}/manage_menu_item.html", {'menu_items':menu_items, 'tables':tables, 'menucategories': categories})
+
+def filter_menu_item(request, id):
+    menu_category = MenuCategory.objects.get(id = id)
+    menuItems = MenuItem.objects.filter(category = menu_category).order_by('-name')
+    menu_items = []
+    for menuitem in menuItems:
+        menuitem.profit = menuitem.price - menuitem.cost
+        primary_image = MenuImage.objects.filter(menu_item=menuitem).first()
+        menu_items.append({
+            'menuitems':menuitem,
+            'menuimage':primary_image
+        })
     tables = Table.objects.all()
     return render(request, f"{user_validator(request)}/manage_menu_item.html", {'menu_items':menu_items, 'tables':tables})
 
 def menu_item_description(request, item_id):
+    rating_data = MenuItemRating.objects.filter(menu_item__id = item_id)
+    ratings = rating_data.values('rating').annotate(count=models.Count('rating'), percent =models.Count('rating') *100/(rating_data.count())).order_by('rating')
     menuitem = MenuItem.objects.get(id = item_id)
     images = MenuImage.objects.filter(menu_item = menuitem)
-    return render(request, f"{user_validator(request)}/menu_description.html", {'images':images, 'menuitem':menuitem})
+    return render(request, f"{user_validator(request)}/menu_description.html", {'images':images, 'menuitem':menuitem, 'ratings':ratings, 'rating_data':rating_data})
 
+from django.shortcuts import get_object_or_404
 
-def rate_menu_item(request, menu_item_id):
-    menu_item = get_object_or_404(MenuItem, pk=menu_item_id)
-    has_rated = MenuItemRating.objects.filter(user=request.user, menu_item=menu_item).exists()
+def rate_menu_item_ajax(request, menu_item_id):
+    if request.method == 'POST':
+        comment = request.POST['comment']
+        menu_item = get_object_or_404(MenuItem, pk=menu_item_id)
+        has_rated = MenuItemRating.objects.filter(user=request.user, menu_item=menu_item).exists()
 
-    if request.method == 'POST' and not has_rated:
-        rating = int(request.POST.get('rating'))
-        menu_item_rating = MenuItemRating(user=request.user, menu_item=menu_item, rating=rating)
-        menu_item_rating.save()
+        if not has_rated:
+            rating = int(request.POST.get('rating'))
+            menu_item_rating = MenuItemRating(user=request.user, menu_item=menu_item, rating=rating, comment = comment)
+            menu_item_rating.save()
 
-        # Calculate and update the average rating for the menu item
-        menu_item.average_rating = MenuItemRating.objects.filter(menu_item=menu_item).aggregate(Avg('rating'))['rating__avg']
-        menu_item.save()
-
-        return redirect('menu_item_detail', menu_item_id=menu_item_id)
-
-    return render(request, f"{user_validator(request)}/rate_menu_item.html", {'menu_item': menu_item, 'has_rated': has_rated})
-
-
-def edit_menu_item(request, id):
-    if request.method == "POST":
-        menuItem = MenuItem.objects.get(id=id)
-        category_id = request.POST["category_id"]
-        name = request.POST['name']
-        description = request.POST['description']
-        price = request.POST['price']
-        category = MenuCategory.objects.get(id=category_id)
-        menuItem.name = name
-        menuItem.description=description
-        menuItem.price=price
-        menuItem.category=category
-        menuItem.save()
-        return redirect("/")
-    menu_item = MenuItem.objects.get(id=id)
-    return render(request, f"{user_validator(request)}/edit_menu_item.html", {"menu_item":menu_item})
-
+            # Calculate and update the average rating for the menu item
+            menu_item.average_rating = MenuItemRating.objects.filter(menu_item=menu_item).aggregate(Avg('rating'))['rating__avg']
+            menu_item.save()
+            messages.success(request, "Rating Submitted successfully")
+        else:
+            messages.error(request, "You have alredy rated this food menu item")
+    return redirect('my_order')
+        
 def add_menu_image(request):
     if request.method == "POST":
         menu_id = request.POST['menu_id']
         image = request.FILES.get('image')
         menu = MenuItem.objects.get(id = menu_id)
-        MenuImage.objects.create(menu_item = menu, image = image)
-        return redirect("add_menu_image")
-    menuitems = MenuItem.objects.all()
-    return render(request, f"{user_validator(request)}/add_menu_image.html", {'menuitems':menuitems})
-
-#ajax to get menu items when adding imge
-def get_items(request):
-    category_id = request.GET.get('category_id')
-    items = MenuItem.objects.filter(menucategory__id = category_id).values('id', 'name')
-    return JsonResponse({'items': list(items)})
+        MenuImage.objects.create(menu_item = menu, image=image)
+        return redirect("manage_menu_image")
 
 def manage_menu_image(request):
     menu_images = MenuImage.objects.all()
-    return render(request, f"{user_validator(request)}/manage_menu_image.html", {'images': menu_images})
+    menuitems = MenuItem.objects.all()
+    return render(request, f"{user_validator(request)}/manage_menu_image.html", {'images': menu_images, 'menuitems':menuitems})
 
 def edit_menu_image(request, id):
     if request.method == "POST":
-        menu_id = request.POST['menu_id']
-        category_id = request.POST["category_id"]
-        image = request.FILES['image']
-        category = MenuCategory.objects.get(id=category_id)
+        menu_id = int(request.POST.get('menu_id'))
+        image = request.FILES.get('image')
         menu = MenuItem.objects.get(id = menu_id)
         menu_image = MenuImage.objects.get(id=id)
         if image:
             menu_image.image=image
         menu_image.menu_item=menu
-        menu_image.menu_category = category
         menu_image.save()
-        return redirect("edit_menu_image", id)
-    menu_image = MenuImage.objects.get(id=id)
-    return render(request, f"{user_validator(request)}/edit_menu_image.html", {'menu_image':menu_image})
+    return redirect("manage_menu_image")
+
+def delete_menu_image(request, id):
+    menu_image = MenuImage.objects.get(id = id)
+    menu_image.delete()
+    return redirect("manage_menu_image")
 
 def add_restaurant(request):
     if request.method == "POST":
@@ -330,7 +390,7 @@ def add_order(request):
         order.save()
         user_type = User_type.objects.get(id = 1)
         message = f"There is a {menu_item.name} request at table number {table.table_number}"
-        # Messages.objects.create(sender = receiver, order= order, message=message, receiver_category=user_type )
+        Messages.objects.create(sender = receiver, order= order, message=message, receiver_category=user_type )
     return redirect('manage_menu_item')
         
 def my_order(request):
@@ -366,3 +426,43 @@ def waiter_activity_check(request):
 def manage_sale(request):
     orders = Order.objects.all()
     return render(request, f"{user_validator(request)}/manage_sales.html", {'orders':orders})
+
+def add_ingredient(request):
+    if request.method == "POST":
+        ingredient_name = request.POST['ingredient_name']
+        quantity = float(request.POST['quantity'])
+        measure = request.POST['measure']
+        menu_id = request.POST['menu_id']
+        price_one= float(request.POST['price'])
+        
+        menu_item  = MenuItem.objects.get(id = menu_id)
+        Ingredient.objects.create(ingredient_name=ingredient_name, quantity=quantity, measured_in = measure, price = price_one * quantity, menu_item = menu_item )
+    return redirect('manage_ingredient')
+
+def manage_ingredient(request):
+    menu_items = MenuItem.objects.all().order_by('-name')
+    ingredients = Ingredient.objects.all().order_by('-menu_item')
+    return render(request, f"{user_validator(request)}/manage_ingredients.html", {'ingredients':ingredients, 'menu_items': menu_items})
+
+def delete_ingredient(request, id):
+    ingredient = Ingredient.objects.get(id = id)
+    ingredient.delete()
+    return redirect("manage_ingredient")
+
+def edit_ingredient(request, id):
+    if request.method == "POST":
+        ingredient_name = request.POST['ingredient_name']
+        quantity = float(request.POST['quantity'])
+        measure = request.POST['measure']
+        menu_id = request.POST['menu_id']
+        price_one= float(request.POST['price'])
+        
+        menu_item  = MenuItem.objects.get(id = menu_id)
+        ingredient = Ingredient.objects.get(id = id)
+        ingredient.ingredient_name = ingredient_name
+        ingredient.quantity = quantity
+        ingredient.measured_in = measure
+        ingredient.price = price_one * quantity
+        ingredient.menu_item = menu_item
+        ingredient.save()
+    return redirect("manage_ingredient")

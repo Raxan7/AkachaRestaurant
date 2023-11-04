@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% load static %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Homepage</title>
+    <link rel="stylesheet" href="{% static 'style.css'%}">
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.9.55/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.1.2/css/all.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'mystyle.css' %}" />
+  </head>
+  <body>
+
+    <div class="container-scroller">
+        {% include 'navigation.html'%}
+        <div class="container-fluid page-body-wrapper">
+        
+        {% block links %}
+
+        {% endblock links %}
+
+        <div class="main-panel">
+            {% include 'messages.html'%}
+
+            {% block content%}
+
+            {%endblock%}
+
+            {% include 'footer.html' with user=user id=id %}
+        </div>
+        </div>
+        </div>
+      <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/off-canvas.js'%}"></script>
+    <script src="{% static 'js/hoverable-collapse.js'%}"></script>
+    <script src="{% static 'js/misc.js'%}"></script>
+    <script src="{% static 'js/dashboard.js'%}"></script>
+  </body>
+</html>

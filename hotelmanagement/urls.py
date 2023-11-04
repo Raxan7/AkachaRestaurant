@@ -14,10 +14,11 @@ urlpatterns = [
     path("register", views.register, name="register"),
     path("home", views.home, name="home"),
     path("logout", views.logout_user, name="logout"),
+    path("password_change", views.password_change, name="password_change"),
     path("add_user", views.add_user, name="add_user"),
     path("add_user_type", views.add_user_type, name="add_user_type"),
     path("manage_user/<int:id>", views.manage_user, name="manage_user"),
-    path("userprofile/<int:id>", views.userprofile, name="userprofile"),
+    path("userprofile", views.userprofile, name="userprofile"),
     path("edit_user", views.edit_user, name="edit_user"),
     path("delete_user/<int:id>", views.delete_user, name="delete_user"),
     path("deactivate_user/<int:id>", views.deactivate_user, name="deactivate_user"),
@@ -28,16 +29,19 @@ urlpatterns = [
     path("add_menu_category", views.add_menu_category, name="add_menu_category"),
     path("edit_menu_category/<int:id>", views.edit_menu_category, name = "edit_menu_category"),
     path("manage_menu_category", views.manage_menu_category, name="manage_menu_category"),
+    path("delete_menu_category/<int:id>", views.delete_menu_category, name = "delete_menu_category"),
     
     path("add_menu_item", views.add_menu_item, name="add_menu_item"),
     path("edit_menu_item/<int:id>", views.edit_menu_item, name = "edit_menu_item"),
     path("manage_menu_item", views.manage_menu_item, name="manage_menu_item"),
-     path("menu_item_description/<int:item_id>", views.menu_item_description, name="menu_item_description"),
+    path("filter_menu_item/<int:id>", views.filter_menu_item, name = "filter_menu_item"),
+    path("menu_item_description/<int:item_id>", views.menu_item_description, name="menu_item_description"),
+    path("delete_menu_item/<int:id>", views.delete_menu_item, name = "delete_menu_item"), 
     
     path("add_menu_image", views.add_menu_image, name="add_menu_image"),
     path("edit_menu_image/<int:id>", views.edit_menu_image, name = "edit_menu_image"),
     path("manage_menu_image", views.manage_menu_image, name="manage_menu_image"),
-    path("get_items", views.get_items, name="get_items"),
+    path("delete_menu_image/<int:id>", views.delete_menu_image, name = "delete_menu_image"),
     
     path("add_table", views.add_table, name="add_table"),
     path("manage_table", views.manage_table, name="manage_table"),
@@ -50,4 +54,12 @@ urlpatterns = [
     path("waiter_activity_check", views.waiter_activity_check, name="waiter_activity_check"),
     
     path("manage_sale", views.manage_sale, name = "manage_sale"),
+    path("manage_ingredient", views.manage_ingredient, name = "manage_ingredient"),
+    path("add_ingredient", views.add_ingredient, name = "add_ingredient"),
+    path("edit_ingredient/<int:id>", views.edit_ingredient, name = "edit_ingredient"),
+    path("delete_ingredient/<int:id>", views.delete_ingredient, name = "delete_ingredient"),
+    
+    path('rate_menu_item_ajax/<int:menu_item_id>/', views.rate_menu_item_ajax, name='rate_menu_item_ajax'),
+    path('check_email_availability/', views.check_email_availability, name = 'check_email_availability'),
+    path('check_username_availability/', views.check_username_availability, name = 'check_username_availability'),
 ]
