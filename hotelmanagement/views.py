@@ -3,7 +3,7 @@ from django.contrib import messages
 from .models import CustomUser
 from .EmailBackEnd import EmailBackEnd
 from django.contrib.auth import login, logout
-from .models import User_type ,Reservation, Messages, MenuItemRating, MenuImage, Restaurant, Review, MenuCategory, MenuItem, Order, OrderItem, Employee, Payment, Table
+from .models import User_type, Reservation, Messages, MenuItemRating, MenuImage, Restaurant, Review, MenuCategory, MenuItem, Order, OrderItem, Employee, Payment, Table
 from .user_validator import user_validator
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
