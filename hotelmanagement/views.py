@@ -287,6 +287,26 @@ def menu_items_api(request):
         })
     return JsonResponse({'menu_items': menu_items_data})
 
+def search_menu_items(request):
+    query = request.GET.get('query')
+    menu_items = MenuItem.objects.filter(name__icontains=query) | MenuItem.objects.filter(category__name__icontains=query)
+    menu_items_data = []
+    for menu_item in menu_items:
+        primary_image = MenuImage.objects.filter(menu_item=menu_item).first()
+        menu_items_data.append({
+            'id': menu_item.id,
+            'name': menu_item.name,
+            'price': menu_item.price,
+            'image_url': primary_image.image.url if primary_image else None,
+            'category': menu_item.category.name,
+            'ingredient_cost': menu_item.ingredient_cost,
+            'item_profit':menu_item.item_profit,
+            'average_rating':menu_item.average_rating,
+            'orders_number':menu_item.orders_number,
+            # Add other fields as needed
+        })
+    return JsonResponse({'menu_items': menu_items_data})
+
 def filter_menu_item(request, id):
     menu_category = MenuCategory.objects.get(id = id)
     menuItems = MenuItem.objects.filter(category = menu_category).order_by('-name')

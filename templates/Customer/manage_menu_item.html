@@ -2,18 +2,27 @@
 {% block content %}
 <h3 style="text-align: center;">Food Menu</h3>
 <div class="container">
-  <div class="row">
-    <div class="col">ORDER BY: </div>
-    <button id="order-by-name-button" class="btn-primary col">Food Name</button>
-    <button id="order-by-price-low-high-button" class="btn-primary col">price: low-high</button>
-    <button id="order-by-price-high-low-button" class="btn-primary col">price: high-low</button>
-    <button id="order-by-best-selling-button" class="btn-primary col">Best sellings</button>
-    <button id="order-by-ratings-button" class="btn-primary col">Ratings</button>
+  <div class="col">
+    <div class="row justify-content-center mb-3">
+      <div class="container mt-5">
+        <div class="input-group col-sm">
+          <div class="input-group-prepend m-0 p-0">
+              <span class="input-group-text m-0 p-0"><i class="mdi mdi-24px mdi-magnify p-0 m-0"></i></span>
+          </div>
+          <input type="text" id="search-input" class="form-control" style="border: 2px green solid; max-width: 500px;" placeholder="search">
+        </div>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col m-1">ORDER BY: </div>
+      <button id="order-by-name-button" class="btn-secondary col m-1">Food Name</button>
+      <button id="order-by-price-low-high-button" class="btn-secondary col m-1">price: low-high</button>
+      <button id="order-by-price-high-low-button" class="btn-secondary col m-1">price: high-low</button>
+      <button id="order-by-best-selling-button" class="btn-secondary col m-1">Best sellings</button>
+      <button id="order-by-ratings-button" class="btn-secondary col m-1">Ratings</button>
+      <button id="order-by-category-button" class="btn-secondary col m-1">Category</button>
+    </div>
   </div>
-  <div ></div>
-  
- <h3 style="text-align: center;">Food Menu</h3>
-<div class="container" >
  <div class="row" id="menu-items-container">
     {% for menu_item in menu_items %}
     <div class="col-md-4">
@@ -133,6 +142,7 @@
               menuItemsContainer.append(menuItemCard);
             });
           }
+          
         },
         error: function (error) {
           console.error('Error fetching menu items:', error);
@@ -156,10 +166,49 @@
       loadMenuItems('-average_rating');
     });
 
+    $('#order-by-category-button').on('click', function () {
+      loadMenuItems('category__name');
+    });
+
     $('#order-by-name-button').on('click', function () {
       loadMenuItems('name');
     });
   });
 </script>
+<script>
+  var menuItemsContainer = "";
+    $(document).ready(function() {
+        $('#search-input').on('input', function() {
+            var query = $(this).val();
+            $.get('/search_menu_items/', { query: query }, function(data) {
+                if (data.menu_items && data.menu_items.length > 0) {
+                menuItemsContainer = $('#menu-items-container');
+                menuItemsContainer.empty(); // Clear previous items
+                $.each(data.menu_items, function (index, menu_item) {
+                  var menuItemCard = `
+                    <div class="col-md-4">
+                      <div class="card mb-4">
+                        <a href="menu_item_description/${menu_item.id}">
+                          <img src="${menu_item.image_url}" class="card-img-top" alt="${menu_item.name}">
+                        </a>
+                        <div class="card-body">
+                          <h5 class="card-title">Food Name: ${menu_item.name}</h5>
+                          <h6 class="card-text">Food Price: ${menu_item.price}/=</h6>
+                          <!-- Add the rest of your card content here -->
+                        </div>
+                      </div>
+                    </div>
+                  `;
+                  menuItemsContainer.append(menuItemCard);
+                });
+              } else {
+                    menuItemsContainer.empty();
+                    menuItemsContainer.append('<p class="text-danger">No results found.</p>');
+                }
+            });
+        });
+    });
+</script>
+
 {% endblock %}
 
