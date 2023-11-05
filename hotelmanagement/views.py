@@ -277,7 +277,6 @@ def menu_items_api(request):
             'id': menu_item.id,
             'name': menu_item.name,
             'price': menu_item.price,
-            'order': order,
             'image_url': primary_image.image.url if primary_image else None,
             'category': menu_item.category.name,
             'ingredient_cost': menu_item.ingredient_cost,
