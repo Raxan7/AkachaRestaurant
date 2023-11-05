@@ -62,4 +62,6 @@ urlpatterns = [
     path('rate_menu_item_ajax/<int:menu_item_id>/', views.rate_menu_item_ajax, name='rate_menu_item_ajax'),
     path('check_email_availability/', views.check_email_availability, name = 'check_email_availability'),
     path('check_username_availability/', views.check_username_availability, name = 'check_username_availability'),
+    
+    path('menu_items_api/', views.menu_items_api, name = 'menu_items_api'),
 ]

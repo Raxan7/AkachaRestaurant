@@ -1,9 +1,19 @@
 {% extends 'Customer/base.html' %}
-{% block content%}
-
- <h3 style="text-align: center;">Food Menu</h3>
+{% block content %}
+<h3 style="text-align: center;">Food Menu</h3>
 <div class="container">
- <div class="row">
+  <div class="btn-group" role="group" aria-label="Order Menu Items">
+    <button id="order-by-name-button" class="btn btn-primary">Order by Name</button>
+    <button id="order-by-price-low-high-button" class="btn btn-primary">price: low-high</button>
+    <button id="order-by-price-high-low-button" class="btn btn-primary">price: high-low</button>
+    <button id="order-by-best-selling-button" class="btn btn-primary">Best sellings</button>
+    <button id="order-by-ratings-button" class="btn btn-primary">Ratings</button>
+  </div>
+  <div ></div>
+  
+ <h3 style="text-align: center;">Food Menu</h3>
+<div class="container" >
+ <div class="row" id="menu-items-container">
     {% for menu_item in menu_items %}
     <div class="col-md-4">
         <div class="card mb-4">
@@ -89,5 +99,67 @@
         </div>
     </div>
     </div>
-    {% endfor %}
-{%endblock%}
+    {%endfor%}
+</div>
+
+<script>
+  $(document).ready(function () {
+    function loadMenuItems(orderBy) {
+      // Fetch menu items via Ajax and display them below
+      $.ajax({
+        url: '{% url "menu_items_api" %}?order_by=' + orderBy,
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+          if (data.menu_items && data.menu_items.length > 0) {
+            var menuItemsContainer = $('#menu-items-container');
+            menuItemsContainer.empty(); // Clear previous items
+            $.each(data.menu_items, function (index, menu_item) {
+              var menuItemCard = `
+                <div class="col-md-4">
+                  <div class="card mb-4">
+                    <a href="menu_item_description/${menu_item.id}">
+                      <img src="${menu_item.image_url}" class="card-img-top" alt="${menu_item.name}">
+                    </a>
+                    <div class="card-body">
+                      <h5 class="card-title">Food Name: ${menu_item.name}</h5>
+                      <h6 class="card-text">Food Price: ${menu_item.price}/=</h6>
+                      <h6 class="card-text">Food Price: ${menu_item.order}/=</h6>
+                      <!-- Add the rest of your card content here -->
+                    </div>
+                  </div>
+                </div>
+              `;
+              menuItemsContainer.append(menuItemCard);
+            });
+          }
+        },
+        error: function (error) {
+          console.error('Error fetching menu items:', error);
+        }
+      });
+    }
+
+    $('#order-by-price-low-high-button').on('click', function () {
+      loadMenuItems('price');
+    });
+
+    $('#order-by-price-high-low-button').on('click', function () {
+      loadMenuItems('-price');
+    });
+
+    $('#order-by-best-selling-button').on('click', function () {
+      loadMenuItems('-orders_number');
+    });
+
+    $('#order-by-ratings-button').on('click', function () {
+      loadMenuItems('-average_rating');
+    });
+
+    $('#order-by-name-button').on('click', function () {
+      loadMenuItems('name');
+    });
+  });
+</script>
+{% endblock %}
+
