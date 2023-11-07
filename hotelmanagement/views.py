@@ -45,6 +45,7 @@ def userprofile(request):
         user = CustomUser.objects.get(id=id)
         base_template = f'{request.user.user_type}/base.html'
         return render(request, 'user_details.html', {'base_template':base_template, 'userr':user})
+    return redirect('home')
 
 def logout_user(request):
     logout(request)
@@ -165,7 +166,7 @@ def add_user(request):
             return render(request, f"{user_validator(request)}/add_user.html")
         user = CustomUser.objects.create_user(user_type=user_type, username=fullname, email=email, password=password,first_name=first_name,last_name=last_name,)
         user.save()
-    return render(request, f"{user_validator(request)}/add_user.html")
+    return redirect('manage_user', user_type)
 
 def  manage_user(request, id):
     if id==0:
@@ -193,7 +194,7 @@ def edit_user(request):
         if profile:
             user.profile = profile
         user.save()
-    return redirect('userprofile', id=id)
+    return redirect('userprofile')
 
 def add_menu_category(request):
     if request.method == "POST":
@@ -262,6 +263,49 @@ def manage_menu_item(request):
     categories = MenuCategory.objects.all()
     tables = Table.objects.all()
     return render(request, f"{user_validator(request)}/manage_menu_item.html", {'menu_items':menu_items, 'tables':tables, 'menucategories': categories})
+
+from django.http import JsonResponse
+from .models import MenuItem, MenuImage
+
+def menu_items_api(request):
+    order = request.GET.get('order_by')
+    menu_items = MenuItem.objects.all().order_by(f'{order}')
+    menu_items_data = []
+    for menu_item in menu_items:
+        primary_image = MenuImage.objects.filter(menu_item=menu_item).first()
+        menu_items_data.append({
+            'id': menu_item.id,
+            'name': menu_item.name,
+            'price': menu_item.price,
+            'image_url': primary_image.image.url if primary_image else None,
+            'category': menu_item.category.name,
+            'ingredient_cost': menu_item.ingredient_cost,
+            'item_profit':menu_item.item_profit,
+            'average_rating':menu_item.average_rating,
+            'orders_number':menu_item.orders_number,
+            # Add other fields as needed
+        })
+    return JsonResponse({'menu_items': menu_items_data})
+
+def search_menu_items(request):
+    query = request.GET.get('query')
+    menu_items = MenuItem.objects.filter(name__icontains=query) | MenuItem.objects.filter(category__name__icontains=query)
+    menu_items_data = []
+    for menu_item in menu_items:
+        primary_image = MenuImage.objects.filter(menu_item=menu_item).first()
+        menu_items_data.append({
+            'id': menu_item.id,
+            'name': menu_item.name,
+            'price': menu_item.price,
+            'image_url': primary_image.image.url if primary_image else None,
+            'category': menu_item.category.name,
+            'ingredient_cost': menu_item.ingredient_cost,
+            'item_profit':menu_item.item_profit,
+            'average_rating':menu_item.average_rating,
+            'orders_number':menu_item.orders_number,
+            # Add other fields as needed
+        })
+    return JsonResponse({'menu_items': menu_items_data})
 
 def filter_menu_item(request, id):
     menu_category = MenuCategory.objects.get(id = id)

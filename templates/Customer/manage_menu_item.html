@@ -1,9 +1,35 @@
 {% extends 'Customer/base.html' %}
-{% block content%}
-
- <h3 style="text-align: center;">Food Menu</h3>
+{% block content %}
+<h3 style="text-align: center;">Food Menu</h3>
 <div class="container">
- <div class="row">
+  <div class="col">
+
+    <!--Search-->
+    <div class="row justify-content-center mb-3">
+      <div class="container mt-5">
+        <div class="input-group col-sm">
+          <div class="input-group-prepend m-0 p-0">
+              <span class="input-group-text m-0 p-0"><i class="mdi mdi-24px mdi-magnify p-0 m-0"></i></span>
+          </div>
+          <input type="text" id="search-input" class="form-control" style="border: 2px green solid; max-width: 500px;" placeholder="search">
+        </div>
+      </div>
+    </div>
+
+    <!--Order-->
+    <div class="row mb-3">
+      <div class="col m-1">ORDER BY: </div>
+      <button id="order-by-name-button" class="btn-secondary col m-1">Food Name</button>
+      <button id="order-by-price-low-high-button" class="btn-secondary col m-1">price: low-high</button>
+      <button id="order-by-price-high-low-button" class="btn-secondary col m-1">price: high-low</button>
+      <button id="order-by-best-selling-button" class="btn-secondary col m-1">Best sellings</button>
+      <button id="order-by-ratings-button" class="btn-secondary col m-1">Ratings</button>
+      <button id="order-by-category-button" class="btn-secondary col m-1">Category</button>
+    </div>
+  </div>
+
+  <!--Results-->
+ <div class="row" id="menu-items-container">
     {% for menu_item in menu_items %}
     <div class="col-md-4">
         <div class="card mb-4">
@@ -22,7 +48,7 @@
                     <p class="text-black text-center">
                       <i id="{{menu_item.menuitems.id}}"></i>
                       <i class="">{{menu_item.menuitems.average_rating}}</i>
-                      <i class="btn-info"><a class = "text-white" href="#">rating details</a></i>
+                      <i class="btn-info"><a class = "text-white" href="{% url 'menu_item_description' menu_item.menuitems.id %}">rating details</a></i>
                     </p>
                     <script>
                       var ratings = {{menu_item.menuitems.average_rating}};
@@ -52,6 +78,7 @@
               </div>                   
             </div>
 
+            <!--Popups-->
             <div class="modal fade" id="updateModal{{ menu_item.menuitems.id }}" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
@@ -89,5 +116,250 @@
         </div>
     </div>
     </div>
-    {% endfor %}
-{%endblock%}
+    {%endfor%}
+</div>
+
+<!--Ordering Ajax-->
+<script>
+  $(document).ready(function () {
+    function loadMenuItems(orderBy) {
+      // Fetch menu items via Ajax and display them below
+      $.ajax({
+        url: '{% url "menu_items_api" %}?order_by=' + orderBy,
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+          if (data.menu_items && data.menu_items.length > 0) {
+            var menuItemsContainer = $('#menu-items-container');
+            menuItemsContainer.empty(); // Clear previous items
+            $.each(data.menu_items, function (index, menu_item) {
+              var menuItemCard = `
+                <div class="col-md-4">
+                  <div class="card mb-4">
+                    <a href="menu_item_description/${menu_item.id}">
+                      <img src="${menu_item.image_url}" class="card-img-top" alt="${menu_item.name}">
+                    </a>
+                    <div class="card-body">
+                      <h5 class="card-title">Food Name: ${menu_item.name}</h5>
+                      <h6 class="card-text">Food Price: ${menu_item.price}/=</h6>
+                      <!-- Add the rest of your card content here -->
+
+                      <div class="star-ratings">
+                        <span class="stars" data-rating="${menu_item.average_rating }">
+                            <p class="text-black text-center">
+                              <i id="m-${menu_item.id}"></i>
+                              <i class="">${menu_item.average_rating}</i>
+                              <i class="btn-info"><a class = "text-white" href="menu_item_description/${menu_item.id}">rating details</a></i>
+                            </p>
+                        </span>
+                      </div>
+                      <div class="row">
+                        <i class=" col">${menu_item.orders_number} Orders</i>
+                        <button class="update-button col btn-primary" data-toggle="modal" data-target="#updateModal${ menu_item.id }">Cart</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+                <!--Popups-->
+                <div class="modal fade" id="updateModal${ menu_item.id }" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="updateModalLabel">Cart ${menu_item.name}</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <!-- Add a form for updating the menu -->
+                      <form method="post" action="{% url 'add_order'%}">
+                        {% csrf_token %}
+                        <br>
+                        <div class="form-group">
+                          <label for="rating">Food carting</label>
+                          <input type="hidden" name="rating" value="0" class="form-control rating-value">
+                        </div>
+                        <div class="rating">
+                            <div class="form-group">
+                              <select class="form-control form-control-lg" name="table_id" id="">
+                                {% for table in tables %}
+                                <option class="form-control form-control-lg" value="{{table.id}}">{{table.table_number}}</option>
+                                {% endfor %}
+                              </select>
+                              <input class="form-control form-control-lg" type="hidden" name="menu_id" value="${menu_item.id}">
+                        </div>
+                        <!-- This will render the form fields for updating the menu -->
+                        <button type="submit" class="btn btn-primary">Submit Order</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              `;
+              menuItemsContainer.append(menuItemCard);
+
+              var ratings = parseFloat(menu_item.average_rating);
+              var starRating = document.getElementById(`m-${menu_item.id}`);
+              for(let i = 1; i <= 5; i++){
+                var star = document.createElement('span');
+                if(i <= ratings | i <= (ratings + 0.25)){
+                  star.style.color = "gold";
+                  star.className = "mdi mdi-18px mdi-star";
+                }else{
+                  if(i <= (ratings + 0.75)){
+                  star.style.color = "gold";
+                  star.className = "mdi mdi-18px mdi-star-half";
+                }else{
+                  star.style.color = "gray";
+                  star.className = "mdi mdi-18px mdi-star";
+                }
+                }
+                starRating.appendChild(star);
+              }
+            });
+          }
+          
+        },
+        error: function (error) {
+          console.error('Error fetching menu items:', error);
+        }
+      });
+    }
+
+    $('#order-by-price-low-high-button').on('click', function () {
+      loadMenuItems('price');
+    });
+
+    $('#order-by-price-high-low-button').on('click', function () {
+      loadMenuItems('-price');
+    });
+
+    $('#order-by-best-selling-button').on('click', function () {
+      loadMenuItems('-orders_number');
+    });
+
+    $('#order-by-ratings-button').on('click', function () {
+      loadMenuItems('-average_rating');
+    });
+
+    $('#order-by-category-button').on('click', function () {
+      loadMenuItems('category__name');
+    });
+
+    $('#order-by-name-button').on('click', function () {
+      loadMenuItems('name');
+    });
+  });
+</script>
+
+<!-- Search results ajax -->
+<script>
+  var menuItemsContainer = "";
+    $(document).ready(function() {
+        $('#search-input').on('input', function() {
+            var query = $(this).val();
+            $.get('/search_menu_items/', { query: query }, function(data) {
+                if (data.menu_items && data.menu_items.length > 0) {
+                menuItemsContainer = $('#menu-items-container');
+                menuItemsContainer.empty(); // Clear previous items
+                $.each(data.menu_items, function (index, menu_item) {
+                  var menuItemCard = `
+                    <div class="col-md-4">
+                  <div class="card mb-4">
+                    <a href="menu_item_description/${menu_item.id}">
+                      <img src="${menu_item.image_url}" class="card-img-top" alt="${menu_item.name}">
+                    </a>
+                    <div class="card-body">
+                      <h5 class="card-title">Food Name: ${menu_item.name}</h5>
+                      <h6 class="card-text">Food Price: ${menu_item.price}/=</h6>
+                      <!-- Add the rest of your card content here -->
+
+                      <div class="star-ratings">
+                        <span class="stars" data-rating="${menu_item.average_rating }">
+                            <p class="text-black text-center">
+                              <i id="m-${menu_item.id}"></i>
+                              <i class="">${menu_item.average_rating}</i>
+                              <i class="btn-info"><a class = "text-white" href="menu_item_description/${menu_item.id}">rating details</a></i>
+                            </p>
+                        </span>
+                      </div>
+                      <div class="row">
+                        <i class=" col">${menu_item.orders_number} Orders</i>
+                        <button class="update-button col btn-primary" data-toggle="modal" data-target="#updateModal${ menu_item.id }">Cart</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+                <!--Popups-->
+                <div class="modal fade" id="updateModal${ menu_item.id }" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="updateModalLabel">Cart ${menu_item.name}</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <!-- Add a form for updating the menu -->
+                      <form method="post" action="{% url 'add_order'%}">
+                        {% csrf_token %}
+                        <br>
+                        <div class="form-group">
+                          <label for="rating">Food carting</label>
+                          <input type="hidden" name="rating" value="0" class="form-control rating-value">
+                        </div>
+                        <div class="rating">
+                            <div class="form-group">
+                              <select class="form-control form-control-lg" name="table_id" id="">
+                                {% for table in tables %}
+                                <option class="form-control form-control-lg" value="{{table.id}}">{{table.table_number}}</option>
+                                {% endfor %}
+                              </select>
+                              <input class="form-control form-control-lg" type="hidden" name="menu_id" value="${menu_item.id}">
+                        </div>
+                        <!-- This will render the form fields for updating the menu -->
+                        <button type="submit" class="btn btn-primary">Submit Order</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              `;
+                menuItemsContainer.append(menuItemCard);
+                var ratings = parseFloat(menu_item.average_rating);
+                var starRating = document.getElementById(`m-${menu_item.id}`);
+                for(let i = 1; i <= 5; i++){
+                  var star = document.createElement('span');
+                  if(i <= ratings | i <= (ratings + 0.25)){
+                    star.style.color = "gold";
+                    star.className = "mdi mdi-18px mdi-star";
+                  }else{
+                    if(i <= (ratings + 0.75)){
+                    star.style.color = "gold";
+                    star.className = "mdi mdi-18px mdi-star-half";
+                  }else{
+                    star.style.color = "gray";
+                    star.className = "mdi mdi-18px mdi-star";
+                  }
+                  }
+                  starRating.appendChild(star);
+                }
+                });
+              } else {
+                    menuItemsContainer.empty();
+                    menuItemsContainer.append('<p class="text-danger">No results found.</p>');
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock %}
+

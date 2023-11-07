@@ -17,15 +17,11 @@
             {%for order in orders%}
           <tr>
             <td>{{order.menu_items.name}}</td>
-            <td>{{order.menu_items.cost}}</td>
+            <td>{{order.menu_items.ingredient_cost}}</td>
             <td> {{order.menu_items.price}}</td>
-            <td id="{{order.id}}"></td>
+            <td>{{order.menu_items.item_profit}}</td>
             <td>{{order.ordered_time}}</td>
           </tr>
-          <script>
-            var profit = {{order.menu_items.price}} - {{order.menu_items.cost}};
-            document.getElementById("{{order.id}}").innerHTML=profit;
-          </script>
           {%endfor%}
         </tbody>
       </table>
