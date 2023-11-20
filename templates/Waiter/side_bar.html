@@ -11,7 +11,7 @@
     <nav class="sidebar sidebar-offcanvas" id="sidebar">
       <ul class="nav">
         <li class="nav-item nav-profile">
-          <a href="#"  class="nav-link">
+          <a href="#" data-toggle="offcanvas"  class="nav-link">
             <div class="nav-profile-image">
               {% if user.profile %}
                 <img src="{{user.profile.url}}" alt="profile" />
@@ -27,31 +27,31 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="home" href="{% url 'home'%}">
+          <a class="nav-link" data-toggle="offcanvas" id="home" href="{% url 'home'%}">
             <span class="menu-title">Dashboard</span>
             <i class="mdi mdi-home menu-icon"></i>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="manage-menu-category" href="{%url 'manage_menu_category'%}">
+          <a class="nav-link" data-toggle="offcanvas" id="manage-menu-category" href="{%url 'manage_menu_category'%}">
             <span class="menu-title">Manage menu categories</span>
             <i class="mdi mdi-contacts menu-icon"></i>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="manage-menu-item" href="{% url 'manage_menu_item'%}">
+          <a class="nav-link" data-toggle="offcanvas" id="manage-menu-item" href="{% url 'manage_menu_item'%}">
             <span class="menu-title">Manage Menu Items</span>
             <i class="mdi mdi-contacts menu-icon"></i>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="manage-menu-image" href="{% url 'manage_menu_image'%}">
+          <a class="nav-link" data-toggle="offcanvas" id="manage-menu-image" href="{% url 'manage_menu_image'%}">
             <span class="menu-title">Manage Menu Images</span>
             <i class="mdi mdi-contacts menu-icon"></i>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="manage-table" href="{% url 'manage_table'%}">
+          <a class="nav-link" data-toggle="offcanvas" id="manage-table" href="{% url 'manage_table'%}">
             <span class="menu-title">Manage Tables</span>
             <i class="mdi mdi-contacts menu-icon"></i>
           </a>
