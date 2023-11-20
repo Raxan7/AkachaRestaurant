@@ -79,15 +79,16 @@ function loadContent(url) {
           console.log(error);
       }
   });
-}
+  
 $(window).on("popstate", function() {
     var url = location.pathname;
     $.ajax({
         url: url,
         success: function(data) {
-            $("#content").html(data);
+            $("#main-content").html(data);
         }
     });
 });
+}
 
 </script>

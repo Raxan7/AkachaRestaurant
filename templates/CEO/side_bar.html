@@ -62,7 +62,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" data-toggle="offcanvas" href="{%url 'manage_menu_category'%}">
+          <a class="nav-link" id="manage-menu-category" data-toggle="offcanvas" href="{%url 'manage_menu_category'%}">
             <span class="menu-title">Manage menu categories</span>
             <i class="mdi mdi-contacts menu-icon"></i>
           </a>
@@ -102,6 +102,10 @@ $("#manage-menu-item").click(function(e) {
   e.preventDefault();
   loadContent($(this).attr('href'));
 });
+$("#manage-menu-category").click(function(e) {
+  e.preventDefault();
+  loadContent($(this).attr('href'));
+});
 $("#check-waiter").click(function(e) {
   e.preventDefault();
   loadContent($(this).attr('href'));
@@ -121,6 +125,15 @@ function loadContent(url) {
           console.log(error);
       }
   });
+  $(window).on("popstate", function() {
+    var url = location.pathname;
+    $.ajax({
+        url: url,
+        success: function(data) {
+            $("#main-content").html(data);
+        }
+    });
+});
 }
 
 </script>
