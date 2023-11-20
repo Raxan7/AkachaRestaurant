@@ -33,36 +33,81 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{%url 'manage_menu_category'%}">
+          <a class="nav-link"  data-toggle="offcanvas"  id="manage-menu-category" href="{%url 'manage_menu_category'%}">
             <span class="menu-title">Manage menu categories</span>
             <i class="mdi mdi-contacts menu-icon"></i>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'manage_menu_item'%}">
+          <a class="nav-link" data-toggle="offcanvas"  id="manage-menu-item" href="{% url 'manage_menu_item'%}">
             <span class="menu-title">Manage Menu Items</span>
             <i class="mdi mdi-contacts menu-icon"></i>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'manage_menu_image'%}">
+          <a class="nav-link" data-toggle="offcanvas"  id="manage-menu-image" href="{% url 'manage_menu_image'%}">
             <span class="menu-title">Manage Menu Images</span>
             <i class="mdi mdi-contacts menu-icon"></i>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'food_item_list' %}">
+          <a class="nav-link" data-toggle="offcanvas"  id="food-item-list" href="{% url 'food_item_list' %}">
             <span class="menu-title">Manage Stocks</span>
             <i class="mdi mdi mdi-stocking menu-icon"></i>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'manage_ingredient' %}">
+          <a class="nav-link" data-toggle="offcanvas"  id="manage-ingredient" href="{% url 'manage_ingredient' %}">
             <span class="menu-title">Manage Ingredients</span>
             <i class="mdi mdi mdi-stocking menu-icon"></i>
           </a>
         </li>
       </ul>
     </nav>
+    <script>
+$("#manage-menu-category").click(function(e) {
+  e.preventDefault();
+  loadContent($(this).attr('href'));
+});
+$("#manage-menu-item").click(function(e) {
+  e.preventDefault();
+  loadContent($(this).attr('href'));
+});
+$("#manage-menu-image").click(function(e) {
+  e.preventDefault();
+  loadContent($(this).attr('href'));
+});
+$("#food-item-list").click(function(e) {
+  e.preventDefault();
+  loadContent($(this).attr('href'));
+});
+$("#manage-ingredient").click(function(e) {
+  e.preventDefault();
+  loadContent($(this).attr('href'));
+});
+      // Function to load content via AJAX
+function loadContent(url) {
+  $.ajax({
+      url: url,
+      type: 'GET',
+      success: function(response) {
+          $('#main-content').html(response);
+          history.pushState(null, null, url);
+      },
+      error: function(error) {
+          console.log(error);
+      }
+  });
+  $(window).on("popstate", function() {
+    var url = location.pathname;
+    $.ajax({
+        url: url,
+        success: function(data) {
+            $("#main-content").html(data);
+        }
+    });
+});
+}
+    </script>
   </body>
 </html>
