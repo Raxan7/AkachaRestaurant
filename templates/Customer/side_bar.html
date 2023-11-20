@@ -66,6 +66,15 @@ $('#my-order').click(function(e) {
   loadContent('{% url "my_order" %}');
 });
 
+// window.onload  = function (){
+//   var url = location.pathname;
+//   $.ajax({
+//         url: url,
+//         success: function(data) {
+//             $("#main-content").html(data);
+//         }
+//     });
+// }
 // Function to load content via AJAX
 function loadContent(url) {
   $.ajax({
@@ -82,13 +91,9 @@ function loadContent(url) {
   
 $(window).on("popstate", function() {
     var url = location.pathname;
-    $.ajax({
-        url: url,
-        success: function(data) {
-            $("#main-content").html(data);
-        }
-    });
+    loadContent(url);
 });
+
 }
 
 </script>
