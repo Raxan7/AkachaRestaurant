@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 
 from hotelmanagement.models import Messages, User_type
-from hotelmanagement.user_validator import user_validator
+from hotelmanagement.utils import user_validator
 
 from .forms import StockForm, PurchasesForm, RequestFoodFromStore, UseFoodItemForm
 from .models import Stock, StockPurchases, ChefStockResource

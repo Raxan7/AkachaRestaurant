@@ -11,7 +11,7 @@
     <nav class="sidebar sidebar-offcanvas" id="sidebar">
       <ul class="nav">
         <li class="nav-item nav-profile">
-          <a href="{% url 'home'%}" class="nav-link">
+          <a href="{% url 'home'%}" data-toggle="offcanvas" class="nav-link">
             <div class="nav-profile-image">
               {% if user.profile %}
                 <img src="{{user.profile.url}}" alt="profile" />
@@ -27,23 +27,24 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'home'%}">
+          <a class="nav-link" href="{% url 'home'%}" data-toggle="offcanvas">
             <span class="menu-title">Dashboard</span>
             <i class="mdi mdi-home menu-icon"></i>
           </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+        {% comment %} <li class="nav-item">
+          <a class="nav-link"  data-bs-toggle="collapse" data-toggle="offcanvas" href="{%url 'manage_user' 0%}" aria-expanded="false" aria-controls="ui-basic">
             <span class="menu-title">Manage Users</span>
             <i class="menu-arrow"></i>
             <i class="mdi mdi-crosshairs-gps menu-icon"></i>
-          </a>
+          {% comment %} </a>
           <div class="collapse" id="ui-basic">
             <ul class="nav flex-column sub-menu">
               {%for user_type in user_types %}
               <li class="nav-item">
-                <a class="nav-link" href="{%url 'manage_user' user_type.id%}">{{user_type.user_type}}</a>
+                <a class="nav-link" id = "manage-user{{user_type.id}}" href="{%url 'manage_user' user_type.id%}">{{user_type.user_type}}</a>
               </li>
+              
               {%endfor%}
               <li class="nav-item">
                 <a class="nav-link" href="{%url 'manage_user' 0%}">All</a>
@@ -53,27 +54,33 @@
               </li>
             </ul>
           </div>
+        </li> {% endcomment %}
+        <li class="nav-item">
+          <a class="nav-link" id="manage-user" href="{%url 'manage_user' 0%}" data-toggle="offcanvas">
+            <span class="menu-title">Manage users</span>
+            <i class="mdi mdi-contacts menu-icon"></i>
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{%url 'manage_menu_category'%}">
+          <a class="nav-link" id="manage-menu-category" data-toggle="offcanvas" href="{%url 'manage_menu_category'%}">
             <span class="menu-title">Manage menu categories</span>
             <i class="mdi mdi-contacts menu-icon"></i>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'manage_sale'%}">
+          <a class="nav-link" data-toggle="offcanvas" id = "manage-sale" href="{% url 'manage_sale'%}">
             <span class="menu-title">Manage sales</span>
             <i class="mdi mdi-contacts menu-icon"></i>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'waiter_activity_check'%}">
+          <a class="nav-link" data-toggle="offcanvas" id="check-waiter" href="{% url 'waiter_activity_check'%}">
             <span class="menu-title">Check Waiter's activity</span>
             <i class="mdi mdi-contacts menu-icon"></i>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'manage_menu_item'%}">
+          <a class="nav-link" data-toggle="offcanvas" id = "manage-menu-item" href="{% url 'manage_menu_item'%}">
             <span class="menu-title">Manage Menu Item</span>
             <i class="mdi mdi-contacts menu-icon"></i>
           </a>
@@ -82,3 +89,51 @@
     </nav>
   </body>
 </html>
+<script>
+  $("#manage-sale").click(function(e) {
+    e.preventDefault();
+    loadContent($(this).attr('href'));
+});
+$("#manage-user").click(function(e) {
+  e.preventDefault();
+  loadContent($(this).attr('href'));
+});
+$("#manage-menu-item").click(function(e) {
+  e.preventDefault();
+  loadContent($(this).attr('href'));
+});
+$("#manage-menu-category").click(function(e) {
+  e.preventDefault();
+  loadContent($(this).attr('href'));
+});
+$("#check-waiter").click(function(e) {
+  e.preventDefault();
+  loadContent($(this).attr('href'));
+});
+
+
+// Function to load content via AJAX
+function loadContent(url) {
+  $.ajax({
+      url: url,
+      type: 'GET',
+      success: function(response) {
+          $('#main-content').html(response);
+          history.pushState(null, null, url);
+      },
+      error: function(error) {
+          console.log(error);
+      }
+  });
+  $(window).on("popstate", function() {
+    var url = location.pathname;
+    $.ajax({
+        url: url,
+        success: function(data) {
+            $("#main-content").html(data);
+        }
+    });
+});
+}
+
+</script>

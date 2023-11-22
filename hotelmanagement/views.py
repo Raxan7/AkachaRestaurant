@@ -4,7 +4,7 @@ from .models import CustomUser
 from .EmailBackEnd import EmailBackEnd
 from django.contrib.auth import login, logout
 from .models import *
-from .user_validator import user_validator
+from .utils import user_validator
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Avg
 import datetime
