@@ -56,31 +56,31 @@
           </div>
         </li> {% endcomment %}
         <li class="nav-item">
-          <a class="nav-link" id="manage-user" href="{%url 'manage_user' 0%}" data-toggle="offcanvas">
+          <a class="nav-link ajax-link" id="manage-user" href="{%url 'manage_user' 0%}" data-toggle="offcanvas">
             <span class="menu-title">Manage users</span>
             <i class="mdi mdi-contacts menu-icon"></i>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="manage-menu-category" data-toggle="offcanvas" href="{%url 'manage_menu_category'%}">
+          <a class="nav-link ajax-link" id="manage-menu-category" data-toggle="offcanvas" href="{%url 'manage_menu_category'%}">
             <span class="menu-title">Manage menu categories</span>
             <i class="mdi mdi-contacts menu-icon"></i>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" data-toggle="offcanvas" id = "manage-sale" href="{% url 'manage_sale'%}">
+          <a class="nav-link ajax-link" data-toggle="offcanvas" id = "manage-sale" href="{% url 'manage_sale'%}">
             <span class="menu-title">Manage sales</span>
             <i class="mdi mdi-contacts menu-icon"></i>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" data-toggle="offcanvas" id="check-waiter" href="{% url 'waiter_activity_check'%}">
+          <a class="nav-link ajax-link" data-toggle="offcanvas" id="check-waiter" href="{% url 'waiter_activity_check'%}">
             <span class="menu-title">Check Waiter's activity</span>
             <i class="mdi mdi-contacts menu-icon"></i>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" data-toggle="offcanvas" id = "manage-menu-item" href="{% url 'manage_menu_item'%}">
+          <a class="nav-link ajax-link" data-toggle="offcanvas" id = "manage-menu-item" href="{% url 'manage_menu_item'%}">
             <span class="menu-title">Manage Menu Item</span>
             <i class="mdi mdi-contacts menu-icon"></i>
           </a>
@@ -89,55 +89,3 @@
     </nav>
   </body>
 </html>
-<script>
-  $("#manage-sale").click(function(e) {
-    e.preventDefault();
-    loadContent($(this).attr('href'));
-});
-$("#manage-user").click(function(e) {
-  e.preventDefault();
-  loadContent($(this).attr('href'));
-});
-$("#manage-menu-item").click(function(e) {
-  e.preventDefault();
-  loadContent($(this).attr('href'));
-});
-$("#manage-menu-category").click(function(e) {
-  e.preventDefault();
-  loadContent($(this).attr('href'));
-});
-$("#check-waiter").click(function(e) {
-  e.preventDefault();
-  loadContent($(this).attr('href'));
-});
-
-
-// Function to load content via AJAX
-function loadContent(url) {
-  $.ajax({
-      url: url,
-      type: 'GET',
-      success: function(response) {
-          $('#main-content').html(response);
-          history.pushState(null, null, url);
-      },
-      error: function(error) {
-          console.log(error);
-      }
-  });
-  $(window).on("popstate", function() {
-    var url = location.pathname;
-    $.ajax({
-        url: url,
-        success: function(data) {
-            $("#main-content").html(data);
-        }
-    });
-});
-}
-<!--window.onbeforeunload = function () {-->
-<!--    var urll = location.pathname;-->
-<!--    loadContent(urll);-->
-<!--  }-->
-
-</script>

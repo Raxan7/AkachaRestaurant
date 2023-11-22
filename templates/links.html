@@ -54,5 +54,39 @@
     <script src="{% static 'js/hoverable-collapse.js'%}"></script>
     <script src="{% static 'js/misc.js'%}"></script>
     <script src="{% static 'js/dashboard.js'%}"></script>
+
+    <script>
+      $(".ajax-link").click(function(e) {
+        e.preventDefault();
+        loadContent($(this).attr('href'));
+      });
+      
+    
+    
+    // Function to load content via AJAX
+    function loadContent(url) {
+      $.ajax({
+          url: url,
+          type: 'GET',
+          success: function(response) {
+              $('#main-content').html(response);
+              history.pushState(null, null, url);
+          },
+          error: function(error) {
+              console.log(error);
+          }
+      });
+      $(window).on("popstate", function() {
+        var url = location.pathname;
+        $.ajax({
+            url: url,
+            success: function(data) {
+                $("#main-content").html(data);
+            }
+        });
+    });
+    }
+  </script>
   </body>
+
 </html>
