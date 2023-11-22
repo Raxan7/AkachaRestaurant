@@ -208,6 +208,7 @@ def add_menu_category(request):
         MenuCategory.objects.create(name = name)
         return redirect("manage_menu_category")
 
+@cache_page(60 * 2500)
 def manage_menu_category(request):
     menus = MenuCategory.objects.all()
     return render(request, f"{user_validator(request)}/manage_menu.html", {"menus":menus})
@@ -331,6 +332,7 @@ def filter_menu_item(request, id):
     tables = Table.objects.all()
     return render(request, f"{user_validator(request)}/manage_menu_item.html", {'menu_items':menu_items, 'tables':tables})
 
+@cache_page(60 * 2500)
 def menu_item_description(request, item_id):
     rating_data = MenuItemRating.objects.filter(menu_item__id = item_id)
     ratings = rating_data.values('rating').annotate(count=models.Count('rating'), percent =models.Count('rating') *100/(rating_data.count())).order_by('rating')
@@ -367,6 +369,7 @@ def add_menu_image(request):
         MenuImage.objects.create(menu_item = menu, image=image)
         return redirect("manage_menu_image")
 
+@cache_page(60 * 2500)
 def manage_menu_image(request):
     menu_images = MenuImage.objects.all()
     menuitems = MenuItem.objects.all()
@@ -479,10 +482,12 @@ def waiter_activity_check(request):
     orders = Order.objects.all()
     return render(request, f"{user_validator(request)}/waiter_activity_check.html", {'orders':orders})
 
+@cache_page(60 * 2500)
 def manage_sale(request):
     orders = Order.objects.all()
     return render(request, f"{user_validator(request)}/manage_sales.html", {'orders':orders})
 
+@cache_page(60 * 2500)
 def add_ingredient(request):
     if request.method == "POST":
         ingredient_name = request.POST['ingredient_name']
@@ -495,6 +500,7 @@ def add_ingredient(request):
         Ingredient.objects.create(ingredient_name=ingredient_name, quantity=quantity, measured_in = measure, price = price_one * quantity, menu_item = menu_item )
     return redirect('manage_ingredient')
 
+@cache_page(60 * 2500)
 def manage_ingredient(request):
     menu_items = MenuItem.objects.all().order_by('-name')
     ingredients = Ingredient.objects.all().order_by('-menu_item')
