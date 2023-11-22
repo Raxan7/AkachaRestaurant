@@ -26,6 +26,8 @@ def check_email_availability(request):
 
 @cache_page(60 * 2500)
 def logins(request):
+    if request.user.is_authenticated:
+        return redirect("home")
     if request.method=="POST":
         username=request.POST.get('email')
         password=request.POST.get('password')

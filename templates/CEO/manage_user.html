@@ -112,8 +112,9 @@
                 <th>Lastname</th>
                 <th>Username</th>
                 <th>User_type</th>
+                <th>Profit</th>
                 <th colspan="3" style="text-align: center;">Actions</th>
-              </tr>
+              </tr>customer_profit
             </thead>
             <tbody>
               {% for userr in users %}
@@ -127,6 +128,7 @@
                   <td>{{ userr.last_name }}</td>
                   <td>{{ userr.username }}</td>
                   <td>{{ userr.user_type }}</td>
+                  <td>{{ userr.customer_profit }}</td>
                   <td>
                     <form method="post" action="{% url 'userprofile'%}">
                       {% csrf_token %}
