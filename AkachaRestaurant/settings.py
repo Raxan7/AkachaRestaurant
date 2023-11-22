@@ -108,6 +108,9 @@ CACHES = {
         'LOCATION': 'unique-snowflake',
     }
 }
+# Set session timeout to 5 minutes (in seconds)
+SESSION_COOKIE_AGE = 300
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 
 
 # Password validation
