@@ -24,7 +24,7 @@ def check_email_availability(request):
     exists = CustomUser.objects.filter(email=email).exists()
     return JsonResponse({'exists': exists})
 
-@login_required(login_url='home')
+
 @cache_page(60 * 2500)
 def logins(request):
     if request.user.is_authenticated:
@@ -40,6 +40,7 @@ def logins(request):
             messages.error(request, "Invalid credentials!.")
     return render(request, "login.html")
 
+@login_required(login_url='login')
 @cache_page(60 * 2500)
 def home(request):
     return render(request, f"{user_validator(request)}/home.html")
