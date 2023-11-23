@@ -24,8 +24,6 @@ def check_email_availability(request):
     exists = CustomUser.objects.filter(email=email).exists()
     return JsonResponse({'exists': exists})
 
-
-@cache_page(60 * 2500)
 def logins(request):
     if request.user.is_authenticated:
         return redirect("home")
@@ -66,7 +64,6 @@ def add_user_type(request):
         return redirect('home')
     return render(request, f"{user_validator(request)}/add_user_type.html")
 
-@cache_page(60 * 2500)
 def register(request):
     if request.method == "POST":
         first_name = request.POST.get("firstname")
