@@ -104,10 +104,11 @@ DATABASES = {
 
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'unique-snowflake',
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'my_cache_table',
     }
 }
+
 # Set session timeout to 5 minutes (in seconds)
 SESSION_COOKIE_AGE = 300
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
