@@ -11,6 +11,7 @@ import datetime
 from django.contrib.auth import update_session_auth_hash
 from django.http import JsonResponse
 from django.views.decorators.cache import cache_page
+from django.contrib.auth.decorators import login_required
 
 
 def check_username_availability(request):
@@ -23,7 +24,7 @@ def check_email_availability(request):
     exists = CustomUser.objects.filter(email=email).exists()
     return JsonResponse({'exists': exists})
 
-
+@login_required(login_url='home')
 @cache_page(60 * 2500)
 def logins(request):
     if request.user.is_authenticated:
