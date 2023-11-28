@@ -1,3 +1,5 @@
+{% extends "CEO/base.html" %}
+{% block content%}
 <h5>Manage Menu Categories</h5>
 
 
@@ -44,7 +46,7 @@
             <td>{{menu.name}}</td>
             <td><a class="btn-success" href="{% url 'filter_menu_item' menu.id%}">Menu Items</a></td>
 
-            
+
             <!-- Modal for Update Confirmation -->
           <div class="modal fade" id="updateModal{{ menu.id }}" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -100,3 +102,4 @@
       </table>
     </div>
   </div>
+{% endblock %}

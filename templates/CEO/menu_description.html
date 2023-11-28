@@ -1,4 +1,6 @@
- <h3 style="text-align: center;">{{menuitem.name}} Descriptions</h3>
+{% extends "CEO/base.html" %}
+{% block content%}
+<h3 style="text-align: center;">{{menuitem.name}} Descriptions</h3>
 <div class="container">
  <div class="row justify-content-around">
     {% for image in images %}
@@ -75,3 +77,4 @@
         </div>
     </div>
 </div>
+{% endblock %}
