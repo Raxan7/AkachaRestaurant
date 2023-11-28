@@ -10,6 +10,9 @@ from django.db.models import Avg
 import datetime
 from django.contrib.auth import update_session_auth_hash
 from django.http import JsonResponse
+from django.views.decorators.cache import cache_page
+from django.contrib.auth.decorators import login_required
+
 
 def check_username_availability(request):
     username = request.GET.get('username')
@@ -22,8 +25,10 @@ def check_email_availability(request):
     return JsonResponse({'exists': exists})
 
 
-# Create your views here.
+@cache_page(60 * 2500)
 def logins(request):
+    if request.user.is_authenticated:
+        return redirect("home")
     if request.method=="POST":
         username=request.POST.get('email')
         password=request.POST.get('password')
@@ -35,10 +40,12 @@ def logins(request):
             messages.error(request, "Invalid credentials!.")
     return render(request, "login.html")
 
-
+@login_required(login_url='login')
+@cache_page(60 * 2500)
 def home(request):
     return render(request, f"{user_validator(request)}/home.html")
 
+@cache_page(60 * 2500)
 def userprofile(request):
     if request.method == "POST":
         id = int(request.POST.get('id'))
@@ -51,6 +58,7 @@ def logout_user(request):
     logout(request)
     return redirect("login")
 
+
 def add_user_type(request):
     if request.method=="POST":
         user_type = request.POST.get('user_type')
@@ -58,6 +66,7 @@ def add_user_type(request):
         return redirect('home')
     return render(request, f"{user_validator(request)}/add_user_type.html")
 
+@cache_page(60 * 2500)
 def register(request):
     if request.method == "POST":
         first_name = request.POST.get("firstname")
@@ -168,6 +177,7 @@ def add_user(request):
         user.save()
     return redirect('manage_user', user_type)
 
+@cache_page(60 * 2500)
 def  manage_user(request, id):
     if id==0:
         users=CustomUser.objects.all()
@@ -202,6 +212,7 @@ def add_menu_category(request):
         MenuCategory.objects.create(name = name)
         return redirect("manage_menu_category")
 
+@cache_page(60 * 2500)
 def manage_menu_category(request):
     menus = MenuCategory.objects.all()
     return render(request, f"{user_validator(request)}/manage_menu.html", {"menus":menus})
@@ -251,6 +262,7 @@ def delete_menu_item(request, id):
     menu_item.delete()
     return redirect('manage_menu_item')
 
+@cache_page(60 * 2500)
 def manage_menu_item(request):
     menuItems = MenuItem.objects.all().order_by('-name')
     menu_items = []
@@ -267,6 +279,7 @@ def manage_menu_item(request):
 from django.http import JsonResponse
 from .models import MenuItem, MenuImage
 
+@cache_page(60 * 2500)
 def menu_items_api(request):
     order = request.GET.get('order_by')
     menu_items = MenuItem.objects.all().order_by(f'{order}')
@@ -287,6 +300,7 @@ def menu_items_api(request):
         })
     return JsonResponse({'menu_items': menu_items_data})
 
+@cache_page(60 * 2500)
 def search_menu_items(request):
     query = request.GET.get('query')
     menu_items = MenuItem.objects.filter(name__icontains=query) | MenuItem.objects.filter(category__name__icontains=query)
@@ -307,6 +321,7 @@ def search_menu_items(request):
         })
     return JsonResponse({'menu_items': menu_items_data})
 
+@cache_page(60 * 2500)
 def filter_menu_item(request, id):
     menu_category = MenuCategory.objects.get(id = id)
     menuItems = MenuItem.objects.filter(category = menu_category).order_by('-name')
@@ -321,6 +336,7 @@ def filter_menu_item(request, id):
     tables = Table.objects.all()
     return render(request, f"{user_validator(request)}/manage_menu_item.html", {'menu_items':menu_items, 'tables':tables})
 
+@cache_page(60 * 2500)
 def menu_item_description(request, item_id):
     rating_data = MenuItemRating.objects.filter(menu_item__id = item_id)
     ratings = rating_data.values('rating').annotate(count=models.Count('rating'), percent =models.Count('rating') *100/(rating_data.count())).order_by('rating')
@@ -357,6 +373,7 @@ def add_menu_image(request):
         MenuImage.objects.create(menu_item = menu, image=image)
         return redirect("manage_menu_image")
 
+@cache_page(60 * 2500)
 def manage_menu_image(request):
     menu_images = MenuImage.objects.all()
     menuitems = MenuItem.objects.all()
@@ -436,7 +453,8 @@ def add_order(request):
         message = f"There is a {menu_item.name} request at table number {table.table_number}"
         Messages.objects.create(sender = receiver, order= order, message=message, receiver_category=user_type )
     return redirect('manage_menu_item')
-        
+      
+@cache_page(60 * 2500)  
 def my_order(request):
     user = request.user
     orders = Order.objects.filter(order_receiver = user)
@@ -463,14 +481,17 @@ def send_order(request, id):
     order.save()
     return redirect('home')
 
+@cache_page(60 * 2500)
 def waiter_activity_check(request):
     orders = Order.objects.all()
     return render(request, f"{user_validator(request)}/waiter_activity_check.html", {'orders':orders})
 
+@cache_page(60 * 2500)
 def manage_sale(request):
     orders = Order.objects.all()
     return render(request, f"{user_validator(request)}/manage_sales.html", {'orders':orders})
 
+@cache_page(60 * 2500)
 def add_ingredient(request):
     if request.method == "POST":
         ingredient_name = request.POST['ingredient_name']
@@ -483,6 +504,7 @@ def add_ingredient(request):
         Ingredient.objects.create(ingredient_name=ingredient_name, quantity=quantity, measured_in = measure, price = price_one * quantity, menu_item = menu_item )
     return redirect('manage_ingredient')
 
+@cache_page(60 * 2500)
 def manage_ingredient(request):
     menu_items = MenuItem.objects.all().order_by('-name')
     ingredients = Ingredient.objects.all().order_by('-menu_item')

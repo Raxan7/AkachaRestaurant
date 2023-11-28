@@ -23,8 +23,8 @@
                   <td>{{menu_item.menuitems.name}}</td>
                   <td>{{menu_item.menuitems.ingredient_cost}}</td>
                   <td>{{menu_item.menuitems.price}}</td>
-                  <td>{{menu_item.menuitems.profit}}</td>
-                  <td> <a class="btn-success" href="{% url 'menu_item_description' menu_item.menuitems.id%}">Description</a></td>
+                  <td>{{menu_item.menuitems.item_profit}}</td>
+                  <td> <a class="btn-success ajax-link" href="{% url 'menu_item_description' menu_item.menuitems.id%}">Description</a></td>
                   {% comment %} <td>
                     {% if menu_item.menuimage.image %}
                     <a href="{{menu_item.menuimage.image.url}}">

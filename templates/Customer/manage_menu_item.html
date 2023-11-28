@@ -46,7 +46,7 @@
                     <p class="text-black text-center">
                       <i id="{{menu_item.menuitems.id}}"></i>
                       <i class="">{{menu_item.menuitems.average_rating}}</i>
-                      <i class="btn-info"><a class = "text-white" href="{% url 'menu_item_description' menu_item.menuitems.id %}">rating details</a></i>
+                      <i class="btn-info"><a class = "text-white ajax-link" href="{% url 'menu_item_description' menu_item.menuitems.id %}">rating details</a></i>
                     </p>
                     <script>
                       var ratings = {{menu_item.menuitems.average_rating}};
