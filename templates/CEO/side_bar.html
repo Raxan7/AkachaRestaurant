@@ -11,7 +11,7 @@
     <nav class="sidebar sidebar-offcanvas" id="sidebar">
       <ul class="nav">
         <li class="nav-item nav-profile">
-          <a href="{% url 'home'%}" data-toggle="offcanvas" class="nav-link">
+          <a href="{% url 'home'%}"  class="nav-link">
             <div class="nav-profile-image">
               {% if user.profile %}
                 <img src="{{user.profile.url}}" alt="profile" />
@@ -27,13 +27,13 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'home'%}" data-toggle="offcanvas">
+          <a class="nav-link" href="{% url 'home'%}" >
             <span class="menu-title">Dashboard</span>
             <i class="mdi mdi-home menu-icon"></i>
           </a>
         </li>
         {% comment %} <li class="nav-item">
-          <a class="nav-link"  data-bs-toggle="collapse" data-toggle="offcanvas" href="{%url 'manage_user' 0%}" aria-expanded="false" aria-controls="ui-basic">
+          <a class="nav-link"  data-bs-toggle="collapse"  href="{%url 'manage_user' 0%}" aria-expanded="false" aria-controls="ui-basic">
             <span class="menu-title">Manage Users</span>
             <i class="menu-arrow"></i>
             <i class="mdi mdi-crosshairs-gps menu-icon"></i>
@@ -56,31 +56,31 @@
           </div>
         </li> {% endcomment %}
         <li class="nav-item">
-          <a class="nav-link ajax-link" id="manage-user" href="{%url 'manage_user' 0%}" data-toggle="offcanvas">
+          <a class="nav-link " id="manage-user" href="{%url 'manage_user' 0%}" >
             <span class="menu-title">Manage users</span>
             <i class="mdi mdi-contacts menu-icon"></i>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link ajax-link" id="manage-menu-category" data-toggle="offcanvas" href="{%url 'manage_menu_category'%}">
+          <a class="nav-link " id="manage-menu-category"  href="{%url 'manage_menu_category'%}">
             <span class="menu-title">Manage menu categories</span>
             <i class="mdi mdi-contacts menu-icon"></i>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link ajax-link" data-toggle="offcanvas" id = "manage-sale" href="{% url 'manage_sale'%}">
+          <a class="nav-link "  id = "manage-sale" href="{% url 'manage_sale'%}">
             <span class="menu-title">Manage sales</span>
             <i class="mdi mdi-contacts menu-icon"></i>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link ajax-link" data-toggle="offcanvas" id="check-waiter" href="{% url 'waiter_activity_check'%}">
+          <a class="nav-link "  id="check-waiter" href="{% url 'waiter_activity_check'%}">
             <span class="menu-title">Check Waiter's activity</span>
             <i class="mdi mdi-contacts menu-icon"></i>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link ajax-link" data-toggle="offcanvas" id = "manage-menu-item" href="{% url 'manage_menu_item'%}">
+          <a class="nav-link "  id = "manage-menu-item" href="{% url 'manage_menu_item'%}">
             <span class="menu-title">Manage Menu Item</span>
             <i class="mdi mdi-contacts menu-icon"></i>
           </a>

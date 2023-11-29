@@ -1,7 +1,7 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
   <ul class="nav">
     <li class="nav-item nav-profile">
-      <a href="{% url 'home' %}" class="nav-link" data-toggle="offcanvas">
+      <a href="{% url 'home' %}" class="nav-link" >
         <div class="nav-profile-image">
           {% if user.profile %}
             <img src="{{ user.profile.url }}" alt="profile" />
@@ -18,36 +18,36 @@
     </li>
     <li class="nav-item">
       <a class="nav-link "  data-toggle="minimize" href="{% url 'home' %}">
-        <span class="menu-title" data-toggle="offcanvas">Dashboard</span>
+        <span class="menu-title" >Dashboard</span>
         <i class="mdi mdi-home menu-icon"></i>
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link ajax-link"  data-toggle="offcanvas" href="#" id = "manage-menu-item">
+      <a class="nav-link "   href="{% url 'manage_menu_item'%}">
         <span class="menu-title">View Food items</span>
         <i class="mdi mdi-food menu-icon"></i>
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link ajax-link" data-toggle="offcanvas" href="#" id = "my-order">
+      <a class="nav-link "  href="{% url 'my_order'%}">
         <span class="menu-title">My orders</span>
         <i class="mdi mdi-food-fork-drink menu-icon"></i>
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link ajax-link" data-toggle="offcanvas" href="#">
+      <a class="nav-link "  href="#">
         <span class="menu-title">My coupons</span>
         <i class="mdi mdi-ticket menu-icon"></i>
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link ajax-link" data-toggle="offcanvas" href="#">
+      <a class="nav-link "  href="#">
         <span class="menu-title">My reservation</span>
         <i class="mdi mdi-calendar-alert menu-icon"></i>
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link ajax-link" data-toggle="offcanvas" href="#">
+      <a class="nav-link "  href="#">
         <span class="menu-title">My rewards</span>
         <i class="mdi mdi-gift menu-icon"></i>
       </a>
