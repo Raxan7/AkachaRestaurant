@@ -6,13 +6,12 @@ from . import views
 
 
 urlpatterns = [
-    path("", views.home, name="homes"),
     path("login", views.logins, name="login"),
+    path("", views.home, name="home"),
 
     # path('accounts/profile/', views.profile, name='profile'),
     # path("register", views.CustomRegistrationView.as_view(), name="register"),
     path("register", views.register, name="register"),
-    path("home", views.home, name="home"),
     path("logout", views.logout_user, name="logout"),
     path("password_change", views.password_change, name="password_change"),
     path("add_user", views.add_user, name="add_user"),

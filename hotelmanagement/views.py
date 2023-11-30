@@ -25,22 +25,20 @@ def check_email_availability(request):
 
 def logins(request):
     if request.user.is_authenticated:
-        return redirect("home")
+        return render(request, f"{user_validator(request)}/home.html")
     if request.method == "POST":
         username = request.POST.get('email')
         password = request.POST.get('password')
         user = EmailBackEnd.authenticate(request, username, password)
         if user != None:
             login(request, user)
-            return redirect('home')
+            return render(request, f"{user_validator(request)}/home.html")
         else:
             messages.error(request, "Invalid credentials!.")
     return render(request, "login.html")
 
-
-@login_required(login_url='login')
 def home(request):
-    return render(request, f"{user_validator(request)}/home.html")
+    return render(request, "index.html")
 
 
 def userprofile(request):
@@ -54,7 +52,7 @@ def userprofile(request):
 
 def logout_user(request):
     logout(request)
-    return redirect("login")
+    return redirect("home")
 
 
 def add_user_type(request):
