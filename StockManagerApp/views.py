@@ -18,26 +18,55 @@ def food_item_list(request):
 
 def add_food_item(request):
     if request.method == 'POST':
-        form = StockForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('food_item_list')
-    else:
-        form = StockForm()
-    return render(request, f'StockManagerApp/{user_validator(request)}/add_food_item.html', {'form': form})
+        name = request.POST['name']
+        description = request.POST['description']
+        quantity = request.POST['quantity']
+        expire_date = request.POST['expireDate']
+        reorder_quantity = request.POST['reorderQuantity']
+        price = float(request.POST['price'])
+
+        stock_model = Stock.objects.create(
+            name=name,
+            description=description,
+            quantity=quantity,
+            expiration_date=expire_date,
+            reorder_quantity=reorder_quantity,
+            price=price,
+        )
+        # stock_model.name = name.lower()
+        # stock_model.description = description
+        # stock_model.quantity = quantity
+        # stock_model.expiration_date = expire_date
+        # stock_model.reorder_quantity = reorder_quantity
+        stock_model.save()
+
+        return redirect('food_item_list')
+    # return render(request, f'StockManagerApp/{user_validator(request)}/add_food_item.html', {'form': form})
 
 
 def edit_food_item(request, pk):
     food_item = Stock.objects.get(pk=pk)
     if request.method == 'POST':
-        form = StockForm(request.POST, instance=food_item)
-        if form.is_valid():
-            form.save()
-            return redirect('food_item_list')
-    else:
-        form = StockForm(instance=food_item)
-    return render(request, f'StockManagerApp/{user_validator(request)}/edit_food_item.html',
-                  {'form': form, 'food_item': food_item})
+        name = request.POST['edit-name']
+        description = request.POST['edit-description']
+        quantity = request.POST['edit-quantity']
+        price = request.POST['edit-price']
+        expire_date = request.POST['edit-expireDate']
+        reorder_quantity = request.POST['edit-reorderQuantity']
+
+        food_item.name = name
+        food_item.description = description
+        food_item.quantity = quantity
+        food_item.price = price
+        food_item.expiration_date = expire_date
+        food_item.reorder_quantity = reorder_quantity
+        food_item.save()
+
+        return redirect('food_item_list')
+    # else:
+    #     form = StockForm(instance=food_item)
+    # return render(request, f'StockManagerApp/{user_validator(request)}/edit_food_item.html',
+    #               {'form': form, 'food_item': food_item})
 
 
 def view_food_item(request, name):
