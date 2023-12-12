@@ -24,8 +24,8 @@ def check_email_availability(request):
 
 
 def logins(request):
-    if request.user.is_authenticated:
-        return render(request, f"{user_validator(request)}/home.html")
+    #if request.user.is_authenticated:
+        #return render(request, f"{user_validator(request)}/home.html")
     if request.method == "POST":
         username = request.POST.get('email')
         password = request.POST.get('password')
