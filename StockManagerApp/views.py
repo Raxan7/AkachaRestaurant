@@ -25,20 +25,23 @@ def add_food_item(request):
         reorder_quantity = request.POST['reorderQuantity']
         price = float(request.POST['price'])
 
-        stock_model = Stock.objects.create(
-            name=name,
-            description=description,
-            quantity=quantity,
-            expiration_date=expire_date,
-            reorder_quantity=reorder_quantity,
-            price=price,
-        )
-        # stock_model.name = name.lower()
-        # stock_model.description = description
-        # stock_model.quantity = quantity
-        # stock_model.expiration_date = expire_date
-        # stock_model.reorder_quantity = reorder_quantity
-        stock_model.save()
+        if Stock.objects.filter(name=name).exists():
+            pass
+        else:
+            stock_model = Stock.objects.create(
+                name=name,
+                description=description,
+                quantity=quantity,
+                expiration_date=expire_date,
+                reorder_quantity=reorder_quantity,
+                price=price,
+            )
+            # stock_model.name = name.lower()
+            # stock_model.description = description
+            # stock_model.quantity = quantity
+            # stock_model.expiration_date = expire_date
+            # stock_model.reorder_quantity = reorder_quantity
+            stock_model.save()
 
         return redirect('food_item_list')
     # return render(request, f'StockManagerApp/{user_validator(request)}/add_food_item.html', {'form': form})

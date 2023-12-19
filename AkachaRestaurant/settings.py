@@ -16,6 +16,10 @@ import os
 import dj_database_url
 import environ
 
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
 env = environ.Env()
 
 environ.Env.read_env()
@@ -132,13 +136,21 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, 'static'),
-# ]
+# adding config
+cloudinary.config(
+  cloud_name = "dvbdol5uj",
+  api_key = "463778388412657",
+  api_secret = "-ohofO2WCM2YdwCgbGfocwCsGNs"
+)
 
-STATIC_ROOT = (os.path.join(BASE_DIR, 'static/'))
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
+# STATIC_ROOT = (os.path.join(BASE_DIR, 'static/'))
 STATIC_URL = '/static/'
-STATICFILES_DIR = (os.path.join(BASE_DIR, 'static'))
+# STATICFILES_DIR = (os.path.join(BASE_DIR, 'static'))
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 MEDIA_URL = '/media/'

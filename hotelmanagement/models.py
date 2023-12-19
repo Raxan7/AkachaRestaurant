@@ -4,6 +4,7 @@ import datetime
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.db.models import Sum
+from cloudinary.models import CloudinaryField
 
 
 # Create your models here.
@@ -18,7 +19,8 @@ class User_type(models.Model):
 class CustomUser(AbstractUser):
     objects = models.Manager()
     id = models.AutoField(primary_key=True)
-    profile = models.ImageField(upload_to="profiles/", default='profiles/default_profile.jpg')
+    profile = CloudinaryField("image")
+    # profile = models.ImageField(upload_to="profiles/", default='profiles/default_profile.jpg')
     user_type = models.ForeignKey(User_type, on_delete=models.SET_NULL, null=True, default=None)
     is_active = models.BooleanField(default=True)
     customer_profit = models.FloatField(default=0.0)
@@ -95,7 +97,8 @@ class MenuItemRating(models.Model):
 class MenuImage(models.Model):
     objects = models.Manager()
     id = models.AutoField(primary_key=True)
-    image = models.ImageField(upload_to="menus/")
+    image = CloudinaryField("image")
+#     image = models.ImageField(upload_to="menus/")
     menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
     is_primary = models.BooleanField(default=False)
 
