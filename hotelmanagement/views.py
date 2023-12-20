@@ -469,13 +469,15 @@ def add_order(request):
     if request.method == "POST":
         table_id = request.POST.get('table_id')
         menu_id = request.POST.get('menu_id')
+        latitude = request.POST.get('latitude')
+        longitude = request.POST.get('longitude')
         # quantity = request.POST.get('quantity')
         table = Table.objects.get(id=table_id)
         menu_item = MenuItem.objects.get(id=menu_id)
         receiver_id = request.user.id
         receiver = CustomUser.objects.get(id=receiver_id)
         order = Order.objects.create(table=table, ordered_time=datetime.datetime.now(), menu_items=menu_item,
-                                     order_receiver=receiver)
+                                     order_receiver=receiver, longitude = longitude, latitude=latitude)
         order.save()
         user_type = User_type.objects.get(id=1)
         message = f"There is a {menu_item.name} request at table number {table.table_number}"
@@ -495,6 +497,9 @@ def my_order(request):
         })
     return render(request, f"{user_validator(request)}/myorder.html", {'myorders': myorders})
 
+def order_details(request, order_id):
+    order = Order.objects.get(id = order_id)
+    return render(request, "order_details.html", {"order":order})
 
 def process_order(request, id):
     order = Order.objects.get(id=id)
@@ -566,3 +571,9 @@ def edit_ingredient(request, id):
         ingredient.menu_item = menu_item
         ingredient.save()
     return redirect("manage_ingredient")
+
+
+def cart(request, menu_id):
+    menu_item = MenuItem.objects.get(id = menu_id)
+    tables = Table.objects.all()
+    return render(request, "cart.html", {"menu_item":menu_item, "tables":tables})

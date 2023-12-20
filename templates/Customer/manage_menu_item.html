@@ -75,7 +75,8 @@
               </div>
               <div class="row">
                 <i class=" col">{{menu_item.menuitems.orders_number}} Orders</i>
-                <button class="update-button col btn-primary" data-toggle="modal" data-target="#updateModal{{ menu_item.menuitems.id }}">Cart</button>
+                {% comment %} <button class="update-button col btn-primary" data-toggle="modal" data-target="#updateModal{{ menu_item.menuitems.id }}">Cart</button> {% endcomment %}
+                <a href="{% url 'cart' menu_item.menuitems.id%}" class="update-button col btn-primary">Cart</a>
               </div>                   
             </div>
 

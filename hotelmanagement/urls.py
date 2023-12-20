@@ -49,6 +49,7 @@ urlpatterns = [
     path("my_order", views.my_order, name = "my_order"),
     path("process_order/<int:id>", views.process_order, name="process_order"),
     path("send_order/<int:id>", views.send_order, name="send_order"),
+    path("order_details/<int:order_id>", views.order_details, name = "order_details"),
     
     path("waiter_activity_check", views.waiter_activity_check, name="waiter_activity_check"),
     
@@ -64,4 +65,5 @@ urlpatterns = [
     
     path('menu_items_api/', views.menu_items_api, name = 'menu_items_api'),
     path('search_menu_items/', views.search_menu_items, name = 'search_menu_items'),
+    path('cart/<int:menu_id>', views.cart, name = 'cart'),
 ]

@@ -1,0 +1,117 @@
+{% extends "Customer/base.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Business Location</title>
+
+    <!-- Include Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+    <!-- Specify a height for the map container -->
+    <style>
+        #map {
+            height: 300px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Business Location Form -->
+    <form action="{% url 'add_order'%}" id="businessLocationForm" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <br><br>
+
+        <!-- Business Location Map -->
+        <label for="map">Business Location:</label>
+        <div id="map"></div>
+
+        <!-- Latitude and Longitude Fields -->
+        <label for="latitude">Latitude:</label>
+        <input type="text" id="latitude" name="latitude" readonly>
+
+        <label for="longitude">Longitude:</label>
+        <input type="text" id="longitude" name="longitude" readonly>
+        
+        <div class="rating">
+            <div class="form-group">
+                <select class="form-control form-control-lg" name="table_id" id="">
+                {% for table in tables %}
+                <option class="form-control form-control-lg" value="{{table.id}}">{{table.table_number}}</option>
+                {% endfor %}
+                </select>
+                <input class="form-control form-control-lg" type="hidden" name="menu_id" value="{{menu_item.id}}">
+        </div>
+        <!-- Button to center map on user's current location -->
+        <button type="button" onclick="centerOnCurrentLocation()">Center on Current Location</button>
+
+        <!-- Submit Button -->
+        <button type="submit" onclick="submitForm()">Add Location</button>
+    </form>
+    <script>
+        function submitForm(){
+            var readOnly = document.getElementById("longitude").value;
+            if(readOnly.trim() === ''){
+                event.preventDefault();
+            }else{
+                return false;
+            }
+
+        }
+    </script>
+    <!-- Include Leaflet JavaScript and your custom script -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([0, 0], 2);
+        var marker;
+
+        // Initial map type
+        var selectedMapType = "roadmap";
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        map.on('click', function(e) {
+            updateLocation(e.latlng.lat, e.latlng.lng);
+        });
+
+        function centerOnCurrentLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        var currentLat = position.coords.latitude;
+                        var currentLng = position.coords.longitude;
+                        updateLocation(currentLat, currentLng);
+
+                        // Center the map on the current location
+                        map.setView([currentLat, currentLng], 15);
+                    },
+                    function(error) {
+                        console.error('Error getting current location:', error.message);
+                    }
+                );
+            } else {
+                console.error('Geolocation is not supported by this browser.');
+            }
+        }
+
+        function updateLocation(latitude, longitude) {
+            document.getElementById("latitude").value = latitude;
+            document.getElementById("longitude").value = longitude;
+
+            // Remove previous marker if exists
+            if (marker) {
+                map.removeLayer(marker);
+            }
+
+            // Add a marker at the updated location
+            marker = L.marker([latitude, longitude]).addTo(map);
+        }
+    </script>
+
+</body>
+</html>
+
+{% endblock content %}
