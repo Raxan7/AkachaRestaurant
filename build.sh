@@ -16,7 +16,7 @@ DJANGO_SUPERUSER_FIRST_NAME="Anania" \
 DJANGO_SUPERUSER_MIDDLE_NAME="Tenson" \
 DJANGO_SUPERUSER_LAST_NAME="Mtawa" \
 DJANGO_SUPERUSER_PASSWORD="1234" \
-python3 manage.py createsuperuser --noinput
+python3 manage.py createsuperuser --username atmaiwiz@gmail.com --noinput 
 
 python3 manage.py collectstatic --no-input
 
