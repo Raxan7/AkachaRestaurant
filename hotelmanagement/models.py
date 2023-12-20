@@ -17,7 +17,7 @@ class User_type(models.Model):
 
 
 class CustomUser(AbstractUser):
-    objects = models.Manager()
+    # objects = models.Manager()
     id = models.AutoField(primary_key=True)
     profile = CloudinaryField("image")
     # profile = models.ImageField(upload_to="profiles/", default='profiles/default_profile.jpg')
@@ -126,6 +126,8 @@ class Order(models.Model):
     order_processor = models.ForeignKey(CustomUser, related_name="processor", on_delete=models.DO_NOTHING, null=True)
     order_receiver = models.ForeignKey(CustomUser, on_delete=models.DO_NOTHING, null=True)
     send = models.BooleanField(default=False)
+    latitude = models.DecimalField(max_digits = 18, decimal_places = 15, default=-6.216848786038759)
+    longitude = models.DecimalField(max_digits = 18, decimal_places = 15, default=35.810966491699226)
 
 
 class OrderItem(models.Model):
