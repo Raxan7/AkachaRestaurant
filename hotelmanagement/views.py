@@ -58,7 +58,7 @@ def index(request):
 
 # @cache_page(60 * 2500)
 def home(request):
-    return render(request, "home.html")
+    return render(request, f"{user_validator(request)}/home.html")
 
 def userprofile(request):
     if request.method == "POST":
