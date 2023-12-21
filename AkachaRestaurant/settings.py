@@ -111,8 +111,8 @@ DATABASES = {
 # }
 
 # Set session timeout to 5 minutes (in seconds)
-SESSION_COOKIE_AGE = 300
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+# SESSION_COOKIE_AGE = 300
+# SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
