@@ -1,18 +1,29 @@
-h1, h2, h3, h4, h5, h6{
-color: #75bb6d;
-text-align: center;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #75bb6d;
+    text-align: center;
 }
 
-a{
-  text-decoration: none;
+a {
+    text-decoration: none;
 }
 
 .valid::before {
-  content: "\2713"; /* Checkmark character */
-  color: green;
+    content: "\2713";
+    /* Checkmark character */
+    color: green;
 }
 
 .invalid::before {
-  content: "\2717"; /* Cross character */
-  color: red;
+    content: "\2717";
+    /* Cross character */
+    color: red;
+}
+
+.sidebar nav {
+    z-index: 9;
 }
