@@ -7,7 +7,9 @@ from . import views
 
 urlpatterns = [
     path("login", views.logins, name="login"),
-    path("", views.home, name="home"),
+    path("", views.index, name="index"),
+    
+    path("home", views.home, name="home"),
 
     # path('accounts/profile/', views.profile, name='profile'),
     # path("register", views.CustomRegistrationView.as_view(), name="register"),

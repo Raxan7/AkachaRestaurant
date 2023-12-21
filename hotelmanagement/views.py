@@ -10,6 +10,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
+from django.views.decorators.cache import cache_page
 
 
 def check_username_availability(request):
@@ -47,14 +48,17 @@ def logins(request):
         user = CustomUser.objects.filter(models.Q(username=username) | models.Q(email=username)).first()
         if user and check_password(password, user.password):
             login(request, user)
-            return render(request, f"{user_validator(request)}/home.html")
+            return redirect('home')
         else:
             messages.error(request, "Invalid Login Credentials!")
             return render(request, 'login.html')
 
-def home(request):
+def index(request):
     return render(request, "index.html")
 
+@cache_page(60 * 2500)
+def home(request):
+    return render(request, "home.html")
 
 def userprofile(request):
     if request.method == "POST":
