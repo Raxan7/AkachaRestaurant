@@ -10,7 +10,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
-from django.views.decorators.cache import cache_page
+# from django.views.decorators.cache import cache_page
 
 
 def check_username_availability(request):
@@ -56,7 +56,7 @@ def logins(request):
 def index(request):
     return render(request, "index.html")
 
-@cache_page(60 * 2500)
+# @cache_page(60 * 2500)
 def home(request):
     return render(request, "home.html")
 

@@ -103,12 +103,12 @@ DATABASES = {
     "default": dj_database_url.parse(env("DATABASE_URL"))
 }
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-        'LOCATION': 'my_cache_table',
-    }
-}
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+#         'LOCATION': 'my_cache_table',
+#     }
+# }
 
 # Set session timeout to 5 minutes (in seconds)
 SESSION_COOKIE_AGE = 300
