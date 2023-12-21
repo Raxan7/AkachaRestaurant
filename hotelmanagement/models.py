@@ -88,10 +88,10 @@ class MenuItem(models.Model):
 
 class MenuItemRating(models.Model):
     objects = models.Manager()
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)  # Link the rating to a user
-    menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None)  # Link the rating to a user
+    menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE, default=None)
     rating = models.DecimalField(decimal_places=1, max_digits=2)
-    comment = models.TextField(max_length=200, default="The food is too good")
+    comment = models.TextField(max_length=200, default="No comment")
 
 
 class MenuImage(models.Model):

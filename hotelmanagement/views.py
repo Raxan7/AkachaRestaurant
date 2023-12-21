@@ -368,6 +368,31 @@ def filter_menu_item(request, id):
 
 def menu_item_description(request, item_id):
     rating_data = MenuItemRating.objects.filter(menu_item__id=item_id)
+    if MenuItemRating.objects.filter(rating = 4).exists():
+        pass
+    else:
+        new_menu = MenuItemRating(rating = 4)
+        rating_data.append(new_menu)
+    if MenuItemRating.objects.filter(rating = 1).exists():
+        pass
+    else:
+        new_menu = MenuItemRating(rating = 1)
+        rating_data.append(new_menu)
+    if MenuItemRating.objects.filter(rating = 2).exists():
+        pass
+    else:
+        new_menu = MenuItemRating(rating = 2)
+        rating_data.append(new_menu)
+    if MenuItemRating.objects.filter(rating = 3).exists():
+        pass
+    else:
+        new_menu = MenuItemRating(rating = 3)
+        rating_data.append(new_menu)
+    if MenuItemRating.objects.filter(rating = 5).exists():
+        pass
+    else:
+        new_menu = MenuItemRating(rating = 5)
+        rating_data.append(new_menu)
     ratings = rating_data.values('rating').annotate(count=models.Count('rating'),
                                                     percent=models.Count('rating') * 100 / (
                                                         rating_data.count())).order_by('rating')
