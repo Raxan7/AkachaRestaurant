@@ -1,0 +1,52 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <title>Main Store Detail</title>
+    </head>
+    <body>
+        <h2>Main Store Detail</h2>
+        <table border=1 style="border-collapse:collapse">
+            </thead>
+                <tr>
+                    <th>Item cotegory</th>
+                    <th>Item Name</th>
+                    <th>Unit Of Measure</th>
+                    <th>Buy Price</th>
+                    <th>Received Quantity In Stock</th>
+                    <th>Remained Quantity Stock</th>
+                    <th>Received By</th>
+                    <th>Received Date</th>
+                    <th>Received Condition</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for store in store %}
+                <tr>
+                    <td>{{ store.ItemCategory}}</td>
+                    <td>{{ store.Item_name }}</td>
+                    <td>{{ store.Unit_Measure }}</td>
+                    <td>{{ store.BuyPrice }}</td>
+                    <td>{{ store.ReceivedQuantityInStock }}</td>
+                    {% if store.RemainedQuantityInStock < 1  %}
+                    <td style="background-color:red; color:white">{{ store.RemainedQuantityInStock }}</td>
+                    {% elif store.RemainedQuantityInStock < 10 %}
+                    <td style="background-color:yellow; color:green">{{ store.RemainedQuantityInStock }}</td>
+                    {% else %}
+                    <td style="background-color:green; color:White">{{ store.RemainedQuantityInStock }}</td>
+                    {% endif %}
+                    <td>{{ store.Received_By }}</td>
+                    <td>{{ store.Received_date }}</td>
+                    <td>{{ store.Received_Condition }}</td>
+                    {% comment %} <td>{{ store.ItemId }}</td> {% endcomment %}
+                    <td><a href="{% url 'AllocateItem' store.ItemId %}">allocate</a></td>
+                   
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{% url 'OrderProcessed' %}">main store</a>
+
+    </body>
+
+</html>

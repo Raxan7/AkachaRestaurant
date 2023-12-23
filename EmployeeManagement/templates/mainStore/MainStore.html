@@ -1,0 +1,14 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <title>MainStore</title>
+    </head>
+    <body>
+        <form method="POST" action="{% url 'MainStore' %}">
+            {% csrf_token %}
+            {{ MainStore.as_p }}
+            <input type='submit' name='submit' values='Register Items'>
+
+        </form>
+    </body>
+</head>

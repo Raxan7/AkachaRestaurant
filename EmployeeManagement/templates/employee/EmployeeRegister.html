@@ -1,0 +1,51 @@
+{% extends 'CEO/base.html'%}
+{% block content %}
+        <form method="POST" action="{% url 'EmployeesRegister' %}">
+            {% csrf_token %}
+                <div class="mb-3 mt-3">
+                  <label for="employeeID" class="form-label">Employee ID:</label>
+                  <input type="text" class="form-control" id="employeeID" placeholder="Enter employeeID" name="employeeID">
+                </div>
+                <div class="mb-3 mt-3">
+                    <label for="firstname" class="form-label">Firstname:</label>
+                    <input type="text" class="form-control" id="firstname" placeholder="Enter firstname" name="firstname">
+                  </div>
+                  <div class="mb-3 mt-3">
+                    <label for="MiddleName" class="form-label">MiddleName:</label>
+                    <input type="text" class="form-control" id="middlename" placeholder="Enter middlename" name="middlename">
+                  </div>
+                  <div class="mb-3 mt-3">
+                    <label for="lastname" class="form-label">LastName:</label>
+                    <input type="text" class="form-control" id="lastname" placeholder="Enter lastname" name="lastname">
+                  </div>
+                  <div class="mb-3 mt-3">
+                    <label for="email" class="form-label">Gender:</label><br>
+                    Female <input type="radio"  name="gender" value="female">
+                    Male <input type="radio" name="gender" value="male">
+                  </div>
+                <div class="mb-3">
+                  <label for="pwd" class="form-label">DOB:</label>
+                  <input type="date" class="form-control" id="date" placeholder="DOB" name="dob">
+                </div>
+                <div class="mb-3">
+                    <label for="pwd" class="form-label">NSSF:</label>
+                    <input type="text" class="form-control" id="date" placeholder="NSSF" name="nssf">
+                  </div>
+                  <div class="mb-3">
+                    <label for="pwd" class="form-label">NIDA:</label>
+                    <input type="text" class="form-control" id="date" placeholder="NIDA" name="nida">
+                  </div>
+                  <div class="container">
+                    <label for="departments" class="form-label">Departments:</label>
+                  <select class="form-control" name="department">
+                    <option>--Select Departments--</option>
+                    {% for dept in departments %}
+                    <option value="{{ dept.departmentName }}">{{ dept.departmentName }}</option>
+                    {%endfor%}
+                    </select>
+                  <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                </form>
+              </div>
+
+        </form>
+    {% endblock %}

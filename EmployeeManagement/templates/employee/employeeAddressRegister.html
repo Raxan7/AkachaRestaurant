@@ -1,0 +1,16 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <title>Employement Register</title>
+    </head>
+    <body>
+        <form method="POST" action="{% url 'employeeAddressesRegister' %}">
+            {% csrf_token %}
+
+            {{ Address.as_p}}
+            <input type= 'submit' value="Register Address">
+
+        </form>
+    </body>
+
+</html>

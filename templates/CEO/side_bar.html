@@ -85,6 +85,31 @@
             <i class="mdi mdi-contacts menu-icon"></i>
           </a>
         </li>
+
+        <li class="nav-item">
+          <a class="nav-link "  id = "manage-menu-item" href="{% url 'LegalDocumentsUpload'%}">
+            <span class="menu-title">Documents Upload</span>
+            <i class="mdi mdi-contacts menu-icon"></i>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+            <span class="menu-title">Employee Details</span>
+            <i class="menu-arrow"></i>
+            <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+          </a>
+          <div class="collapse" id="ui-basic">
+            <ul class="nav flex-column sub-menu">
+              <li class="nav-item"> <a class="nav-link "  id = "manage-menu-item" href="{% url 'LegalDocumentsUpload'%}">Documents Upload</a></li>
+              <li class="nav-item"> <a class="nav-link" href="{% url 'department_register'%}">Register Dept</a></li>
+              <li class="nav-item"> <a class="nav-link" href="{% url 'registered_dept'%}">Registered Dept</a></li>
+              <li class="nav-item"> <a class="nav-link" href="{% url 'EmployeesRegister' %}">Register Employee</a></li>
+              <li class="nav-item"> <a class="nav-link" href="">Employee Info</a></li>
+            </ul>
+          </div>
+        </li>
+
       </ul>
     </nav>
   </body>

@@ -1,0 +1,17 @@
+{% extends 'CEO/base.html' %}
+{% block content%}
+<form method="post" action="{% url 'department_register'%}">
+  {% csrf_token %}
+<div class="row">
+  <div class="col-md-6">
+    <label class="form-label" for="job_application_letter">DepartmentID</label>
+    <input type="text" class="form-control" id="job_application_letter" name="departmentID" required>
+  </div>
+  <div class="col-md-6">
+    <label class="form-label" for="sponsor_letter">Departmen Name</label>
+    <input type="text" class="form-control" id="sponsor_letter" name="departmentName" required>
+  </div>
+</div>
+<button type="submit" class="btn btn-primary w-12">Submit</button>
+</form>
+{% endblock %}

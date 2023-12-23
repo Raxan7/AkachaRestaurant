@@ -26,6 +26,7 @@ urlpatterns = [
     path('hidden/', admin.site.urls),
     path('', include('hotelmanagement.urls')),
     path("stock/", include("StockManagerApp.urls")),
+    path("employee/",include("EmployeeManagement.urls")),
     path("Email/", include("EmailApp.urls")),
 ]
 urlpatterns += [re_path(r'^media/(?P<path>.*)$', serve,{

@@ -1,0 +1,44 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <title>Employees Detail</title>
+    </head>
+    <body>
+        <table border=1 style="border-collapse:collapse">
+            </thead>
+                <tr>
+                    <th>Employee ID</th>
+                    <th>FirstName</th>
+                    <th>MiddleName</th>
+                    <th>LastName</th>
+                    <th>gender</th>
+                    <th>DOB</th>
+                    <th>SSN</th>
+                    <th>NIN</th>
+                    <th>Department</th>
+                    <th>ACTION</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for emp in employ %}
+                <tr>
+                    <td>{{ emp.employeeID }}</td>
+                    <td>{{ emp.firstName }}</td>
+                    <td>{{ emp.middleName }}</td>
+                    <td>{{ emp.lastName }}</td>
+                    <td>{{ emp.gender }}</td>
+                    <td>{{ emp.date_of_birth }}</td>
+                    <td>{{ emp.social_security_number}}</td>
+                    <td>{{ emp.National_id_number }}</td>
+                    <td>{{ emp.department }}</td>
+                    <td><a href="{% url 'EmployeeDelete' emp.employeeID %}">delete</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </form>
+    </body>
+
+</html>

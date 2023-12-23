@@ -1,0 +1,39 @@
+
+     {% extends 'CEO/base.html' %}
+
+    {% block content %} 
+    <form method="post" action="{% url 'LegalDocumentsUpload'%}" enctype="multipart/form-data">
+      {% csrf_token %}
+      <label class="form-label" for="job_application_letter">Job Application Letter</label>
+      <select class="form-select" aria-label="Default select example">
+        <option selected>Select Employee</option>
+        {% for Employee in employees%}
+            <option>{{ employee.firstName }}</option>
+        {% endfor%}
+      </select>
+      <div class="row">
+        <div class="col-md-6">
+          <label class="form-label" for="job_application_letter">Job Application Letter</label>
+          <input type="file" class="form-control" id="job_application_letter" name="job_application_letter" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label" for="sponsor_letter">Sponsor Letter</label>
+          <input type="file" class="form-control" id="sponsor_letter" name="sponsor_letter" required>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <label class="form-label" for="local_government_approval_letter">Local government Approval Letter</label>
+          <input type="file" class="form-control" id="local_government_approval_letter" name="local_government_approval_letter" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label" for="cv">Curriculam vitae(CV)</label>
+          <input type="file" class="form-control" id="cv" name="cv" required>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+ {% endblock %} 
+
+
+    

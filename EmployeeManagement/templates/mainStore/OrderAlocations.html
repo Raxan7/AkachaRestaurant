@@ -1,0 +1,15 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <title>Main Store Detail</title>
+    </head>
+    <body>
+     <form method="POST" action="{% url 'OrderAlocations' %}">
+        {% csrf_token %}
+        {{ OrderAlocations.as_p }}
+        <input type="submit" value="Allocate Order">
+     </form>
+             
+    </body>
+
+</html>
