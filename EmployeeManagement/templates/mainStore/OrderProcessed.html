@@ -1,0 +1,41 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <title>Main Store Detail</title>
+    </head>
+    <body>
+        <h2>Order Alocation</h2>
+        <table border=1 style="border-collapse:collapse">
+        </thead>
+            <tr>
+                <th>Item cotegory</th>
+                <th>Item Name</th>
+                <th>QuantityAllocated</th>
+                <th>Received_By</th>
+                <th>Issued By</th>
+                <th>Received Date</th>
+                <th>Received department</th>
+                <th>Received Condition</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in order %}
+            <tr>
+                <td>{{ order.ItemCategory}}</td>
+                <td>{{ order.Item_name }}</td>
+                <td>{{ order.QuantityAllocated }}</td>
+                <td>{{ order.Received_By }}</td>
+                <td>{{ order.Issued_by }}</td>
+                <td>{{ order.Received_date }}</td>
+                <td>{{ order.Receiver_department }}</td>
+                <td>{{ order.Received_Condition }}</td>
+               
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'MainStoreDetails' %}">main store</a>
+
+    </body>
+
+</html>

@@ -1,0 +1,18 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <title></title>
+    </head>
+    <body>
+        <form method="POST" action="{% url 'allocate' pk=allocateItem.ItemId %}">
+            {% csrf_token %}
+
+            {{ allocate.as_p}}
+            <input type= 'submit' value="Allocate">
+
+        </form>
+        {% if error_message%}
+        <p style="color:red">{{ error_message }}</p>
+         {% endif %}
+    </body>
+</html>

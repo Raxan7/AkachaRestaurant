@@ -1,0 +1,11 @@
+{% extends 'CEO/base.html' %}
+{% block content %}
+    <h3 style="font-weight:1px">Registered Depatment</h3>
+    {% for dept in registered %}
+    <ul>
+        <li>{{dept.departmentID }}</li>
+        <li>{{dept.departmentName }}</li>
+    </ul>
+    {% endfor %}
+    <a href="{% url 'department_register'%}">Register dept</a>
+{% endblock %}

@@ -16,6 +16,8 @@ import datetime
 from django.contrib.auth import update_session_auth_hash
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import check_password
+# from django.views.decorators.cache import cache_page
 
 
 def check_username_availability(request):
@@ -30,25 +32,42 @@ def check_email_availability(request):
     return JsonResponse({'exists': exists})
 
 
+# def logins(request):
+#     #if request.user.is_authenticated:
+#         #return render(request, f"{user_validator(request)}/home.html")
+#     if request.method == "POST":
+#         username = request.POST.get('email')
+#         password = request.POST.get('password')
+#         user = EmailBackEnd.authenticate(request, username, password)
+#         if user != None:
+#             login(request, user)
+#             return render(request, f"{user_validator(request)}/home.html")
+#         else:
+#             messages.error(request, "Invalid credentials!.")
+#     return render(request, "login.html")
+
 def logins(request):
-    # if request.user.is_authenticated:
-    # return render(request, f"{user_validator(request)}/home.html")
     if request.method == "POST":
         username = request.POST.get('email')
         password = request.POST.get('password')
-        user = EmailBackEnd.authenticate(request, username, password)
-        if user is not None and user.is_active:
+        user = CustomUser.objects.filter(models.Q(username=username) | models.Q(email=username)).first()
+        if user and check_password(password, user.password) and user.is_active:
             login(request, user)
-            return render(request, f"{user_validator(request)}/home.html")
+            return redirect('home')
         elif not user.is_active:
             messages.error(request, "Verify Your Email First To Login!")
         else:
-            messages.error(request, "Invalid credentials!.")
-    return render(request, "login.html")
+            messages.error(request, "Invalid Login Credentials!")
+            return render(request, 'login.html')
 
 
-def home(request):
+def index(request):
     return render(request, "index.html")
+
+
+# @cache_page(60 * 2500)
+def home(request):
+    return render(request, f"{user_validator(request)}/home.html")
 
 
 def userprofile(request):
@@ -550,6 +569,7 @@ def send_order(request, id):
     order.send = True
     order.received_time = datetime.datetime.now()
     order.save()
+    Cupon.objects.create(customer = order.order_receiver, ammount = order.menu_items.price/11)
     return redirect('home')
 
 
@@ -612,4 +632,8 @@ def edit_ingredient(request, id):
 def cart(request, menu_id):
     menu_item = MenuItem.objects.get(id=menu_id)
     tables = Table.objects.all()
-    return render(request, "cart.html", {"menu_item": menu_item, "tables": tables})
+    return render(request, "cart.html", {"menu_item":menu_item, "tables":tables})
+
+def my_cupon(request):
+    cupons = Cupon.objects.all()
+    return render(request, f"{user_validator(request)}/cupon.html", {'cupons':cupons})

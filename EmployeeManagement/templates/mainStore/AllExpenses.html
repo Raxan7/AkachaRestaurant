@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profit and Loss Statement</title>
+</head>
+<body>
+    <h1>Profit and Loss Statement</h1>
+    <h3>Expenses Details</h3>
+    <ul>
+        {% for items in expensesDetails %}
+            <li>Item Name: {{ items.Item_name }} - Buy Price: Tsh{{ items.BuyPrice }}/=</li>
+        {% endfor %}
+        <h3>Total Expenses Tsh {{ expenses }}/=</h3>
+    </ul>
+
+<h3>Income Details</h3>
+    <ul>
+        {% for items in incomeDetails %}
+            <li>Item Category: {{ items.IncomeCategoryName }} -Sell Price: Tsh{{ items.IncomeAmount }}/=</li>
+        {% endfor %}
+    <h3>Total Income: Tsh {{ income }}/=</h3>
+    </ul>
+
+    <h2>Total Profit: Tsh {{ profit }}/=</h2>
+</body>
+</html>

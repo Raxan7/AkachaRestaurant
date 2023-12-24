@@ -45,6 +45,8 @@
                 <option value="{{user_type.id}}" {% if user_type.id == userr.user_type.id %} selected {% endif %}>{{user_type.user_type}}</option>
                 {% endfor %}
                 </select>
+                {% else %}
+                <input type="hidden" name="user_type" value="{{userr.user_type.id}}">
                 {% endif %}
                 <br>
                 <!-- This will render the form fields for updating the menu -->

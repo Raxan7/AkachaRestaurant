@@ -7,7 +7,9 @@ from . import views
 
 urlpatterns = [
     path("login", views.logins, name="login"),
-    path("", views.home, name="home"),
+    path("", views.index, name="index"),
+    
+    path("home", views.home, name="home"),
 
     # path('accounts/profile/', views.profile, name='profile'),
     # path("register", views.CustomRegistrationView.as_view(), name="register"),
@@ -67,4 +69,6 @@ urlpatterns = [
     path('menu_items_api/', views.menu_items_api, name = 'menu_items_api'),
     path('search_menu_items/', views.search_menu_items, name = 'search_menu_items'),
     path('cart/<int:menu_id>', views.cart, name = 'cart'),
+    
+    path('my_cupon', views.my_cupon, name = 'my_cupon'),
 ]

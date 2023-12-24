@@ -1,0 +1,41 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <title>Main Store Detail</title>
+    </head>
+    <body>
+        <h2><a href="{% url 'allocate' items.ItemId %}">ALLOACE THIS ITEM-{{ items.ItemId }}</a></h2>
+        <table border=1 style="border-collapse:collapse">
+            </thead>
+                <tr>
+                    <th>Item cotegory</th>
+                    <th>Item Name</th>
+                    <th>Unit Of Measure</th>
+                    <th>Buy Price</th>
+                    <th>Received Quantity In Stock</th>
+                    <th>Remained Quantity Stock</th>
+                    <th>Received By</th>
+                    <th>Received Date</th>
+                    <th>Received Condition</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ items.ItemCategory}}</td>
+                    <td>{{ items.Item_name }}</td>
+                    <td>{{ items.Unit_Measure }}</td>
+                    <td>{{ items.BuyPrice }}</td>
+                    <td>{{ items.ReceivedQuantityInStock }}</td>
+                    <td>{{ items.RemainedQuantityInStock }}</td>
+                    <td>{{ items.Received_By }}</td>
+                    <td>{{ items.Received_date }}</td>
+                    <td>{{ items.Received_Condition }}</td>
+                   
+                </tr>
+            </tbody>
+        </table>
+        <a href="{% url 'OrderProcessed' %}">main store</a>
+
+    </body>
+
+</html>

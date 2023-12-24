@@ -1,7 +1,7 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
   <ul class="nav">
     <li class="nav-item nav-profile">
-      <a href="{% url 'home' %}" class="nav-link" >
+      <a href="{% url 'home' %}" class="ajax-link nav-link" >
         <div class="nav-profile-image">
           {% if user.profile %}
             <img src="{{ user.profile.url }}" alt="profile" />
@@ -17,37 +17,37 @@
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link "  data-toggle="minimize" href="{% url 'home' %}">
+      <a class="ajax-link nav-link "  data-toggle="minimize" href="{% url 'home' %}">
         <span class="menu-title" >Dashboard</span>
         <i class="mdi mdi-home menu-icon"></i>
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link "   href="{% url 'manage_menu_item'%}">
+      <a class="ajax-link nav-link "   href="{% url 'manage_menu_item'%}">
         <span class="menu-title">View Food items</span>
         <i class="mdi mdi-food menu-icon"></i>
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link "  href="{% url 'my_order'%}">
+      <a class="ajax-link nav-link "  href="{% url 'my_order'%}">
         <span class="menu-title">My orders</span>
         <i class="mdi mdi-food-fork-drink menu-icon"></i>
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link "  href="#">
+      <a class="ajax-lin nav-link "  href="{% url 'my_cupon'%}">
         <span class="menu-title">My coupons</span>
         <i class="mdi mdi-ticket menu-icon"></i>
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link "  href="#">
+      <a class="ajax-link nav-link "  href="#">
         <span class="menu-title">My reservation</span>
         <i class="mdi mdi-calendar-alert menu-icon"></i>
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link "  href="#">
+      <a class="ajax-link nav-link "  href="#">
         <span class="menu-title">My rewards</span>
         <i class="mdi mdi-gift menu-icon"></i>
       </a>
