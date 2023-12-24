@@ -153,8 +153,12 @@ AUTHENTICATION_BACKENDS = ['hotelmanagement.EmailBackEnd.EmailBackEnd']
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-
-
+# Email Settings
+EMAIL_HOST = 'smtp.mailgun.org'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'postmaster@mg.raxan7.com'
+EMAIL_HOST_PASSWORD = 'cc65b44faed9917229034f2439fe0fe2-5e3f36f5-5b3337cd'
+EMAIL_USE_TLS = True
 
 # """
 # Django settings for AkachaRestaurant project.
