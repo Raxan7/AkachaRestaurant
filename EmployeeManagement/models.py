@@ -1,6 +1,7 @@
 from typing import Any
 from django.db import models
 from django.core.validators import MinValueValidator
+from cloudinary.models import CloudinaryField
   
 class Departments(models.Model):
     departmentID=models.CharField(max_length=20,primary_key=True)
@@ -77,10 +78,10 @@ class EquipmentIssuance(models.Model):
 
 class LegalDocuments(models.Model):
     employee = models.OneToOneField(EmployeeDetails, on_delete=models.CASCADE)
-    Job_Application_Letter = models.FileField(upload_to='legal_documents/')
-    SponsorLetter = models.FileField(upload_to='legal_documents/')
-    Local_government_Approval_Letter = models.FileField(upload_to='legal_documents/')
-    Curriculam_vitae = models.FileField(upload_to='legal_documents/', null=True, blank=True)
+    Job_Application_Letter = CloudinaryField("image")
+    SponsorLetter = CloudinaryField("image")
+    Local_government_Approval_Letter = CloudinaryField("image")
+    Curriculam_vitae = CloudinaryField("image")
     def __str__(self):
         return self.employee
     

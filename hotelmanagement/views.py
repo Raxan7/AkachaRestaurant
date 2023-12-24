@@ -71,7 +71,7 @@ def userprofile(request):
 
 def logout_user(request):
     logout(request)
-    return redirect("home")
+    return redirect("index")
 
 
 def add_user_type(request):
@@ -133,10 +133,8 @@ def password_change(request):
 def delete_user(request, id):
     user = CustomUser.objects.get(id=id)
     user.delete()
-    if user.user_type == "Super":
-        return redirect("manage_user", user.user_type.id)
-    else:
-        return redirect("manage_user", user.user_type.id)
+    url = request.META.get('HTTP_REFERER')
+    return redirect(url)
 
 
 # 0 means all user types present
@@ -145,7 +143,8 @@ def activate_all_user(request):
     for user in users:
         user.is_active = True
         user.save()
-    return redirect("manage_user", 0)
+    url = request.META.get('HTTP_REFERER')
+    return redirect(url)
 
     # 0 means all user types present
 
@@ -156,7 +155,8 @@ def deactivate_all_user(request):
         if user.user_type != "CEO":
             user.is_active = False
             user.save()
-    return redirect("manage_user", 0)
+    url = request.META.get('HTTP_REFERER')
+    return redirect(url)
 
 
 def deactivate_user(request, id):
@@ -168,7 +168,8 @@ def deactivate_user(request, id):
     user_type = user.user_type
     user_types = User_type.objects.get(user_type=user_type)
     type_id = user_types.id
-    return redirect("manage_user", type_id)
+    url = request.META.get('HTTP_REFERER')
+    return redirect(url)
 
 
 def activate_user(request, id):
@@ -178,7 +179,8 @@ def activate_user(request, id):
     user_type = user.user_type
     user_types = User_type.objects.get(user_type=user_type)
     type_id = user_types.id
-    return redirect("manage_user", type_id)
+    url = request.META.get('HTTP_REFERER')
+    return redirect(url)
 
 
 def add_user(request):
@@ -190,14 +192,16 @@ def add_user(request):
         user_type = User_type.objects.get(id=user_types)
         password = "12345678"
         fullname = first_name + last_name
+        url = request.META.get('HTTP_REFERER')
         if CustomUser.objects.filter(username=fullname).exists():
             fullname = email
         if CustomUser.objects.filter(email=email).exists():
             messages.error(request, 'Email Alredy Exists')
-            return render(request, f"{user_validator(request)}/add_user.html")
+            return redirect(url)
         user = CustomUser.objects.create_user(user_type=user_type, username=fullname, email=email, password=password,
                                               first_name=first_name, last_name=last_name, )
         user.save()
+        return redirect(url)
     return redirect('manage_user', user_type.id)
 
 
@@ -599,5 +603,5 @@ def cart(request, menu_id):
     return render(request, "cart.html", {"menu_item":menu_item, "tables":tables})
 
 def my_cupon(request):
-    cupons = Cupon.objects.all()
+    cupons = Cupon.objects.filter(customer = request.user)
     return render(request, f"{user_validator(request)}/cupon.html", {'cupons':cupons})
