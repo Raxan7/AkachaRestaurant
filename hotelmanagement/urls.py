@@ -13,6 +13,7 @@ urlpatterns = [
     # path("register", views.CustomRegistrationView.as_view(), name="register"),
     path("register", views.register, name="register"),
     path("logout", views.logout_user, name="logout"),
+    path("verify_email", views.verify_email, name="verify_email"),
     path("password_change", views.password_change, name="password_change"),
     path("add_user", views.add_user, name="add_user"),
     path("add_user_type", views.add_user_type, name="add_user_type"),

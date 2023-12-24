@@ -1,4 +1,11 @@
 from django.contrib import messages
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
+
+from EmailApp.token import account_activation_token
 from .EmailBackEnd import EmailBackEnd
 from django.contrib.auth import login, logout
 from .models import *
@@ -24,18 +31,21 @@ def check_email_availability(request):
 
 
 def logins(request):
-    #if request.user.is_authenticated:
-        #return render(request, f"{user_validator(request)}/home.html")
+    # if request.user.is_authenticated:
+    # return render(request, f"{user_validator(request)}/home.html")
     if request.method == "POST":
         username = request.POST.get('email')
         password = request.POST.get('password')
         user = EmailBackEnd.authenticate(request, username, password)
-        if user != None:
+        if user is not None and user.is_active:
             login(request, user)
             return render(request, f"{user_validator(request)}/home.html")
+        elif not user.is_active:
+            messages.error(request, "Verify Your Email First To Login!")
         else:
             messages.error(request, "Invalid credentials!.")
     return render(request, "login.html")
+
 
 def home(request):
     return render(request, "index.html")
@@ -72,20 +82,44 @@ def register(request):
         password1 = request.POST.get("password1")
         user_type = User_type.objects.get(id=5)
         fullname = first_name + last_name
+        email_user_name = f"{first_name} {last_name}"
         if CustomUser.objects.filter(username=fullname).exists():
             fullname = email
         if password != password1:
             messages.error(request, 'Password do not match')
             return render(request, "register.html")
         if CustomUser.objects.filter(email=email).exists():
-            messages.error(request, 'Email Alredy Exists')
+            messages.error(request, 'Email Already Exists')
             return render(request, "register.html")
         user = CustomUser.objects.create_user(user_type=user_type, username=fullname, email=email, password=password,
                                               first_name=first_name, last_name=last_name, )
+        user.is_active = False
         user.save()
-        return redirect("login")
+        # Get the domain name of the current site
+        current_site = get_current_site(request)
+        mail_subject = 'Activation link has been sent to your email id'
+        message = render_to_string('acc_active_email.html', {
+            'user': user,
+            'domain': current_site.domain,
+            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+            'token': account_activation_token.make_token(user),
+        })
+        to_email = email
+        email = EmailMessage(
+            subject=mail_subject,
+            body=message,
+            from_email="no-reply-akacha@raxan7.com",
+            to=[to_email]
+        )
+        email.send()
+
+        return redirect("verify_email")
     else:
         return render(request, "register.html")
+
+
+def verify_email(request):
+    return render(request, "verify_email.html")
 
 
 def password_change(request):
@@ -477,7 +511,7 @@ def add_order(request):
         receiver_id = request.user.id
         receiver = CustomUser.objects.get(id=receiver_id)
         order = Order.objects.create(table=table, ordered_time=datetime.datetime.now(), menu_items=menu_item,
-                                     order_receiver=receiver, longitude = longitude, latitude=latitude)
+                                     order_receiver=receiver, longitude=longitude, latitude=latitude)
         order.save()
         user_type = User_type.objects.get(id=1)
         message = f"There is a {menu_item.name} request at table number {table.table_number}"
@@ -497,9 +531,11 @@ def my_order(request):
         })
     return render(request, f"{user_validator(request)}/myorder.html", {'myorders': myorders})
 
+
 def order_details(request, order_id):
-    order = Order.objects.get(id = order_id)
-    return render(request, "order_details.html", {"order":order})
+    order = Order.objects.get(id=order_id)
+    return render(request, "order_details.html", {"order": order})
+
 
 def process_order(request, id):
     order = Order.objects.get(id=id)
@@ -574,6 +610,6 @@ def edit_ingredient(request, id):
 
 
 def cart(request, menu_id):
-    menu_item = MenuItem.objects.get(id = menu_id)
+    menu_item = MenuItem.objects.get(id=menu_id)
     tables = Table.objects.all()
-    return render(request, "cart.html", {"menu_item":menu_item, "tables":tables})
+    return render(request, "cart.html", {"menu_item": menu_item, "tables": tables})
