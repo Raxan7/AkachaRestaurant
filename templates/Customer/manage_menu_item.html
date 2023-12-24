@@ -95,6 +95,37 @@
                   <form method="post" action="{% url 'add_order'%}">
                     {% csrf_token %}
                     <br>
+
+                    <label for="businessName">Business Name:</label>
+        <input type="text" id="businessName" name="name" required>
+
+        <br><br>
+
+        <!-- Business Location Map -->
+        <label for="map">Business Location:</label>
+        <div id="map"></div>
+
+        <!-- Latitude and Longitude Fields -->
+        <label for="latitude">Latitude:</label>
+        <input type="text" id="latitude" name="latitude" readonly>
+
+        <label for="longitude">Longitude:</label>
+        <input type="text" id="longitude" name="longitude" readonly>
+
+        <br><br>
+
+        <!-- Dropdown menu for map type -->
+        <label for="mapType">Map Type:</label>
+        <select id="mapType" onchange="changeMapType()">
+            <option value="roadmap">Normal Map</option>
+            <option value="satellite">Satellite Map</option>
+        </select>
+
+        <br><br>
+
+        <!-- Button to center map on user's current location -->
+        <button type="button" onclick="centerOnCurrentLocation()">Center on Current Location</button>
+
                     <div class="form-group">
                       <label for="rating">Food carting</label>
                       <input type="hidden" name="rating" value="0" class="form-control rating-value">
@@ -362,5 +393,69 @@
         });
     });
 </script>
+<script>
+  var map = L.map('map').setView([0, 0], 2);
+  var marker;
 
+  // Initial map type
+  var selectedMapType = "roadmap";
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
+
+  map.on('click', function(e) {
+      updateLocation(e.latlng.lat, e.latlng.lng);
+  });
+
+  function centerOnCurrentLocation() {
+      if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+              function(position) {
+                  var currentLat = position.coords.latitude;
+                  var currentLng = position.coords.longitude;
+                  updateLocation(currentLat, currentLng);
+
+                  // Center the map on the current location
+                  map.setView([currentLat, currentLng], 15);
+              },
+              function(error) {
+                  console.error('Error getting current location:', error.message);
+              }
+          );
+      } else {
+          console.error('Geolocation is not supported by this browser.');
+      }
+  }
+
+  function updateLocation(latitude, longitude) {
+      document.getElementById("latitude").value = latitude;
+      document.getElementById("longitude").value = longitude;
+
+      // Remove previous marker if exists
+      if (marker) {
+          map.removeLayer(marker);
+      }
+
+      // Add a marker at the updated location
+      marker = L.marker([latitude, longitude]).addTo(map);
+  }
+
+  function changeMapType() {
+      // Get the selected map type from the dropdown
+      selectedMapType = document.getElementById("mapType").value;
+
+      // Remove the current map layer
+      map.eachLayer(function(layer) {
+          if (layer instanceof L.TileLayer) {
+              map.removeLayer(layer);
+          }
+      });
+
+      // Add the new map layer based on the selected type
+      L.tileLayer(`https://{s}.tile.${selectedMapType === 'satellite' ? 'satellite' : 'openstreetmap'}.org/{z}/{x}/{y}.png`, {
+          attribution: selectedMapType === 'satellite' ? '© Google Maps' : '© OpenStreetMap contributors'
+      }).addTo(map);
+  }
+</script>
 {%endblock%}

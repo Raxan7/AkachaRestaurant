@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 
 # import dj_database_url
+<<<<<<< Updated upstream
 import environ
 
 import cloudinary
@@ -21,8 +22,13 @@ import cloudinary.uploader
 import cloudinary.api
 
 env = environ.Env()
+=======
+# import environ
 
-environ.Env.read_env()
+# env = environ.Env()
+>>>>>>> Stashed changes
+
+# environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -146,6 +152,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
+<<<<<<< Updated upstream
 # adding config
 cloudinary.config(
   cloud_name = "dvbdol5uj",
@@ -158,6 +165,12 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
+=======
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
+>>>>>>> Stashed changes
 # STATIC_ROOT = (os.path.join(BASE_DIR, 'static/'))
 STATIC_URL = '/static/'
 # STATICFILES_DIR = (os.path.join(BASE_DIR, 'static'))

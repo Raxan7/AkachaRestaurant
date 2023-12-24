@@ -71,6 +71,7 @@ class MenuItem(models.Model):
     ingredient_cost = models.FloatField(default=0)
     item_profit = models.FloatField(default=0)
     orders_number = models.FloatField(default=0)
+    # image_url = models.URLField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
         self.item_profit = self.price - self.ingredient_cost
@@ -229,3 +230,12 @@ def update_menu_item(sender, instance, **kwargs):
 @receiver(post_delete, sender=Order)
 def update_menu_item(sender, instance, **kwargs):
     instance.menu_items.update_orders_number()
+
+# @receiver(post_save, sender = MenuImage)
+# @receiver(post_delete, sender = MenuImage)
+# def copy_image(instance):
+#     id = instance.menu_item
+#     menu_image = MenuImage.objects.filter(menu_item = instance).first()
+#     instance.menu_item.image_url = menu_image.image.url
+#     instance.menu_item.save()
+    
