@@ -59,6 +59,8 @@ def logins(request):
         else:
             messages.error(request, "Invalid Login Credentials!")
             return render(request, 'login.html')
+    else:
+        return render(request, "login.html")
 
 
 def index(request):
