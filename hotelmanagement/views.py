@@ -533,6 +533,7 @@ def send_order(request, id):
     order.send = True
     order.received_time = datetime.datetime.now()
     order.save()
+    Cupon.objects.create(customer = order.order_receiver, ammount = order.menu_items.price/11)
     return redirect('home')
 
 
@@ -596,3 +597,7 @@ def cart(request, menu_id):
     menu_item = MenuItem.objects.get(id = menu_id)
     tables = Table.objects.all()
     return render(request, "cart.html", {"menu_item":menu_item, "tables":tables})
+
+def my_cupon(request):
+    cupons = Cupon.objects.all()
+    return render(request, f"{user_validator(request)}/cupon.html", {'cupons':cupons})

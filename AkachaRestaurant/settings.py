@@ -51,8 +51,9 @@ INSTALLED_APPS = [
 
     'hotelmanagement',
     'StockManagerApp',
+    'EmployeeManagement',
 
-    'widget_tweaks',
+    # 'widget_tweaks',
 ]
 
 MIDDLEWARE = [

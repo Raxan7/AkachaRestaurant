@@ -1,0 +1,11 @@
+{% extends 'Customer/base.html' %}
+
+{% block content %}
+<div class="col">
+{% for cupon in cupons %}
+<div class="row">
+    {% comment %} <h3>{{cupon.ammount}}</h3> {% endcomment %}
+</div>
+{% endfor %}
+</div>
+{%endblock%}

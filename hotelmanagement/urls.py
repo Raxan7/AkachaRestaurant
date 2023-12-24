@@ -68,4 +68,6 @@ urlpatterns = [
     path('menu_items_api/', views.menu_items_api, name = 'menu_items_api'),
     path('search_menu_items/', views.search_menu_items, name = 'search_menu_items'),
     path('cart/<int:menu_id>', views.cart, name = 'cart'),
+    
+    path('my_cupon', views.my_cupon, name = 'my_cupon'),
 ]
