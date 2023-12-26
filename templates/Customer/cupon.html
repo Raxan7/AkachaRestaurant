@@ -16,6 +16,7 @@
               it when ordering {{cupon.menu_item.name}} Another time
             </p>
           </div>
+          <span> <a class="btn-info text-center" href="{% url 'cart' cupon.menu_item.id%}">Use it</a></span>
         </div>
       </div>
     {% endfor %}
