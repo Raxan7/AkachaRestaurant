@@ -575,7 +575,12 @@ def send_order(request, id):
     order.send = True
     order.received_time = datetime.datetime.now()
     order.save()
-    Cupon.objects.create(customer = order.order_receiver, ammount = order.menu_items.price/11)
+    cupon_exist = Cupon.objects.filter(customer = order.order_receiver, menu_item = order.menu_items)
+    if cupon_exist.count() > 0:
+        cupon_exist.ammount += order.menu_items/11
+        cupon_exist.save()
+    else:        
+        Cupon.objects.create(customer = order.order_receiver, ammount = order.menu_items.price/11)
     return redirect('home')
 
 
@@ -641,5 +646,9 @@ def cart(request, menu_id):
     return render(request, "cart.html", {"menu_item":menu_item, "tables":tables})
 
 def my_cupon(request):
-    cupons = Cupon.objects.filter(customer = request.user)
+    my_cupons = Cupon.objects.filter(customer = request.user)
+    cupons = []
+    for cupon in my_cupons:
+        cupon.image = MenuImage.objects.filter(menu_item = cupon.menu_item).first()
+        cupons.append(cupon)
     return render(request, f"{user_validator(request)}/cupon.html", {'cupons':cupons})
