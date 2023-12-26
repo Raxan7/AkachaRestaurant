@@ -575,7 +575,7 @@ def send_order(request, id):
     order.send = True
     order.received_time = datetime.datetime.now()
     order.save()
-    cupon_exist = Cupon.objects.filter(customer = order.order_receiver, menu_item = order.menu_items)
+    cupon_exist = Cupon.objects.get(customer = order.order_receiver, menu_item = order.menu_items)
     count = cupon_exist.count()
     if count > 0:
         cupon_exist.ammount += order.menu_items/11
