@@ -13,6 +13,7 @@ cryptography==41.0.4
 defusedxml==0.7.1
 dj-database-url==2.1.0
 Django==4.2.4
+django-anymail==8.6
 django-environ==0.11.2
 django-sms==0.6.0
 django-storages==1.13.1
