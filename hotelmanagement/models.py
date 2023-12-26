@@ -59,9 +59,10 @@ class Cupon(models.Model):
     id = models.AutoField(primary_key=True)
     customer = models.ForeignKey(CustomUser, on_delete = models.CASCADE)
     ammount = models.DecimalField(max_digits = 7, decimal_places = 2)
+    menu_item = models.ForeignKey('MenuItem', on_delete = models.CASCADE, null=True)
 
 class MenuItem(models.Model):
-    objects = models.Manager()
+    # objects = models.Manager()
     id = models.AutoField(primary_key=True)
     category = models.ForeignKey(MenuCategory, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
@@ -124,7 +125,7 @@ class Order(models.Model):
     table = models.ForeignKey(Table, on_delete=models.CASCADE)
     # menu_items = models.ManyToManyField(MenuItem, through='OrderItem')
     menu_items = models.ForeignKey(MenuItem, on_delete=models.CASCADE, null=True)
-    ordered_time = models.DateTimeField(default=datetime.datetime.now())
+    ordered_time = models.DateTimeField(auto_now = True)
     start_processing_time = models.DateTimeField(null=True, blank=True)
     received_time = models.DateTimeField(null=True, blank=True)
     order_processor = models.ForeignKey(CustomUser, related_name="processor", on_delete=models.DO_NOTHING, null=True)
