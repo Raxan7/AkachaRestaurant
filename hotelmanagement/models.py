@@ -23,7 +23,7 @@ class CustomUser(AbstractUser):
     # profile = models.ImageField(upload_to="profiles/", default='profiles/default_profile.jpg')
     user_type = models.ForeignKey(User_type, on_delete=models.SET_NULL, null=True, default=None)
     is_active = models.BooleanField(default=True)
-    customer_profit = models.FloatField(default=0.0)
+    customer_profit = models.DecimalField(decimal_places = 2, max_digits = 12)
 
     def update_customer_profit(instance):
         order = instance
@@ -60,6 +60,7 @@ class Cupon(models.Model):
     customer = models.ForeignKey(CustomUser, on_delete = models.CASCADE)
     ammount = models.DecimalField(max_digits = 7, decimal_places = 2)
     menu_item = models.ForeignKey('MenuItem', on_delete = models.CASCADE, null=True)
+    used = models.BooleanField(default = False)
 
 class MenuItem(models.Model):
     # objects = models.Manager()
@@ -67,11 +68,11 @@ class MenuItem(models.Model):
     category = models.ForeignKey(MenuCategory, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     description = models.TextField()
-    price = models.FloatField()
+    price = models.DecimalField(decimal_places = 2, max_digits = 12)
     average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
-    ingredient_cost = models.FloatField(default=0)
-    item_profit = models.FloatField(default=0)
-    orders_number = models.FloatField(default=0)
+    ingredient_cost = models.DecimalField(decimal_places = 2, max_digits = 12)
+    item_profit = models.DecimalField(decimal_places = 2, max_digits = 12)
+    orders_number = models.IntegerField()
     # image_url = models.URLField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
@@ -160,7 +161,7 @@ class Ingredient(models.Model):
     ingredient_name = models.CharField(max_length=50)
     measured_in = models.CharField(max_length=50)
     quantity = models.FloatField()
-    price = models.FloatField()
+    price = models.DecimalField(decimal_places = 2, max_digits = 12)
 
 
 class Employee(models.Model):
