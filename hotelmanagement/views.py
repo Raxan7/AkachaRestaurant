@@ -576,11 +576,12 @@ def send_order(request, id):
     order.received_time = datetime.datetime.now()
     order.save()
     cupon_exist = Cupon.objects.filter(customer = order.order_receiver, menu_item = order.menu_items)
-    if cupon_exist.count() > 0:
+    count = cupon_exist.count()
+    if count > 0:
         cupon_exist.ammount += order.menu_items/11
         cupon_exist.save()
     else:        
-        Cupon.objects.create(customer = order.order_receiver, ammount = order.menu_items.price/11)
+        Cupon.objects.create(customer = order.order_receiver, ammount = order.menu_items.price/11, menu_item = order.menu_items)
     return redirect('home')
 
 
