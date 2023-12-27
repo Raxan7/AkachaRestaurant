@@ -675,6 +675,7 @@ import json
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from azampay import Azampay
+import uuid
 
 def initiate_payment(request):
     # ... your order/payment logic ...
@@ -683,16 +684,12 @@ def initiate_payment(request):
             client_id= "ce8ece8a-da0c-4738-b9a4-f5c4b287b58a",
             client_secret='NX7Tw83XBifEVMA8ci3QQc6w/3Jsx/n0qsVwhz3kAaST6a950VQ6r/UTrFGQyY7UYlHhKCedFWv9E5mZ1DWz09Bj7tDEWWs/HMQQZRGLBg+bF0tFpfRIFYvE+XuH34bKbGZ8GinBi4NApiiHzgo5fTqjdVjhTeOKvoYgkdpHMqai31o+xvP5xjlxhWTDQDqwpRGDhwdQVYwZFDMglA3OGOtgYNO72OvO4Nx5mcGG4hoVBvkI6jj4DqyW/1uBpdP2xxpu0/Ycc3jHRAjVsYW5hI67XMYIcxcizoqnMERYYTYdjOc1f3UGb//U1H+URTCp/zoqlw6c0Rdhr1+u8vukKDQVt19JoV3XjAzNoQGasnckzYJkpVTu2D3Jdu7nz3jI5KMK5QpFakjZasN1xbVgm/FDpA3leAURo9DvvMqSRFlhoyBnDHhEp/N+Q1jgqQctU4hI41OWkLJlnOGwZVvfFU15wdbKRoKA7rHHHoH6YHwtRhxYP5ooAP23xKxWdGWy5HLZlKH7EcdwokIbOdb6d2tr8sXkr5iC65XFu6JykkQHuWCyi7QPfJRXrufVs1DmlXUbvucG5O4VZHTgja7T0paXe3M+WA90OQSyjbFUlAKtu+h95S1jRXOJttcjsrGd/9p8xmjchPIkHtFL9X0OZIIM37oRuYaX9aKmRdssrnQ=',
         )
+        reference_id = str(uuid.uuid4())
         payment = object.mobile_checkout(
-            amount="1000",
-            # currency='12',
-            # description='Order #123',
-            external_id="https://akacha-restaurant.onrender.com",
+            amount=1000,
+            external_id=reference_id,
             provider="Airtel",
-            # additional_properties = 'Pay now',
-            # customer_email=user.email,  # If available
-            mobile='+255695570470',  # Replace with the actual phone number
-            # ... other optional parameters (refer to AzamPay documentation) ...
+            mobile="0695570470",
         )
         return HttpResponse(payment)
 
