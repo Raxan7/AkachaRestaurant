@@ -54,3 +54,4 @@ typing_extensions==4.7.1
 urllib3==1.26.18
 whitenoise==6.5.0
 yarl==1.9.2
+azampay==0.4
