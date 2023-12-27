@@ -683,7 +683,9 @@ def initiate_payment(request):
             app_name = "Akacha",
             client_id= "ce8ece8a-da0c-4738-b9a4-f5c4b287b58a",
             client_secret='NX7Tw83XBifEVMA8ci3QQc6w/3Jsx/n0qsVwhz3kAaST6a950VQ6r/UTrFGQyY7UYlHhKCedFWv9E5mZ1DWz09Bj7tDEWWs/HMQQZRGLBg+bF0tFpfRIFYvE+XuH34bKbGZ8GinBi4NApiiHzgo5fTqjdVjhTeOKvoYgkdpHMqai31o+xvP5xjlxhWTDQDqwpRGDhwdQVYwZFDMglA3OGOtgYNO72OvO4Nx5mcGG4hoVBvkI6jj4DqyW/1uBpdP2xxpu0/Ycc3jHRAjVsYW5hI67XMYIcxcizoqnMERYYTYdjOc1f3UGb//U1H+URTCp/zoqlw6c0Rdhr1+u8vukKDQVt19JoV3XjAzNoQGasnckzYJkpVTu2D3Jdu7nz3jI5KMK5QpFakjZasN1xbVgm/FDpA3leAURo9DvvMqSRFlhoyBnDHhEp/N+Q1jgqQctU4hI41OWkLJlnOGwZVvfFU15wdbKRoKA7rHHHoH6YHwtRhxYP5ooAP23xKxWdGWy5HLZlKH7EcdwokIbOdb6d2tr8sXkr5iC65XFu6JykkQHuWCyi7QPfJRXrufVs1DmlXUbvucG5O4VZHTgja7T0paXe3M+WA90OQSyjbFUlAKtu+h95S1jRXOJttcjsrGd/9p8xmjchPIkHtFL9X0OZIIM37oRuYaX9aKmRdssrnQ=',
-        )
+            x_api_key = '446bf9f3-9355-42da-a352-fad2a3d911c3',
+            sandbox=True,
+        ) 
         reference_id = str(uuid.uuid4())
         payment = object.mobile_checkout(
             amount=1000,
