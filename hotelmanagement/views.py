@@ -695,9 +695,7 @@ def initiate_payment(request):
             mobile='+255695570470',  # Replace with the actual phone number
             # ... other optional parameters (refer to AzamPay documentation) ...
         )
-
-        response = payment.response()
-        return response
+        return HttpResponse(payment)
 
         # return render(request, 'error.html', {'error_message': str(e)})
 
