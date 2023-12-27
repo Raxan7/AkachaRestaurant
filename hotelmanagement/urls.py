@@ -71,6 +71,6 @@ urlpatterns = [
     path('cart/<int:menu_id>', views.cart, name = 'cart'),
     
     path('my_cupon', views.my_cupon, name = 'my_cupon'),
-    path('pay', views.pay, name='pay'),
+    # path('pay', views.pay, name='pay'),
     path('initiate_payment', views.initiate_payment, name = 'initiate_payment'),
 ]
