@@ -678,7 +678,6 @@ from azampay import Azampay
 
 def initiate_payment(request):
     # ... your order/payment logic ...
-        menucategory = MenuCategory(name = "anania")
         object = Azampay(
             app_name = "Akacha",
             client_id= "ce8ece8a-da0c-4738-b9a4-f5c4b287b58a",
