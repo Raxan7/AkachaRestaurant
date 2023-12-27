@@ -23,7 +23,7 @@ class CustomUser(AbstractUser):
     # profile = models.ImageField(upload_to="profiles/", default='profiles/default_profile.jpg')
     user_type = models.ForeignKey(User_type, on_delete=models.SET_NULL, null=True, default=None)
     is_active = models.BooleanField(default=True)
-    customer_profit = models.DecimalField(decimal_places = 2, max_digits = 12)
+    customer_profit = models.DecimalField(decimal_places = 2, max_digits = 12, default=0.00)
 
     def update_customer_profit(instance):
         order = instance
