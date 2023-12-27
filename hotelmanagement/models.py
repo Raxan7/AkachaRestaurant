@@ -38,7 +38,7 @@ class Restaurant(models.Model):
     name = models.CharField(max_length=255)
     location = models.CharField(max_length=255)
     contact = models.CharField(max_length=255)
-    rating = models.DecimalField(max_digits=3, decimal_places=2)
+    rating = models.DecimalField(max_digits=3, decimal_places=2, default = 0.0)
     description = models.TextField()
 
 
@@ -70,9 +70,9 @@ class MenuItem(models.Model):
     description = models.TextField()
     price = models.DecimalField(decimal_places = 2, max_digits = 12)
     average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
-    ingredient_cost = models.DecimalField(decimal_places = 2, max_digits = 12)
-    item_profit = models.DecimalField(decimal_places = 2, max_digits = 12)
-    orders_number = models.IntegerField()
+    ingredient_cost = models.DecimalField(decimal_places = 2, max_digits = 12, default = 0.0)
+    item_profit = models.DecimalField(decimal_places = 2, max_digits = 12, default = 0.0)
+    orders_number = models.IntegerField(default = 0)
     # image_url = models.URLField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
@@ -96,7 +96,7 @@ class MenuItemRating(models.Model):
     objects = models.Manager()
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None)  # Link the rating to a user
     menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE, default=None)
-    rating = models.DecimalField(decimal_places=1, max_digits=2)
+    rating = models.DecimalField(decimal_places=1, max_digits=2, default = 0.0)
     comment = models.TextField(max_length=200, default="No comment")
 
 
@@ -149,7 +149,7 @@ class Review(models.Model):
     id = models.AutoField(primary_key=True)
     guest_name = models.CharField(max_length=255)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
-    rating = models.DecimalField(max_digits=3, decimal_places=2)
+    rating = models.DecimalField(max_digits=3, decimal_places=2, default = 0.0)
     comment = models.TextField()
     date = models.DateTimeField()
 
@@ -172,14 +172,14 @@ class Employee(models.Model):
     phone = models.CharField(max_length=15)
     address = models.TextField()
     role = models.CharField(max_length=255)
-    salary = models.DecimalField(max_digits=10, decimal_places=2)
+    salary = models.DecimalField(max_digits=10, decimal_places=2, default = 0.0)
 
 
 class Payment(models.Model):
     objects = models.Manager()
     id = models.AutoField(primary_key=True)
     reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    amount = models.DecimalField(max_digits=10, decimal_places=2, default = 0.0)
     payment_date = models.DateTimeField()
     payment_method = models.CharField(max_length=255)
 
