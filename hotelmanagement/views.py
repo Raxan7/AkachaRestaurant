@@ -654,3 +654,71 @@ def my_cupon(request):
         cupon.image = MenuImage.objects.filter(menu_item = cupon.menu_item).first()
         cupons.append(cupon)
     return render(request, f"{user_validator(request)}/cupon.html", {'cupons':cupons})
+
+
+from django.shortcuts import render
+from django.http import HttpResponse
+from django_daraja.mpesa.core import MpesaClient
+
+def pay(request):
+    cl = MpesaClient()
+    # Use a Safaricom phone number that you have access to, for you to be able to view the prompt.
+    phone_number = '0765106833'
+    amount = 1
+    account_reference = 'reference'
+    transaction_desc = 'Description'
+    callback_url = 'https://api.darajambili.com/express-payment'
+    response = cl.stk_push(phone_number, amount, account_reference, transaction_desc, callback_url)
+    return HttpResponse(response)
+
+import json
+from django.shortcuts import redirect, render
+from django.http import HttpResponse
+from azampay import Azampay
+
+def initiate_payment(request):
+    # ... your order/payment logic ...
+        menucategory = MenuCategory(name = "anania")
+        object = Azampay(
+            app_name = "https://akacha-restaurant.onrender.com",
+            client_id= "ce8ece8a-da0c-4738-b9a4-f5c4b287b58a",
+            client_secret='NX7Tw83XBifEVMA8ci3QQc6w/3Jsx/n0qsVwhz3kAaST6a950VQ6r/UTrFGQyY7UYlHhKCedFWv9E5mZ1DWz09Bj7tDEWWs/HMQQZRGLBg+bF0tFpfRIFYvE+XuH34bKbGZ8GinBi4NApiiHzgo5fTqjdVjhTeOKvoYgkdpHMqai31o+xvP5xjlxhWTDQDqwpRGDhwdQVYwZFDMglA3OGOtgYNO72OvO4Nx5mcGG4hoVBvkI6jj4DqyW/1uBpdP2xxpu0/Ycc3jHRAjVsYW5hI67XMYIcxcizoqnMERYYTYdjOc1f3UGb//U1H+URTCp/zoqlw6c0Rdhr1+u8vukKDQVt19JoV3XjAzNoQGasnckzYJkpVTu2D3Jdu7nz3jI5KMK5QpFakjZasN1xbVgm/FDpA3leAURo9DvvMqSRFlhoyBnDHhEp/N+Q1jgqQctU4hI41OWkLJlnOGwZVvfFU15wdbKRoKA7rHHHoH6YHwtRhxYP5ooAP23xKxWdGWy5HLZlKH7EcdwokIbOdb6d2tr8sXkr5iC65XFu6JykkQHuWCyi7QPfJRXrufVs1DmlXUbvucG5O4VZHTgja7T0paXe3M+WA90OQSyjbFUlAKtu+h95S1jRXOJttcjsrGd/9p8xmjchPIkHtFL9X0OZIIM37oRuYaX9aKmRdssrnQ=',
+        )
+        payment = object.mobile_checkout(
+            amount="1000",
+            # currency='12',
+            # description='Order #123',
+            provider="Airtel",
+            additional_properties = 'Pay now',
+            # customer_email=user.email,  # If available
+            mobile='+255695570470',  # Replace with the actual phone number
+            # ... other optional parameters (refer to AzamPay documentation) ...
+        )
+
+        response = payment.response()
+        return response
+
+        # return render(request, 'error.html', {'error_message': str(e)})
+
+def payment_callback(request):
+    order = 1
+    Azampay = Azampay(order)
+    transaction_id = request.GET.get('transaction_id')
+    payment_status = request.GET.get('payment_status')
+
+    try:
+        # Verify payment status with AzamPay API (refer to documentation)
+        verification_response = Azampay.verify_payment(transaction_id)
+
+        if verification_response['status'] == 'success':
+            # Update order status or perform other actions
+            # order.status = 'paid'
+            # order.save()
+
+            return render(request, 'payment_success.html')
+        else:
+            # Handle payment failure
+            return render(request, 'payment_failure.html')
+
+    except Exception as e:
+        return HttpResponse(json.dumps({'error': str(e)}), status=500)
