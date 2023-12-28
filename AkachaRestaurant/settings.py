@@ -35,7 +35,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'EmployeeManagement',
 
     'anymail',
+    # 'django_daraja',
     # 'widget_tweaks',
 ]
 
@@ -187,3 +188,53 @@ DEFAULT_FROM_EMAIL = 'no-reply-akacha@raxan7.com'
 #     "MAILJET_API_KEY": str(os.getenv('MAILJET_API_KEY')),
 #     "MAILJET_SECRET_KEY": str(os.getenv('MAILJET_SECRET_KEY')),
 #     "WEBHOOK_SECRET": str(os.getenv('WEBHOOK_SECRET')),
+
+
+# Possible values: sandbox, production
+
+# MPESA_ENVIRONMENT = 'sandbox'
+
+# # Credentials for the daraja app
+
+# MPESA_CONSUMER_KEY = '1wYpl0MHAFjStNC7n8FmdGt0o0rHhQ9h'
+# MPESA_CONSUMER_SECRET = 'wpa0BdtFLsNRcymB'
+
+# #Shortcode to use for transactions. For sandbox  use the Shortcode 1 provided on test credentials page
+
+# MPESA_SHORTCODE = '174379'
+
+# # Shortcode to use for Lipa na MPESA Online (MPESA Express) transactions
+# # This is only used on sandbox, do not set this variable in production
+# # For sandbox use the Lipa na MPESA Online Shorcode provided on test credentials page
+
+# MPESA_EXPRESS_SHORTCODE = '174379'
+
+# # Type of shortcode
+# # Possible values:
+# # - paybill (For Paybill)
+# # - till_number (For Buy Goods Till Number)
+
+# MPESA_SHORTCODE_TYPE = 'paybill'
+
+# # Lipa na MPESA Online passkey
+# # Sandbox passkey is available on test credentials page
+# # Production passkey is sent via email once you go live
+
+# MPESA_PASSKEY = 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919'
+
+# # Username for initiator (to be used in B2C, B2B, AccountBalance and TransactionStatusQuery Transactions)
+
+# MPESA_INITIATOR_USERNAME = 'atmaiwiz'
+
+# # Plaintext password for initiator (to be used in B2C, B2B, AccountBalance and TransactionStatusQuery Transactions)
+
+# MPESA_INITIATOR_SECURITY_CREDENTIAL = 'YP0UOBwU9+ZhGKlZzV5FZi5h6odwNdc5yhESj/YWyNKOVhGE9/9aAYaekhpLMkSEiFvy++xJ4MfEHqgecsDWRH0hESGk7TUsp7M9/QAYVngGyBWqMRaO4YAVbYmKGqgWvytIYOGu0I0ueg1bx23kJIRiNveBiaoWi1MGQz4ILfMGa1uoS9mA6PM7RF7GMSNCN//5TrBnjaB8A9af90MVwWS5DbDe8Hb7XjCNNfR8etJrW8SSlSCb4lxBfaewS+lJRe4TC9cbsOdGhksDz/SSLGlC61VMjC3RAKyv+VmFMTB+YYw3/HHwyf/xej+lMk+pcPhMi2I6zuuK5pZRdYovPA=='
+
+
+
+# AZAMPAY_CLIENT_ID = 'ce8ece8a-da0c-4738-b9a4-f5c4b287b58a'
+# AZAMPAY_CLIENT_SECRET = 'NX7Tw83XBifEVMA8ci3QQc6w/3Jsx/n0qsVwhz3kAaST6a950VQ6r/UTrFGQyY7UYlHhKCedFWv9E5mZ1DWz09Bj7tDEWWs/HMQQZRGLBg+bF0tFpfRIFYvE+XuH34bKbGZ8GinBi4NApiiHzgo5fTqjdVjhTeOKvoYgkdpHMqai31o+xvP5xjlxhWTDQDqwpRGDhwdQVYwZFDMglA3OGOtgYNO72OvO4Nx5mcGG4hoVBvkI6jj4DqyW/1uBpdP2xxpu0/Ycc3jHRAjVsYW5hI67XMYIcxcizoqnMERYYTYdjOc1f3UGb//U1H+URTCp/zoqlw6c0Rdhr1+u8vukKDQVt19JoV3XjAzNoQGasnckzYJkpVTu2D3Jdu7nz3jI5KMK5QpFakjZasN1xbVgm/FDpA3leAURo9DvvMqSRFlhoyBnDHhEp/N+Q1jgqQctU4hI41OWkLJlnOGwZVvfFU15wdbKRoKA7rHHHoH6YHwtRhxYP5ooAP23xKxWdGWy5HLZlKH7EcdwokIbOdb6d2tr8sXkr5iC65XFu6JykkQHuWCyi7QPfJRXrufVs1DmlXUbvucG5O4VZHTgja7T0paXe3M+WA90OQSyjbFUlAKtu+h95S1jRXOJttcjsrGd/9p8xmjchPIkHtFL9X0OZIIM37oRuYaX9aKmRdssrnQ='
+
+# # Optional settings (refer to AzamPay documentation for details)
+# AZAMPAY_ENVIRONMENT = 'sandbox'  # or 'live'
+# AZAMPAY_CALLBACK_URL = 'https://akacha-restaurant.onrender.com/payment_callback'
