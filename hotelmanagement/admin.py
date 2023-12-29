@@ -1,5 +1,12 @@
 from django.contrib import admin
+from django.contrib.admin import AdminSite
 from .models import *
+class MyAdminSite(AdminSite):
+    site_header = 'Akacha Restaurant Admin'  # Set the custom name for the admin panel
+    site_title = 'Akacha Adminstrator'
+    index_title = 'Visit Tables'
+
+admin.site = MyAdminSite()
 
 
 # admin.site.register(Messages)
