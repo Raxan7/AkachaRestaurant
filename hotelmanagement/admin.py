@@ -4,24 +4,6 @@ from .models import *
 def get_model_fields(self, model):
         return [field.name for field in model._meta.fields]
 
-admin.site.register(Messages)
-admin.site.register(Ingredient)
-admin.site.register(MenuItemRating)
-admin.site.register(CustomUser)
-admin.site.register(Restaurant)
-admin.site.register(Review)
-admin.site.register(MenuCategory)
-admin.site.register(MenuItem)
-admin.site.register(Order)
-admin.site.register(OrderItem)
-admin.site.register(Employee)
-admin.site.register(Payment)
-admin.site.register(MenuImage)
-admin.site.register(User_type)
-admin.site.register(Table)
-admin.site.register(Cupon)
-
-
 class MessagesAdmin(admin.ModelAdmin):
     list_display = get_model_fields(Messages)
     search_fields = get_model_fields(Messages)
