@@ -1,8 +1,8 @@
 # admin.py
 from django.contrib import admin
-from .models import Departments
+from .models import EmployeeDetails
 
-class DepartmentsAdmin(admin.ModelAdmin):
+class EmployeeDetailsAdmin(admin.ModelAdmin):
     list_display = ('employeeID', 'social_security_number', 'gender', 'date_of_birth','National_id_number')  # Fields to be displayed in the list view
     search_fields = ('employeeID', 'social_security_number','National_id_number')  # Enable searching by these fields
     list_filter = ('employeeID',)  # Add filters for these fields
@@ -18,4 +18,4 @@ class DepartmentsAdmin(admin.ModelAdmin):
     # Customize how fields are displayed in the detail view
     readonly_fields = ('gender',)  # Fields that are read-only in the detail view
 
-admin.site.register(Departments, DepartmentsAdmin)
+admin.site.register(EmployeeDetails, EmployeeDetailsAdmin)
