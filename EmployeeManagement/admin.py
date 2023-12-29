@@ -16,6 +16,6 @@ class EmployeeDetailsAdmin(admin.ModelAdmin):
     )
 
     # Customize how fields are displayed in the detail view
-    readonly_fields = ('gender',)  # Fields that are read-only in the detail view
+    readonly_fields = ('gender')  # Fields that are read-only in the detail view
 
 admin.site.register(EmployeeDetails, EmployeeDetailsAdmin)
