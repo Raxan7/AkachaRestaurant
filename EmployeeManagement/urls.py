@@ -21,4 +21,6 @@ urlpatterns = [
     path('allocateItem/<int:pk>/',views.AllocateItem,name='AllocateItem'),
     path('allocate/<int:pk>/',views.Allocate,name='allocate'),
     path('LegalDocumentsUpload/',views.LegalDocumentsUpload,name='LegalDocumentsUpload'),
+    
+    # path('copy', views.copy, name="copy"),
 ]

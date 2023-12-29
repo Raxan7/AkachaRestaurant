@@ -7,6 +7,7 @@ from .models import *
 from django.template import loader
 from .forms import *
 from django.core.files.storage import FileSystemStorage
+from hotelmanagement.models import CustomUser
 
 # Create your views here.
 def index(request):
@@ -254,3 +255,32 @@ def LegalDocumentsUpload(request):
     return render(request, 'employee/UploadLegalDocuments.html',{'employees':employees})
 
               
+              
+              
+# import secrets
+# import string
+# import random
+
+# def generate_random_string(length=5):
+#     alphabet = string.ascii_letters + string.digits
+#     random_string = ''.join(secrets.choice(alphabet) for _ in range(length))
+#     return random_string
+
+# # Example usage
+# random_string = generate_random_string()
+# print(random_string)
+
+# def copy(request):
+#        users = CustomUser.objects.all()
+#        gender = ["Male", "Female", "Other"]
+#        for user in users:
+#               EmployeeDetails.objects.create(
+#                      user = user,
+#                      employeeID = generate_random_string(5),
+#                      gender = random.choice(gender),
+#                      department = Departments.objects.get(departmentID = "12"),
+#                      social_security_number=generate_random_string(10),
+#                      National_id_number=generate_random_string(8),
+#               )
+#        return HttpResponse("Ready")
+       

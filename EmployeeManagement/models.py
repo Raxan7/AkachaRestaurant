@@ -2,6 +2,8 @@ from typing import Any
 from django.db import models
 from django.core.validators import MinValueValidator
 from cloudinary.models import CloudinaryField
+from hotelmanagement.models import CustomUser
+from datetime import date
   
 class Departments(models.Model):
     departmentID=models.CharField(max_length=20,primary_key=True)
@@ -16,17 +18,18 @@ GENDER_CHOICE = (
       ('other','other')
   )
 class EmployeeDetails(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     employeeID = models.CharField(max_length=100,primary_key=True)
-    firstName = models.CharField(max_length=100,blank=False)
-    middleName = models.CharField(max_length=100,blank=False)
-    lastName = models.CharField(max_length=100,blank=False)
+    # firstName = models.CharField(max_length=100,blank=False)
+    # middleName = models.CharField(max_length=100,blank=False)
+    # lastName = models.CharField(max_length=100,blank=False)
     gender = models.CharField(max_length=10,choices=GENDER_CHOICE)
-    date_of_birth = models.DateField()
+    date_of_birth = models.DateField(default= date.today)
     social_security_number = models.CharField(max_length=20)
     National_id_number = models.CharField(max_length=15)
     department = models.ForeignKey(Departments,on_delete=models.CASCADE)
-    def __str__(self):
-        return self.firstName
+    # def __str__(self):
+    #     return self.firstName
     
 class EmploymentDetail(models.Model):
     employee = models.OneToOneField(EmployeeDetails, on_delete=models.CASCADE)
