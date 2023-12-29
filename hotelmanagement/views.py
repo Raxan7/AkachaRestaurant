@@ -101,7 +101,7 @@ def register(request):
         email = request.POST.get("email")
         password = request.POST.get("password")
         password1 = request.POST.get("password1")
-        user_type = User_type.objects.get(id=5)
+        user_type = User_type.objects.get(id=2)
         fullname = first_name + last_name
         email_user_name = f"{first_name} {last_name}"
         if CustomUser.objects.filter(username=fullname).exists():
