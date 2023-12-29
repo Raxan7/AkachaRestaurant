@@ -5,8 +5,8 @@ from .models import EmployeeDetails
 class EmployeeDetailsAdmin(admin.ModelAdmin):
     list_display = ('employeeID', 'social_security_number', 'gender', 'date_of_birth','National_id_number')  # Fields to be displayed in the list view
     search_fields = ('employeeID', 'social_security_number','National_id_number')  # Enable searching by these fields
-    list_filter = ('employeeID',)  # Add filters for these fields
-    ordering = ('employeeID',)  # Set the default sorting order
+    list_filter = ('employeeID','National_id_number')  # Add filters for these fields
+    ordering = ('employeeID','social_security_number')  # Set the default sorting order
 
     fieldsets = (
         ('Main Information', {
