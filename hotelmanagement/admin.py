@@ -1,120 +1,68 @@
 from django.contrib import admin
 from .models import *
 
-# def get_model_fields(self, model):
-#     return [field.name for field in model._meta.fields]
 
-# class MessagesAdmin(admin.ModelAdmin):
-#     def get_model_fields(self, model):
-#         return [field.name for field in model._meta.fields]
-#     list_display = get_model_fields(Messages)
-#     search_fields = get_model_fields(Messages)
-#     # list_filter = ('')
-#     ordering = get_model_fields(Messages)
-#     # readonly_fields = ('')
-# admin.site.register(Messages, MessagesAdmin)
+# admin.site.register(Messages)
+# admin.site.register(Ingredient)
+admin.site.register(MenuItemRating)
+# admin.site.register(CustomUser)
+admin.site.register(Restaurant)
+admin.site.register(Review)
+admin.site.register(MenuCategory)
+# admin.site.register(MenuItem)
+# admin.site.register(Order)
+admin.site.register(OrderItem)
+admin.site.register(Employee)
+admin.site.register(Payment)
+admin.site.register(MenuImage)
+admin.site.register(User_type)
+admin.site.register(Table)
+# admin.site.register(Cupon)
 
+class MessagesAdmin(admin.ModelAdmin):
+    list_display = ('sender', 'receiver_category','time_sent','time_opened', 'opened', 'message', 'message_type', 'order')
+    search_fields = ('sender', 'receiver_category','message_type', 'order')
+    list_filter = ('sender', 'receiver_category','message_type', 'order')
+    ordering = ('sender', 'receiver_category','message_type', 'order')
+    # readonly_fields = ('used')
+admin.site.register(Messages, MessagesAdmin)
 
-# class CuponAdmin(admin.ModelAdmin):
-#     list_display = get_model_fields(Cupon)
-#     search_fields = get_model_fields(Cupon)
-#     # list_filter = ('')
-#     ordering = get_model_fields(Cupon)
-#     # readonly_fields = ('')
-# admin.site.register(Cupon, CuponAdmin)
+class CuponAdmin(admin.ModelAdmin):
+    list_display = ('ammount', 'used','customer','menu_item')
+    search_fields = ('ammount', 'used','customer','menu_item')
+    list_filter = ('ammount', 'used')
+    ordering = ('ammount', 'used', 'customer','menu_item')
+    # readonly_fields = ('used')
+admin.site.register(Cupon, CuponAdmin)
 
-# class IngredientAdmin(admin.ModelAdmin):
-#     list_display = get_model_fields(Ingredient)
-#     search_fields = get_model_fields(Ingredient)
-#     # list_filter = ('')
-#     ordering = get_model_fields(Ingredient)
-#     # readonly_fields = ('')
-# admin.site.register(Ingredient, IngredientAdmin)
+class CustomUserAdmin(admin.ModelAdmin):
+    list_display = ('first_name', 'last_name','username','email','is_active')
+    search_fields = ('first_name', 'last_name','username','email')
+    list_filter = ('first_name', 'last_name','username','email')
+    ordering = ('first_name', 'last_name','username','email')
+    # readonly_fields = ('used')
+admin.site.register(CustomUser, CustomUserAdmin)
 
-# class MenuItemRatingAdmin(admin.ModelAdmin):
-#     list_display = get_model_fields(MenuItemRating)
-#     search_fields = get_model_fields(MenuItemRating)
-#     # list_filter = ('')
-#     ordering = get_model_fields(MenuItemRating)
-#     # readonly_fields = ('')
-# admin.site.register(MenuItemRating, MenuItemRatingAdmin)
+class MenuItemAdmin(admin.ModelAdmin):
+    list_display = ('category', 'name','description','price','average_rating', 'ingredient_cost', 'orders_number', 'item_profit')
+    list_filter = ('category', 'name')
+    search_fields = ('category', 'name')
+    ordering = ('category', 'name','price','average_rating', 'ingredient_cost', 'orders_number', 'item_profit')
+    # readonly_fields = ('used')
+admin.site.register(MenuItem, MenuItemAdmin)
 
-# class CustomUserAdmin(admin.ModelAdmin):
-#     list_display = get_model_fields(CustomUser)
-#     search_fields = get_model_fields(CustomUser)
-#     # list_filter = ('')
-#     ordering = get_model_fields(CustomUser)
-#     # readonly_fields = ('')
-# admin.site.register(CustomUser, CustomUserAdmin)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ('table', 'menu_items','ordered_time','start_processing_time', 'received_time', 'order_processor', 'order_receiver', 'longitude', 'latitude')
+    search_fields = ('table', 'menu_items','order_processor', 'order_receiver')
+    list_filter = ('table', 'menu_items','order_processor', 'order_receiver')
+    ordering = ('table', 'menu_items','order_processor', 'order_receiver')
+    # readonly_fields = ('used')
+admin.site.register(Order, OrderAdmin)
 
-# class RestaurantAdmin(admin.ModelAdmin):
-#     list_display = get_model_fields(Restaurant)
-#     search_fields = get_model_fields(Restaurant)
-#     # list_filter = ('')
-#     ordering = get_model_fields(Restaurant)
-#     # readonly_fields = ('')
-# admin.site.register(Restaurant, RestaurantAdmin)
-
-# class ReviewAdmin(admin.ModelAdmin):
-#     list_display = get_model_fields(Review)
-#     search_fields = get_model_fields(Review)
-#     # list_filter = ('')
-#     ordering = get_model_fields(Review)
-#     # readonly_fields = ('')
-# admin.site.register(Review, ReviewAdmin)
-
-# class MenuCategoryAdmin(admin.ModelAdmin):
-#     list_display = get_model_fields(MenuCategory)
-#     search_fields = get_model_fields(MenuCategory)
-#     # list_filter = ('')
-#     ordering = get_model_fields(MenuCategory)
-#     # readonly_fields = ('')
-# admin.site.register(MenuCategory, MenuCategoryAdmin)
-
-# class MenuItemAdmin(admin.ModelAdmin):
-#     list_display = get_model_fields(MenuItem)
-#     search_fields = get_model_fields(MenuItem)
-#     # list_filter = ('')
-#     ordering = get_model_fields(MenuItem)
-#     # readonly_fields = ('')
-# admin.site.register(MenuItem, MenuItemAdmin)
-
-# class EmployeeAdmin(admin.ModelAdmin):
-#     list_display = get_model_fields(Employee)
-#     search_fields = get_model_fields(Employee)
-#     # list_filter = ('')
-#     ordering = get_model_fields(Employee)
-#     # readonly_fields = ('')
-# admin.site.register(Employee, EmployeeAdmin)
-
-# class PaymentAdmin(admin.ModelAdmin):
-#     list_display = get_model_fields(Payment)
-#     search_fields = get_model_fields(Payment)
-#     # list_filter = ('')
-#     ordering = get_model_fields(Payment)
-#     # readonly_fields = ('')
-# admin.site.register(Payment, PaymentAdmin)
-
-# class MenuImageAdmin(admin.ModelAdmin):
-#     list_display = get_model_fields(MenuImage)
-#     search_fields = get_model_fields(MenuImage)
-#     # list_filter = ('')
-#     ordering = get_model_fields(MenuImage)
-#     # readonly_fields = ('')
-# admin.site.register(MenuImage, MenuImageAdmin)
-
-# class User_typeAdmin(admin.ModelAdmin):
-#     list_display = get_model_fields(User_type)
-#     search_fields = get_model_fields(User_type)
-#     # list_filter = ('')
-#     ordering = get_model_fields(User_type)
-#     # readonly_fields = ('')
-# admin.site.register(User_type, User_typeAdmin)
-
-# class TableAdmin(admin.ModelAdmin):
-#     list_display = get_model_fields(Table)
-#     search_fields = get_model_fields(Table)
-#     # list_filter = ('')
-#     ordering = get_model_fields(Table)
-#     # readonly_fields = ('')
-# admin.site.register(Table, TableAdmin)
+class IngredientAdmin(admin.ModelAdmin):
+    list_display = ('menu_item', 'ingredient_name','measured_in','quantity','price')
+    search_fields = ('menu_item', 'ingredient_name')
+    list_filter = ('menu_item','ingredient_name')
+    ordering = ('menu_item', 'ingredient_name')
+    # readonly_fields = ('used')
+admin.site.register(Ingredient, IngredientAdmin)

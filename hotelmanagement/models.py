@@ -31,6 +31,8 @@ class CustomUser(AbstractUser):
                            'menu_items__item_profit__sum'] or 0
         order.customer_profit = total_profit
         order.save()
+    def __str__(self):
+        return self.username
 
 class Restaurant(models.Model):
     objects = models.Manager()
@@ -40,6 +42,8 @@ class Restaurant(models.Model):
     contact = models.CharField(max_length=255)
     rating = models.DecimalField(max_digits=3, decimal_places=2, default = 0.0)
     description = models.TextField()
+    def __str__(self):
+        return self.name
 
 
 class Table(models.Model):
@@ -48,12 +52,16 @@ class Table(models.Model):
     # restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     table_number = models.CharField(max_length=10)
     capacity = models.PositiveIntegerField()
+    def __str__(self):
+        return self.table_number
 
 
 class MenuCategory(models.Model):
     objects = models.Manager()
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
+    def __str__(self):
+        return self.name
 
 class Cupon(models.Model):
     id = models.AutoField(primary_key=True)
@@ -61,6 +69,8 @@ class Cupon(models.Model):
     ammount = models.DecimalField(max_digits = 7, decimal_places = 2)
     menu_item = models.ForeignKey('MenuItem', on_delete = models.CASCADE, null=True)
     used = models.BooleanField(default = False)
+    def __str__(self):
+        return self.ammount
 
 class MenuItem(models.Model):
     # objects = models.Manager()
@@ -73,6 +83,8 @@ class MenuItem(models.Model):
     ingredient_cost = models.DecimalField(decimal_places = 2, max_digits = 12, default = 0.0)
     item_profit = models.DecimalField(decimal_places = 2, max_digits = 12, default = 0.0)
     orders_number = models.IntegerField(default = 0)
+    def __str__(self):
+        return self.name
     # image_url = models.URLField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
@@ -98,6 +110,8 @@ class MenuItemRating(models.Model):
     menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE, default=None)
     rating = models.DecimalField(decimal_places=1, max_digits=2, default = 0.0)
     comment = models.TextField(max_length=200, default="No comment")
+    def __str__(self):
+        return self.rating
 
 
 class MenuImage(models.Model):
@@ -134,6 +148,8 @@ class Order(models.Model):
     send = models.BooleanField(default=False)
     latitude = models.DecimalField(max_digits = 18, decimal_places = 15, default=-6.216848786038759)
     longitude = models.DecimalField(max_digits = 18, decimal_places = 15, default=35.810966491699226)
+    def __str__(self):
+        return self.order_receiver
 
 
 class OrderItem(models.Model):
@@ -162,6 +178,8 @@ class Ingredient(models.Model):
     measured_in = models.CharField(max_length=50)
     quantity = models.FloatField()
     price = models.DecimalField(decimal_places = 2, max_digits = 12)
+    def __str__(self):
+        return self.ingredient_name
 
 
 class Employee(models.Model):
