@@ -8,8 +8,8 @@ def get_model_fields(self, model):
 class EmployeeDetailsAdmin(admin.ModelAdmin):
     list_display = get_model_fields(EmployeeDetails)
     search_fields = get_model_fields(EmployeeDetails)
-    list_filter = ('')
+    # list_filter = ('')
     ordering = get_model_fields(EmployeeDetails)
-    readonly_fields = ('')
+    # readonly_fields = ('')
 admin.site.register(EmployeeDetails, EmployeeDetailsAdmin)
 
