@@ -3,7 +3,6 @@ from .models import *
 
 def get_model_fields(self, model):
         return [field.name for field in model._meta.fields]
-    # list_display = get_model_fields(YourModel)
 
 admin.site.register(Messages)
 admin.site.register(Ingredient)

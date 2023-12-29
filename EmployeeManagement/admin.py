@@ -1,11 +1,15 @@
 # admin.py
 from django.contrib import admin
-from .models import EmployeeDetails
+from .models import *
+
+def get_model_fields(self, model):
+    return [field.name for field in model._meta.fields]    
 
 class EmployeeDetailsAdmin(admin.ModelAdmin):
-    list_display = ('employeeID', 'social_security_number', 'gender', 'date_of_birth','National_id_number')
-    search_fields = ('employeeID', 'social_security_number','National_id_number')
-    list_filter = ('employeeID','National_id_number')
-    ordering = ('employeeID','social_security_number')
-    readonly_fields = ('gender')
+    list_display = get_model_fields(EmployeeDetails)
+    search_fields = get_model_fields(EmployeeDetails)
+    list_filter = ('')
+    ordering = get_model_fields(EmployeeDetails)
+    readonly_fields = ('')
 admin.site.register(EmployeeDetails, EmployeeDetailsAdmin)
+
