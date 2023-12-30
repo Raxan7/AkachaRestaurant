@@ -4,7 +4,7 @@ from .models import *
 class MyAdminSite(AdminSite):
     site_header = 'Akacha Restaurant Admin'  # Set the custom name for the admin panel
     site_title = 'Akacha Adminstrator'
-    index_title = 'Visit Tables'
+    index_title = 'Akache Restaurant'
 
 admin.site = MyAdminSite()
 
