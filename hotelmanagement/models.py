@@ -5,6 +5,7 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.db.models import Sum
 from cloudinary.models import CloudinaryField
+from django.utils import timezone
 
 
 # Create your models here.
@@ -24,6 +25,8 @@ class CustomUser(AbstractUser):
     user_type = models.ForeignKey(User_type, on_delete=models.SET_NULL, null=True, default=None)
     is_active = models.BooleanField(default=True)
     customer_profit = models.DecimalField(decimal_places = 2, max_digits = 12, default=0.00)
+    reset_password_token = models.CharField(max_length=255, blank=True, null=True)
+    reset_password_expiration = models.DateTimeField(blank=True, null=True)
 
     def update_customer_profit(instance):
         order = instance

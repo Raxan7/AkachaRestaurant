@@ -71,6 +71,8 @@ urlpatterns = [
     path('cart/<int:menu_id>', views.cart, name = 'cart'),
     
     path('my_cupon', views.my_cupon, name = 'my_cupon'),
-    # path('pay', views.pay, name='pay'),
+    
     path('initiate_payment', views.initiate_payment, name = 'initiate_payment'),
+    path('initiate_password_reset/', views.initiate_password_reset, name='initiate_password_reset'),
+    path('complete_password_reset/<str:token>/', views.complete_password_reset, name='complete_password_reset'),
 ]

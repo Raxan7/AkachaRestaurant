@@ -9,7 +9,7 @@ from EmailApp.token import account_activation_token
 from .EmailBackEnd import EmailBackEnd
 from django.contrib.auth import login, logout
 from .models import *
-from .utils import user_validator
+from .utils import *
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Avg
 import datetime
@@ -18,6 +18,8 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
 from django_ratelimit.decorators import ratelimit
+from django.utils import timezone
+from .utils import generate_reset_token
 
 def check_username_availability(request):
     username = request.GET.get('username')
@@ -720,3 +722,35 @@ def payment_callback(request):
 
     except Exception as e:
         return HttpResponse(json.dumps({'error': str(e)}), status=500)
+
+def initiate_password_reset(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        try:
+            user = CustomUser.objects.get(email=email)
+            # Generate a unique token
+            token = generate_reset_token()
+            # Set the token and expiration in the user model
+            user.reset_password_token = token
+            user.reset_password_expiration = timezone.now() + timezone.timedelta(hours=1)
+            user.save()
+            send_reset_email(request, user, user.email, token)
+            
+            messages.success(request, 'Password reset link sent to your email.')
+            return redirect('login')  # Redirect to login page
+
+        except CustomUser.DoesNotExist:
+            messages.error(request, 'User with this email does not exist.')
+
+    return render(request, 'password_reset.html')
+
+def complete_password_reset(request, token):
+    try:
+        user = CustomUser.objects.get(reset_password_token=token, reset_password_expiration__gt=timezone.now())
+        # Implement logic for resetting the password (show a form, update the password, etc.)
+        # ...
+        return render(request, 'complete_password_reset.html')
+
+    except CustomUser.DoesNotExist:
+        messages.error(request, 'Invalid or expired token.')
+        return redirect('login')  # Redirect to login page
