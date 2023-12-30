@@ -17,8 +17,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
-# from django.views.decorators.cache import cache_page
-
+from django_ratelimit.decorators import ratelimit
 
 def check_username_availability(request):
     username = request.GET.get('username')
@@ -68,6 +67,8 @@ def index(request):
 
 
 # @cache_page(60 * 2500)
+# @login_required
+# @ratelimit(key='user', rate='10/h', block=True)
 def home(request):
     return render(request, f"{user_validator(request)}/home.html")
 

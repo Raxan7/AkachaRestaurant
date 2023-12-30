@@ -55,3 +55,4 @@ urllib3==1.26.18
 whitenoise==6.5.0
 yarl==1.9.2
 azampay==0.4
+django-ratelimit==4.1.0
